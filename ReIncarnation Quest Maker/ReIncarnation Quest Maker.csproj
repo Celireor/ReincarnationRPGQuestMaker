@@ -78,6 +78,9 @@
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestTasks.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\LinqExtensions.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\UtilityFunctions.cs" />
+    <Compile Include="Obsidius%28Interpreter%29\VariablePanels.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Obsidius%28Interpreter%29\Interpreter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -85,6 +88,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Obsidius%28Interpreter%29\VariablePanels_Base.cs" />
     <Compile Include="Obsidius%28Interpreter%29\Unbidden.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
