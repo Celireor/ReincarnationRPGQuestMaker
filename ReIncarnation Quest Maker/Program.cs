@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using ReIncarnation_Quest_Maker.Made_in_Abyss.Parser;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
 
 namespace ReIncarnation_Quest_Maker
 {

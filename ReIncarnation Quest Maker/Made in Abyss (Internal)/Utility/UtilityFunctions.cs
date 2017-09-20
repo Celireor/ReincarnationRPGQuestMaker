@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReIncarnation_Quest_Maker.Made_in_Abyss.Utility
+namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
 {
     public static class UtilityFunctions
     {

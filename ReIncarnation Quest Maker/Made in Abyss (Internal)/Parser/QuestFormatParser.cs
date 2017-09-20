@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-using ReIncarnation_Quest_Maker.Made_in_Abyss.QuestFormat;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
 using ReIncarnation_Quest_Maker.Obsidius;
 
-namespace ReIncarnation_Quest_Maker.Made_in_Abyss.Parser
+namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
 {
     public static class QuestFormatParser
     {

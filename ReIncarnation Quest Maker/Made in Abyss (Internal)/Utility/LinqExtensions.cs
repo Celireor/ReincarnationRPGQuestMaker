@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Forms;
 
-namespace ReIncarnation_Quest_Maker.Made_in_Abyss.Utility
+namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
 {
     public static class LinqExtensions
     {
@@ -24,14 +24,17 @@ namespace ReIncarnation_Quest_Maker.Made_in_Abyss.Utility
             }
         }
 
-        public static void UpdatePossibleValues(this ComboBox ThisBox, List<string> Values)
+        public static void UpdatePossibleValues(this ComboBox ThisBox, List<string> Values, bool IgnoreNonFittingItems = false)
         {
             ThisBox.Items.Clear();
             Values.Sort();
-            for (int x = 0; x < Values.Count; x++)
-            {
-                ThisBox.Items.Add(Values[x]);
-            }
+            Values.Distinct().ToList().ForEach(obj => {
+
+                if (!IgnoreNonFittingItems || obj.Contains(ThisBox.Text))
+                {
+                    ThisBox.Items.Add(obj);
+                }
+            });
         }
     }
 }

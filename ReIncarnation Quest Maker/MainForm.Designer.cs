@@ -76,8 +76,13 @@
             this.newqueststagetaskbutton = new System.Windows.Forms.Button();
             this.QuestStageTaskList = new System.Windows.Forms.Panel();
             this.QuestStageDialogue = new System.Windows.Forms.TabPage();
+            this.questStageDialogueList = new System.Windows.Forms.Panel();
+            this.NewDialogueButton = new System.Windows.Forms.Button();
             this.QuestStageList = new System.Windows.Forms.Panel();
             this.newqueststagebutton = new System.Windows.Forms.Button();
+            this.QuestDialoguePage = new System.Windows.Forms.TabPage();
+            this.QuestDialogueList = new System.Windows.Forms.Panel();
+            this.NewQuestDialogueButton = new System.Windows.Forms.Button();
             this.QuestList = new System.Windows.Forms.Panel();
             this.newquestbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -109,6 +114,8 @@
             this.QuestStageTasks.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.QuestStageDialogue.SuspendLayout();
+            this.QuestDialoguePage.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -202,6 +209,7 @@
             // 
             this.QuestTabs.Controls.Add(this.QuestBasicInfoPage);
             this.QuestTabs.Controls.Add(this.Stages);
+            this.QuestTabs.Controls.Add(this.QuestDialoguePage);
             this.QuestTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestTabs.Location = new System.Drawing.Point(0, 0);
             this.QuestTabs.Name = "QuestTabs";
@@ -566,9 +574,9 @@
             this.QuestStageDescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.QuestStageDescriptionLabel.Location = new System.Drawing.Point(3, 4);
             this.QuestStageDescriptionLabel.Name = "QuestStageDescriptionLabel";
-            this.QuestStageDescriptionLabel.Size = new System.Drawing.Size(131, 16);
+            this.QuestStageDescriptionLabel.Size = new System.Drawing.Size(132, 16);
             this.QuestStageDescriptionLabel.TabIndex = 1;
-            this.QuestStageDescriptionLabel.Text = "Quest Description";
+            this.QuestStageDescriptionLabel.Text = "Stage Description";
             // 
             // QuestStageDescriptionBox
             // 
@@ -621,6 +629,7 @@
             // 
             // tableLayoutPanel3
             // 
+            this.tableLayoutPanel3.AutoSize = true;
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -631,7 +640,7 @@
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(383, 29);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
@@ -648,10 +657,11 @@
             // newqueststagetaskbutton
             // 
             this.newqueststagetaskbutton.AutoSize = true;
+            this.newqueststagetaskbutton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.newqueststagetaskbutton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.newqueststagetaskbutton.Location = new System.Drawing.Point(3, 3);
             this.newqueststagetaskbutton.Name = "newqueststagetaskbutton";
-            this.newqueststagetaskbutton.Size = new System.Drawing.Size(185, 32);
+            this.newqueststagetaskbutton.Size = new System.Drawing.Size(185, 23);
             this.newqueststagetaskbutton.TabIndex = 11;
             this.newqueststagetaskbutton.Text = "New Task";
             this.newqueststagetaskbutton.UseVisualStyleBackColor = true;
@@ -669,6 +679,8 @@
             // 
             // QuestStageDialogue
             // 
+            this.QuestStageDialogue.Controls.Add(this.questStageDialogueList);
+            this.QuestStageDialogue.Controls.Add(this.NewDialogueButton);
             this.QuestStageDialogue.Location = new System.Drawing.Point(4, 22);
             this.QuestStageDialogue.Name = "QuestStageDialogue";
             this.QuestStageDialogue.Padding = new System.Windows.Forms.Padding(3);
@@ -676,6 +688,28 @@
             this.QuestStageDialogue.TabIndex = 1;
             this.QuestStageDialogue.Text = "Dialogue";
             this.QuestStageDialogue.UseVisualStyleBackColor = true;
+            // 
+            // questStageDialogueList
+            // 
+            this.questStageDialogueList.AutoScroll = true;
+            this.questStageDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.questStageDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questStageDialogueList.Location = new System.Drawing.Point(3, 3);
+            this.questStageDialogueList.Name = "questStageDialogueList";
+            this.questStageDialogueList.Size = new System.Drawing.Size(389, 284);
+            this.questStageDialogueList.TabIndex = 7;
+            // 
+            // NewDialogueButton
+            // 
+            this.NewDialogueButton.AutoSize = true;
+            this.NewDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.NewDialogueButton.Location = new System.Drawing.Point(3, 287);
+            this.NewDialogueButton.Name = "NewDialogueButton";
+            this.NewDialogueButton.Size = new System.Drawing.Size(389, 50);
+            this.NewDialogueButton.TabIndex = 6;
+            this.NewDialogueButton.Text = "New Dialogue";
+            this.NewDialogueButton.UseVisualStyleBackColor = true;
+            this.NewDialogueButton.Click += new System.EventHandler(this.NewStageDialogueButton_Click);
             // 
             // QuestStageList
             // 
@@ -698,6 +732,40 @@
             this.newqueststagebutton.Text = "New Stage";
             this.newqueststagebutton.UseVisualStyleBackColor = true;
             this.newqueststagebutton.Click += new System.EventHandler(this.newqueststagebutton_Click);
+            // 
+            // QuestDialoguePage
+            // 
+            this.QuestDialoguePage.Controls.Add(this.QuestDialogueList);
+            this.QuestDialoguePage.Controls.Add(this.NewQuestDialogueButton);
+            this.QuestDialoguePage.Location = new System.Drawing.Point(4, 22);
+            this.QuestDialoguePage.Name = "QuestDialoguePage";
+            this.QuestDialoguePage.Padding = new System.Windows.Forms.Padding(3);
+            this.QuestDialoguePage.Size = new System.Drawing.Size(629, 510);
+            this.QuestDialoguePage.TabIndex = 3;
+            this.QuestDialoguePage.Text = "Quest Dialogue";
+            this.QuestDialoguePage.UseVisualStyleBackColor = true;
+            // 
+            // QuestDialogueList
+            // 
+            this.QuestDialogueList.AutoScroll = true;
+            this.QuestDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.QuestDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.QuestDialogueList.Location = new System.Drawing.Point(3, 3);
+            this.QuestDialogueList.Name = "QuestDialogueList";
+            this.QuestDialogueList.Size = new System.Drawing.Size(623, 454);
+            this.QuestDialogueList.TabIndex = 2;
+            // 
+            // NewQuestDialogueButton
+            // 
+            this.NewQuestDialogueButton.AutoSize = true;
+            this.NewQuestDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.NewQuestDialogueButton.Location = new System.Drawing.Point(3, 457);
+            this.NewQuestDialogueButton.Name = "NewQuestDialogueButton";
+            this.NewQuestDialogueButton.Size = new System.Drawing.Size(623, 50);
+            this.NewQuestDialogueButton.TabIndex = 1;
+            this.NewQuestDialogueButton.Text = "New Dialogue";
+            this.NewQuestDialogueButton.UseVisualStyleBackColor = true;
+            this.NewQuestDialogueButton.Click += new System.EventHandler(this.NewQuestDialogueButton_Click);
             // 
             // QuestList
             // 
@@ -774,8 +842,13 @@
             this.QuestStageTabs.ResumeLayout(false);
             this.QuestStageTasks.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.QuestStageDialogue.ResumeLayout(false);
+            this.QuestStageDialogue.PerformLayout();
+            this.QuestDialoguePage.ResumeLayout(false);
+            this.QuestDialoguePage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -835,6 +908,11 @@
         private System.Windows.Forms.Button newqueststagetaskbutton;
         private System.Windows.Forms.Panel QuestStageTaskList;
         private System.Windows.Forms.ComboBox QuestStageTaskType;
+        private System.Windows.Forms.TabPage QuestDialoguePage;
+        private System.Windows.Forms.Panel QuestDialogueList;
+        private System.Windows.Forms.Button NewQuestDialogueButton;
+        private System.Windows.Forms.Panel questStageDialogueList;
+        private System.Windows.Forms.Button NewDialogueButton;
     }
 }
 

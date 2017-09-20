@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using ReIncarnation_Quest_Maker.Made_in_Abyss.QuestFormat;
-using ReIncarnation_Quest_Maker.Made_in_Abyss.Parser;
-using ReIncarnation_Quest_Maker.Made_in_Abyss.Utility;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
 using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker
@@ -20,7 +20,10 @@ namespace ReIncarnation_Quest_Maker
         public OrganizedControlList<QuestButton, Quest> QuestButtons;
         public OrganizedControlList<QuestStagePanel, QuestStage> QuestStagePanels;
         public OrganizedControlList<PrerequisitePanel, KVPair> PrerequisitePanels;
+        public OrganizedControlList<QuestDialoguePanel, QuestDialogue> QuestDialoguePanels;
         public OrganizedControlList<QuestTaskPanel, QuestTask> QuestTaskPanels;
+        public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageDialoguePanels;
+        //public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageParticlePanels;
         //public OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue> AffectedNPCsPanels;
         //public 
 
@@ -30,7 +33,9 @@ namespace ReIncarnation_Quest_Maker
             QuestButtons = OrganizedControlList<QuestButton, Quest>.GenerateOrganizedControlList(QuestList, QuestButton.Sort());
             QuestStagePanels = OrganizedControlList<QuestStagePanel, QuestStage>.GenerateOrganizedControlList(QuestStageList, QuestStagePanel.Sort());
             PrerequisitePanels = OrganizedControlList<PrerequisitePanel, KVPair>.GenerateOrganizedControlList(PrerequisiteList, PrerequisitePanel.Sort());
+            QuestDialoguePanels = OrganizedControlList<QuestDialoguePanel, QuestDialogue>.GenerateOrganizedControlList(QuestDialogueList, QuestDialoguePanel.Sort());
             QuestTaskPanels = OrganizedControlList<QuestTaskPanel, QuestTask>.GenerateOrganizedControlList(QuestStageTaskList, QuestTaskPanel.Sort());
+            QuestStageDialoguePanels = OrganizedControlList<QuestStageDialoguePanel, KVPair>.GenerateOrganizedControlList(questStageDialogueList, QuestStageDialoguePanel.Sort());
 
             //AffectedNPCsPanels = OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue>.GenerateOrganizedControlList(AffectedNPCsList, AffectedNPCsPanel.Sort());
 
@@ -45,8 +50,8 @@ namespace ReIncarnation_Quest_Maker
 
         public void LoadValues()
         {
-            QuestTypeIcon.UpdatePossibleValues(Interpreter.CurrentQuestList.ThisEditorExternal.PossibleTypeIcons);
-            QuestStageTaskType.UpdatePossibleValues(QuestTask.PossibleTaskTypes);
+            Interpreter.CurrentQuestList.ThisEditorExternal.PossibleTypeIcons.AddListener(obj => QuestTypeIcon.UpdatePossibleValues(obj));
+            QuestTask.PossibleTaskTypes.AddListener(obj => QuestStageTaskType.UpdatePossibleValues(obj));
             QuestStageTaskType.Text = "kill";
         }
 
@@ -66,6 +71,7 @@ namespace ReIncarnation_Quest_Maker
         {
             PrerequisitePanels.Refresh(Interpreter.SelectedQuest.prerequisites);
             QuestStagePanels.Refresh(Interpreter.SelectedQuest.stages);
+            QuestDialoguePanels.Refresh(Interpreter.SelectedQuest.injections);
             //
 
             UpdateStageData();
@@ -75,6 +81,7 @@ namespace ReIncarnation_Quest_Maker
         {
             QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.description;
             QuestTaskPanels.Refresh(Interpreter.SelectedQuestStage.tasks);
+            QuestStageDialoguePanels.Refresh(Interpreter.SelectedQuestStage.dialogue);
             //AffectedNPCsPanel.MassGenerate(Interpreter.SelectedQuestStage.affectedNPCs.ToArray(), AffectedNPCsPanels);
         }
 
@@ -113,6 +120,15 @@ namespace ReIncarnation_Quest_Maker
         public void OnNewQuestStageTask(QuestTask NewTask)
         {
             QuestTaskPanel.Generate(NewTask, QuestTaskPanels);
+        }
+
+        public void OnNewQuestDialogue(QuestDialogue NewDialogue)
+        {
+            QuestDialoguePanel.Generate(NewDialogue, QuestDialoguePanels);
+        }
+
+        public void OnNewQuestStageDialogue(KVPair NewStageDialogue) {
+            QuestStageDialoguePanel.Generate(NewStageDialogue, QuestStageDialoguePanels);
         }
 
         /*public void OnNewAffectedNPC(QuestInjectDialogue NewAffectedNPC)
@@ -266,14 +282,22 @@ namespace ReIncarnation_Quest_Maker
         {
             Interpreter.AddQuestStageTask(GetTextFromComboBox(QuestStageTaskType));
         }
+
+        private void NewQuestDialogueButton_Click(object sender, EventArgs e)
+        {
+            Interpreter.AddQuestDialogue();
+        }
+
+        private void NewStageDialogueButton_Click(object sender, EventArgs e)
+        {
+            Interpreter.AddQuestStageDialogue();
+        }
     }
 
     public class OrganizedControlList <T, U> where T : SortablePanel <T, U>, new() {
         public U ThisQuestVariable;
 
         public List<T> ThisList = new List<T>();
-
-        public List<U> RefreshList;
 
         public Panel BaseControl;
 
@@ -287,19 +311,34 @@ namespace ReIncarnation_Quest_Maker
             OrganizedControlList<T, U> ReturnValue = new OrganizedControlList<T, U> ();
             ReturnValue.OrderMetric = OrderMetric;
             ReturnValue.BaseControl = BaseControl;
+            ReturnValue.BaseControl.SizeChanged += ReturnValue.ResetAllItemSizes;
             return ReturnValue;
+        }
+
+        public void ResetAllItemSizes(object sender, EventArgs e) {
+            ThisList.ForEach(obj => obj.ResetSize(this));
         }
 
         public void Add(T Item) {
             ThisList.Add(Item);
-            BaseControl.Controls.Add(Item);
             PositionNewItem(Item);
+            BaseControl.Controls.Add(Item);
+            //RepositionItems();
         }
 
         public void Remove(T Item) {
             ThisList.Remove(Item);
             BaseControl.Controls.Remove(Item);
             SortControls();
+        }
+
+        public void RepositionItems () {
+
+            NextPos = 0;
+            ThisList.ForEach(obj =>
+            {
+                PositionNewItem(obj);
+            });
         }
 
         public void PositionNewItem (T Item)
@@ -310,11 +349,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void SortControls() {
             ThisList.Sort(OrderMetric);
-            NextPos = 0;
-            ThisList.ForEach(obj =>
-            {
-                PositionNewItem(obj);
-            });
+            RepositionItems();
         }
 
         public void Clear ()
@@ -336,12 +371,15 @@ namespace ReIncarnation_Quest_Maker
 
     public abstract class SortablePanel <T, U> : Panel where T : SortablePanel <T, U>, new()
     {
-        TableLayoutPanel ContentsTable;
+        DefaultTable ThisTable;
+        public Panel DownContentsPanel;
+
+        DefaultTable ContentsTable;
         public Panel ContentsPanel;
 
-        Button TrashButton;
-        Button UpButton;
-        Button DownButton;
+        DefaultImagebutton TrashButton;
+        DefaultImagebutton UpButton;
+        DefaultImagebutton DownButton;
         TableLayoutPanel UpDownButtonTable;
         public OrganizedControlList<T, U> ParentControlList;
 
@@ -352,6 +390,7 @@ namespace ReIncarnation_Quest_Maker
         public U ThisQuestVariable;
 
         public Func<U, OrganizedControlList<T, U>, T> GenerateFunction;
+        public Action FinishUpFunction;
 
         public static IComparer<T> Sort() {
             return new T().SortComparer();
@@ -402,57 +441,79 @@ namespace ReIncarnation_Quest_Maker
             //nothing in here. only use for sortcomparer
         }
 
-        public SortablePanel (OrganizedControlList<T, U> Parent) {
-
-            ContentsTable = new DefaultTable(3, 1);
-            ContentsPanel = new Panel();
-            TrashButton = new DefaultButton("T");
-            UpDownButtonTable = new DefaultTable(1, 2);
-            UpButton = new DefaultButton("^");
-            DownButton = new DefaultButton("V");
-
-            TabIndex = 5;
-
-            ParentControlList = Parent;
-
+        public void ResetSize(OrganizedControlList<T, U> Parent)
+        {
             int ExtraVerticalScrollSpace = 0;
             if (Parent.BaseControl.VerticalScroll.Visible)
             {
                 ExtraVerticalScrollSpace = SystemInformation.VerticalScrollBarWidth;
             }
-            MinimumSize = new System.Drawing.Size(Parent.BaseControl.Size.Width - 6 - ExtraVerticalScrollSpace, 50);
-            MaximumSize = new System.Drawing.Size(Parent.BaseControl.Size.Width - 6 - ExtraVerticalScrollSpace, Screen.PrimaryScreen.Bounds.Height);
+            MinimumSize = new System.Drawing.Size(Parent.BaseControl.Size.Width - 6 - ExtraVerticalScrollSpace, 0);
+            MaximumSize = new System.Drawing.Size(Parent.BaseControl.Size.Width - 6 - ExtraVerticalScrollSpace, int.MaxValue);
+            ThisTable.MaximumSize = MaximumSize;
+            ContentsTable.MaximumSize = MaximumSize;
+            DownContentsPanel.MaximumSize = MaximumSize;
+            ContentsPanel.MaximumSize = MaximumSize;
+        }
+
+        public void OnSizeChanged(object sender, EventArgs e) {
+            ParentControlList.RepositionItems();
+        }
+
+        public SortablePanel (OrganizedControlList<T, U> Parent) {
+
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            ThisTable = new DefaultTable(1, 2);
+            DownContentsPanel = new Panel();
+
+            ContentsTable = new DefaultTable(3, 1);
+            ContentsPanel = new Panel();
+            TrashButton = new DefaultImagebutton(Trash, new Bitmap(Properties.Resources.Trash));
+            UpDownButtonTable = new DefaultTable(1, 2);
+            UpButton = new DefaultImagebutton(MoveUp, new Bitmap(ReIncarnation_Quest_Maker.Properties.Resources.UpArrow));
+            DownButton = new DefaultImagebutton(MoveDown, new Bitmap(ReIncarnation_Quest_Maker.Properties.Resources.DownArrow));
+
+            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+
+            TabIndex = 5;
+
+            ParentControlList = Parent;
 
             BackColor = SystemColors.ControlDarkDark;
 
             ContentsPanel.AutoSize = true;
             ContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ContentsPanel.Dock = DockStyle.Fill;
             ContentsPanel.Margin = new Padding(0, 0, 0, 0);
 
-            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            ContentsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            ContentsPanel.Dock = DockStyle.Fill;
+
+            DownContentsPanel.AutoSize = true;
+            DownContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            DownContentsPanel.Dock = DockStyle.Fill;
+            DownContentsPanel.Margin = new Padding(0, 0, 0, 0);
+
             ContentsTable.Margin = new Padding(0, 0, 0, 0);
             ContentsTable.TabIndex = 5;
 
-            TrashButton.Click += Trash;
-
             UpDownButtonTable.Margin = new Padding(0, 0, 0, 0);
-
-            UpButton.Click += MoveUp;
-            DownButton.Click += MoveDown;
-
-            ContentsTable.Controls.Add(ContentsPanel, 1, 0);
-
-            ContentsTable.Controls.Add(TrashButton, 2, 0);
 
             UpDownButtonTable.Controls.Add(UpButton, 0, 0);
             UpDownButtonTable.Controls.Add(DownButton, 0, 1);
 
             ContentsTable.Controls.Add(UpDownButtonTable, 0, 0);
+            ContentsTable.Controls.Add(ContentsPanel, 1, 0);
+            ContentsTable.Controls.Add(TrashButton, 2, 0);
+            //ContentsTable.Dock = DockStyle.Fill;
 
-            Controls.Add(ContentsTable);
+            ThisTable.Controls.Add(ContentsTable, 0, 0);
+            ThisTable.Controls.Add(DownContentsPanel, 0, 1);
+            //ThisTable.Dock = DockStyle.Fill;
+
+            Controls.Add(ThisTable);
         }
 
         public static T[] MassGenerate(U[] Item, OrganizedControlList<T, U> Parent)
@@ -465,33 +526,53 @@ namespace ReIncarnation_Quest_Maker
             return ReturnValue.ToArray();
         }
 
-        public static T Generate(U Item, OrganizedControlList<T, U> Parent) {
+        public static T Generate(U Item, OrganizedControlList<T, U> Parent)
+        {
             T ReturnValue = new T().GenerateFunction(Item, Parent);
             ReturnValue.ThisQuestVariable = Item;
             ReturnValue.FinishUp();
             return ReturnValue;
         }
 
-        public void AddControl(Control Item) {
+        public void AddControl(Control Item, bool AddToDownContentsPanel = false)
+        {
+            if (AddToDownContentsPanel)
+            {
+                DownContentsPanel.Controls.Add(Item);
+                return;
+            }
             ContentsPanel.Controls.Add(Item);
+        }
+
+        public void RemoveControl(Control Item, bool RemoveFromDownContentsPanel = false)
+        {
+            if (RemoveFromDownContentsPanel)
+            {
+                DownContentsPanel.Controls.Remove(Item);
+                return;
+            }
+            ContentsPanel.Controls.Remove(Item);
         }
 
         public void FinishUp()
         {
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
             Dock = DockStyle.Fill;
             Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
-
             ListPosition = ParentControlList.ThisList.Count;
+
+            FinishUpFunction?.Invoke();
+
+            SizeChanged += OnSizeChanged;
+
             ParentControlList.Add((T)this);
+
+            ResetSize(ParentControlList);
         }
 
         public abstract IComparer<T> SortComparer();
 
-        public class SortableButton_IComparer : IComparer<T>
+        public class SortablePanel_IComparer : IComparer<T>
         {
             public int Compare(T a, T b) //Compare TA to TB kappa ta loses
             {
@@ -500,22 +581,76 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public abstract class ModifyQuestVariablePanel<T, U> : SortablePanel<T, U> where T : SortablePanel<T, U>, new()
+    public class ListPanel<T, U> : Panel where T : SortablePanel<T, U>, new()
     {
-        DefaultTable ThisTable;
+        public DefaultTable ThisTable;
+        public DefaultPanel ThisPanel;
+        public DefaultButton ThisButton;
+        public OrganizedControlList<T, U> ThisList;
 
-        public ModifyQuestVariablePanel() { }
+        public Func<U> NewDefaultItem;
 
-        public ModifyQuestVariablePanel(OrganizedControlList<T, U> Parent) : base(Parent)
+        public void OnClick(object sender, EventArgs e)
         {
-            ThisTable = new DefaultTable(2, 1);
-            AddControl(ThisTable);
+            SortablePanel<T, U>.Generate(NewDefaultItem(), ThisList);
+        }
+
+        public void ResetSize (object sender, EventArgs e)
+        {
+            Size NewMaxSize = new System.Drawing.Size(Parent.Size.Width - 6, int.MaxValue);
+            ThisTable.MaximumSize = NewMaxSize;
+            NewMaxSize.Width -= 6;
+            ThisPanel.MaximumSize = NewMaxSize;
+            ThisButton.MaximumSize = NewMaxSize;
+        }
+
+        public ListPanel(string ThisButtonText, Func<U> NewDefaultItem, IComparer<T> SortMetric)
+        {
+            ThisTable = new DefaultTable(1, 2);
+            ThisTable.Margin = new Padding(0, 0, 0, 0);
+            ThisTable.Padding = new Padding(0, 0, 0, 0);
+
+            this.NewDefaultItem = NewDefaultItem;
+            ThisPanel = new DefaultPanel();
+            ThisButton = new DefaultButton(OnClick, ThisButtonText);
+            ThisList = OrganizedControlList<T, U>.GenerateOrganizedControlList(ThisPanel, SortMetric);
+
+            //ThisPanel.AutoSize = true;
+
+            ThisPanel.Dock = DockStyle.Top;
+            ThisButton.Dock = System.Windows.Forms.DockStyle.Top;
+            ThisTable.Dock = DockStyle.Top;
+
+            ThisTable.Controls.Add(ThisButton, 0, 1);
+            ThisTable.Controls.Add(ThisPanel, 0, 0);
+            Controls.Add(ThisTable);
+
+            //ThisTable.Dock = DockStyle.Top;
+
+            //ThisPanel.AutoSize = true;
+            //ThisPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            Dock = DockStyle.Top;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            //Anchor = AnchorStyles.Left | AnchorStyles.Right;
+
+            SizeChanged += ResetSize;
+        }
+    }
+
+    public class ModifyQuestVariableTable : DefaultTable
+    {
+        public ModifyQuestVariableTable() : base(2, 1)
+        {
+            Dock = DockStyle.Fill;
         }
 
         public void AddItem(string VarString, Control VarControl, EventHandler OnValueChanged)
         {
-            ThisTable.Controls.Add(new DefaultLabel(VarString), 0, ThisTable.RowCount - 1);
-            ThisTable.Controls.Add(VarControl, 1, ThisTable.RowCount - 1);
+            Controls.Add(new DefaultLabel(VarString), 0, RowCount - 1);
+            Controls.Add(VarControl, 1, RowCount - 1);
 
             Type VarControlType = VarControl.GetType();
             if (VarControlType == typeof(DefaultTextBox))
@@ -523,7 +658,7 @@ namespace ReIncarnation_Quest_Maker
                 TextBox temp = VarControl as TextBox;
                 temp.TextChanged += OnValueChanged;
             }
-            else if (VarControlType == typeof(ComboBox))
+            else if (VarControlType == typeof(DefaultDropDown))
             {
 
                 ComboBox temp = VarControl as ComboBox;
@@ -535,8 +670,14 @@ namespace ReIncarnation_Quest_Maker
                 DefaultNumericUpDown temp = VarControl as DefaultNumericUpDown;
                 temp.ValueChanged += OnValueChanged;
             }
+            else if (VarControlType == typeof(DefaultCheckBox))
+            {
 
-            ThisTable.RowCount++;
+                DefaultCheckBox temp = VarControl as DefaultCheckBox;
+                temp.CheckedChanged += OnValueChanged;
+            }
+
+            RowCount++;
         }
     }
 
@@ -558,6 +699,7 @@ namespace ReIncarnation_Quest_Maker
             if (ParentControlList.ThisList.Count > 1) {
                 Interpreter.CurrentQuestList.Quests.Remove(ThisQuestVariable);
                 Interpreter.GetLargestQuestID();
+                Interpreter.SelectQuest(Interpreter.CurrentQuestList.Quests[0]);
                 return true;
             }
             return false;
@@ -630,8 +772,9 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class PrerequisitePanel : ModifyQuestVariablePanel<PrerequisitePanel, KVPair>
+    public class PrerequisitePanel : SortablePanel<PrerequisitePanel, KVPair>
     {
+        ModifyQuestVariableTable ThisTable;
 
         public void moveAddon (PrerequisitePanel other, int OtherPos)
         {
@@ -640,7 +783,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void UpdateType(object sender, EventArgs e)
         {
-            ThisQuestVariable.Key = MainForm.GetTextFromTextBox(sender);
+            ThisQuestVariable.Key = MainForm.GetTextFromComboBox(sender);
         }
         public void UpdateValue(object sender, EventArgs e)
         {
@@ -660,12 +803,14 @@ namespace ReIncarnation_Quest_Maker
         public static PrerequisitePanel Generate_2(KVPair Item, OrganizedControlList<PrerequisitePanel, KVPair> Parent)
         {
             PrerequisitePanel ReturnValue = new PrerequisitePanel(Parent);
+            ReturnValue.ThisTable = new ModifyQuestVariableTable();
+            ReturnValue.AddControl(ReturnValue.ThisTable);
 
             ReturnValue.Move_Addon = ReturnValue.moveAddon;
             ReturnValue.TrashFunction = ReturnValue.Trash;
 
-            ReturnValue.AddItem("Type: ", new DefaultTextBox(Item.Key), ReturnValue.UpdateType);
-            ReturnValue.AddItem("Value: ", new DefaultTextBox(Item.Value), ReturnValue.UpdateValue);
+            ReturnValue.ThisTable.AddItem("Type: ", new DefaultDropDown(Item.Key, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestPrerequisites), ReturnValue.UpdateType);
+            ReturnValue.ThisTable.AddItem("Value: ", new DefaultTextBox(Item.Value), ReturnValue.UpdateValue);
 
             return ReturnValue;
         }
@@ -696,6 +841,7 @@ namespace ReIncarnation_Quest_Maker
             if (ParentControlList.ThisList.Count > 1)
             {
                 ThisQuestVariable.Trash();
+                Interpreter.SelectQuestStage(Interpreter.SelectedQuest.stages[0]);
                 return true;
             }
             return false;
@@ -773,14 +919,17 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestTaskPanel : ModifyQuestVariablePanel<QuestTaskPanel, QuestTask>
+    public class QuestTaskPanel : SortablePanel<QuestTaskPanel, QuestTask>
     {
         public static Dictionary<Type, Type> TaskToPanel = new Dictionary<Type, Type>();
+        public ModifyQuestVariableTable ThisTable;
 
         public QuestTaskPanel() { GenerateFunction = Generate_2;}
 
         public QuestTaskPanel(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent)
         {
+            ThisTable = new ModifyQuestVariableTable();
+            AddControl(ThisTable);
             Move_Addon = moveAddon;
         }
 
@@ -790,6 +939,7 @@ namespace ReIncarnation_Quest_Maker
             TaskToPanel.Add(typeof(QuestTask_talkto), typeof(QuestTaskPanel_talkto));
             TaskToPanel.Add(typeof(QuestTask_kill), typeof(QuestTaskPanel_kill));
             TaskToPanel.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
+            TaskToPanel.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
         }
 
         public void moveAddon(QuestTaskPanel OtherObject, int OtherPosition) {
@@ -815,7 +965,7 @@ namespace ReIncarnation_Quest_Maker
 
         public override IComparer<QuestTaskPanel> SortComparer()
         {
-            return new SortableButton_IComparer();
+            return new SortablePanel_IComparer();
         }
     }
 
@@ -849,9 +999,9 @@ namespace ReIncarnation_Quest_Maker
 
             ReturnValue.ThisItem = Item;
 
-            ReturnValue.AddItem("Name", new DefaultTextBox(Item.name), ReturnValue.ModifyLocationName);
-            ReturnValue.AddItem("Location Name", new DefaultTextBox(Item.locationString), ReturnValue.ModifyLocationInternalName);
-            ReturnValue.AddItem("Radius", new DefaultNumericUpDown(Item.radius), ReturnValue.ModifyLocationRadius);
+            ReturnValue.ThisTable.AddItem("Name", new DefaultTextBox(Item.name), ReturnValue.ModifyLocationName);
+            ReturnValue.ThisTable.AddItem("Location Name", new DefaultTextBox(Item.locationString), ReturnValue.ModifyLocationInternalName);
+            ReturnValue.ThisTable.AddItem("Radius", new DefaultNumericUpDown(Item.radius), ReturnValue.ModifyLocationRadius);
 
             return ReturnValue;
         }
@@ -859,7 +1009,6 @@ namespace ReIncarnation_Quest_Maker
     public class QuestTaskPanel_talkto : QuestTaskPanel
     {
         public QuestTask_talkto ThisItem;
-
 
         public void ModifyTalkToDescription(object sender, EventArgs e)
         {
@@ -887,9 +1036,9 @@ namespace ReIncarnation_Quest_Maker
 
             ReturnValue.ThisItem = Item;
 
-            ReturnValue.AddItem("Description", new DefaultTextBox(Item.description), ReturnValue.ModifyTalkToDescription);
-            ReturnValue.AddItem("Listen String", new DefaultTextBox(Item.listenString), ReturnValue.ModifyTalkToListenString);
-            ReturnValue.AddItem("Completion String", new DefaultTextBox(Item.completionString), ReturnValue.ModifyTalkToCompletionString);
+            ReturnValue.ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ReturnValue.ModifyTalkToDescription);
+            ReturnValue.ThisTable.AddItem("Listen String", new DefaultTextBox(Item.listenString), ReturnValue.ModifyTalkToListenString);
+            ReturnValue.ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ReturnValue.ModifyTalkToCompletionString);
 
             return ReturnValue;
         }
@@ -915,12 +1064,13 @@ namespace ReIncarnation_Quest_Maker
         public static new QuestTaskPanel Generate_2(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
         {
             QuestTask_kill Item = (QuestTask_kill)Item_raw;
+
             QuestTaskPanel_kill ReturnValue = new QuestTaskPanel_kill(Parent);
 
             ReturnValue.ThisItem = Item;
 
-            ReturnValue.AddItem("Target Name", new DefaultTextBox(Item.ThisEditorExternal.TargetName), ReturnValue.ModifyKillTarget);
-            ReturnValue.AddItem("Number To Kill", new DefaultNumericUpDown(Item.amount), ReturnValue.ModifyKillAmount);
+            ReturnValue.ThisTable.AddItem("Target Name", new DefaultTextBox(Item.ThisEditorExternal.TargetName), ReturnValue.ModifyKillTarget);
+            ReturnValue.ThisTable.AddItem("Number To Kill", new DefaultNumericUpDown(Item.amount), ReturnValue.ModifyKillAmount);
 
             return ReturnValue;
         }
@@ -946,14 +1096,297 @@ namespace ReIncarnation_Quest_Maker
         public static new QuestTaskPanel Generate_2(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
         {
             QuestTask_gather Item = (QuestTask_gather)Item_raw;
+
             QuestTaskPanel_gather ReturnValue = new QuestTaskPanel_gather(Parent);
 
             ReturnValue.ThisItem = Item;
 
-            ReturnValue.AddItem("Item Name", new DefaultTextBox(Item.ThisEditorExternal.ItemName), ReturnValue.ModifyGatherObject);
-            ReturnValue.AddItem("Number To Gather", new DefaultNumericUpDown(Item.required), ReturnValue.ModifyGatherAmount);
+            ReturnValue.ThisTable.AddItem("Item Name", new DefaultTextBox(Item.ThisEditorExternal.ItemName), ReturnValue.ModifyGatherObject);
+            ReturnValue.ThisTable.AddItem("Number To Gather", new DefaultNumericUpDown(Item.required), ReturnValue.ModifyGatherAmount);
 
             return ReturnValue;
+        }
+    }
+    public class QuestTaskPanel_killType : QuestTaskPanel
+    {
+        public QuestTask_killType ThisItem;
+
+        public void ModifyKillTypeGroupName(object sender, EventArgs e)
+        {
+            ThisItem.ThisEditorExternal.EnemyGroupName = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void ModifyKillTypeCustomName(object sender, EventArgs e)
+        {
+            ThisItem.customName = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void ModifyKillTypeAmount(object sender, EventArgs e)
+        {
+            ThisItem.amount = (int)MainForm.GetNumberFromNumericUpDown(sender);
+        }
+
+        public QuestTaskPanel_killType() { GenerateFunction = Generate_2; }
+
+        public QuestTaskPanel_killType(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { }
+
+        public static new QuestTaskPanel Generate_2(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
+        {
+            QuestTask_killType Item = (QuestTask_killType)Item_raw;
+
+            QuestTaskPanel_killType ReturnValue = new QuestTaskPanel_killType(Parent);
+
+            ReturnValue.ThisItem = Item;
+
+            ReturnValue.ThisTable.AddItem("Custom Name", new DefaultTextBox(Item.customName), ReturnValue.ModifyKillTypeCustomName);
+            ReturnValue.ThisTable.AddItem("Enemy Type", new DefaultTextBox(Item.ThisEditorExternal.EnemyGroupName), ReturnValue.ModifyKillTypeGroupName);
+            ReturnValue.ThisTable.AddItem("Number To Kill", new DefaultNumericUpDown(Item.amount), ReturnValue.ModifyKillTypeAmount);
+
+            return ReturnValue;
+        }
+    }
+
+    public class QuestDialoguePanel : SortablePanel<QuestDialoguePanel, QuestDialogue> {
+        public DefaultTable ThisTable;
+        public DefaultTable NameTable;
+        public DefaultTextBox NameBox;
+
+        public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ThisOptionsList;
+
+        public bool Trash() {
+            Interpreter.SelectedQuest.injections.Remove(ThisQuestVariable);
+            return true;
+        }
+
+        public void ModifyDialogueName(object sender, EventArgs e) {
+            ThisQuestVariable.ThisEditorExternal.ChangeName (MainForm.GetTextFromTextBox(sender));
+        }
+
+        public QuestDialoguePanel() { GenerateFunction = Generate_2; }
+
+        public QuestDialoguePanel(OrganizedControlList<QuestDialoguePanel, QuestDialogue> Parent) : base(Parent) {
+            TrashFunction = Trash;
+            FinishUpFunction = FinishUpFunction_2;
+        }
+
+        public QuestDialogueOption NewQuestDialogueOption() {
+            return QuestDialogueOption.Generate(Interpreter.SelectedQuest, ThisQuestVariable.options);
+        }
+
+        public static QuestDialoguePanel Generate_2(QuestDialogue Item, OrganizedControlList<QuestDialoguePanel, QuestDialogue> Parent) {
+            QuestDialoguePanel ReturnValue = new QuestDialoguePanel(Parent);
+
+            ReturnValue.ThisTable = new DefaultTable(1, 2);
+            ReturnValue.NameBox = new DefaultTextBox(Item.ThisEditorExternal.DialogueName);
+            ReturnValue.ThisOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Dialogue Option", ReturnValue.NewQuestDialogueOption, QuestDialogueOptionsPanel.Sort()) ;
+
+            ReturnValue.ThisTable.Controls.Add(ReturnValue.NameBox, 0, 0);
+            ReturnValue.ThisTable.Controls.Add(ReturnValue.ThisOptionsList, 0, 1);
+
+            ReturnValue.AddControl(ReturnValue.ThisTable);
+            //ReturnValue.ThisTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
+            ReturnValue.NameBox.TextChanged += ReturnValue.ModifyDialogueName;
+
+            return ReturnValue;
+        }
+
+        public void FinishUpFunction_2()
+        {
+            ThisOptionsList.ThisList.Refresh(ThisQuestVariable.options);
+        }
+
+        public override IComparer<QuestDialoguePanel> SortComparer()
+        {
+            return new PanelComparer();
+        }
+
+        public class PanelComparer : IComparer<QuestDialoguePanel>
+        {
+            public int Compare(QuestDialoguePanel x, QuestDialoguePanel y)
+            {
+                return x.ThisQuestVariable.ThisEditorExternal.DialogueName.CompareTo(y.ThisQuestVariable.ThisEditorExternal.DialogueName);
+            }
+        }
+    }
+
+    public class QuestDialogueOptionsPanel : SortablePanel<QuestDialogueOptionsPanel, QuestDialogueOption>
+    {
+        public DefaultTable ThisTable;
+        public ModifyQuestVariableTable DialogueOptionsTable;
+        public ModifyQuestVariableTable DialogueResponseTable;
+
+        public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
+
+        DefaultTextBox ResponseTextBox;
+        DefaultTextBox ResponsePortraitBox;
+        DefaultTextBox PlaySoundBox;
+        
+        public QuestDialogueOption NewQuestDialogueOption()
+        {
+            return QuestDialogueOption.Generate(Interpreter.SelectedQuest, ThisQuestVariable.Response.options);
+        }
+
+        public QuestDialogueOptionsPanel() { GenerateFunction = Generate_2; }
+
+        public void OnSelectionTextChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.selectText = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void OnSelectionImageChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.selectImg = MainForm.GetTextFromComboBox(sender);
+        }
+
+        /*public void OnQuestMarkerChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.ThisOptionalFields.questMarker = MainForm.GetTextFromComboBox(sender);
+        }
+
+        public void OnSelectBackgroundChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.ThisOptionalFields.selectBackground = MainForm.GetTextFromComboBox(sender);
+        }*/
+
+        public void OnSendListenStringChanged(object sender, EventArgs e)
+        {
+
+            ThisQuestVariable.ThisOptionalFields.sendListenString = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void OnHasResponseChanged(object sender, EventArgs e)
+        {
+            bool State = MainForm.GetStateFromCheckBox(sender);
+            
+            if (State)
+            {
+                ThisQuestVariable.Response = new QuestDialogueResponse();
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 1);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 2);
+                return;
+            }
+
+            ThisQuestVariable.Response = null;
+            ThisTable.Controls.Remove(DialogueResponseTable);
+            ThisTable.Controls.Remove(ResponseOptionsList);
+        }
+
+        public void OnResponseTextChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Response.responseText = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void OnResponsePortraitChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Response.ThisOptionalFields.responsePortait = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void OnPlaySoundChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Response.ThisOptionalFields.playSound = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public QuestDialogueOptionsPanel(OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent) : base(Parent)
+        {
+            FinishUpFunction = FinishUp_2;
+
+            ThisTable = new DefaultTable(1, 3);
+
+            DialogueOptionsTable = new ModifyQuestVariableTable();
+            DialogueResponseTable = new ModifyQuestVariableTable();
+            ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, QuestDialogueOptionsPanel.Sort());
+
+            AddControl(ThisTable, true);
+            ThisTable.Controls.Add(DialogueOptionsTable, 0, 0);
+        }
+        public static QuestDialogueOptionsPanel Generate_2 (QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
+        {
+            QuestDialogueOptionsPanel ReturnValue = new QuestDialogueOptionsPanel(Parent);
+
+            ReturnValue.DialogueOptionsTable.AddItem("Selection Text", new DefaultTextBox(Item.selectText), ReturnValue.OnSelectionTextChanged);
+            ReturnValue.DialogueOptionsTable.AddItem("Selection Image", new DefaultDropDown(Item.selectImg, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestOptionSelectImage), ReturnValue.OnSelectionImageChanged);
+            //ReturnValue.DialogueOptionsTable.AddItem("Quest Marker", new DefaultDropDown(Item.ThisOptionalFields.questMarker, new List<string>()), ReturnValue.OnQuestMarkerChanged);
+            //ReturnValue.DialogueOptionsTable.AddItem("Select Background", new DefaultDropDown(Item.ThisOptionalFields.selectBackground, new List<string>()), ReturnValue.OnSelectBackgroundChanged);
+            ReturnValue.DialogueOptionsTable.AddItem("Sent Listen String", new DefaultTextBox(Item.ThisOptionalFields.sendListenString), ReturnValue.OnSendListenStringChanged);
+            ReturnValue.DialogueOptionsTable.AddItem("Has Response", new DefaultCheckBox(Item.Response != null), ReturnValue.OnHasResponseChanged);
+
+            ReturnValue.ResponseTextBox = new DefaultTextBox();
+            ReturnValue.ResponsePortraitBox = new DefaultTextBox();
+            ReturnValue.PlaySoundBox = new DefaultTextBox();
+
+            ReturnValue.DialogueResponseTable.AddItem("Response Text", ReturnValue.ResponseTextBox, ReturnValue.OnResponseTextChanged);
+            ReturnValue.DialogueResponseTable.AddItem("Response Portrait", ReturnValue.ResponsePortraitBox, ReturnValue.OnResponsePortraitChanged);
+            ReturnValue.DialogueResponseTable.AddItem("Sound Played", ReturnValue.PlaySoundBox, ReturnValue.OnPlaySoundChanged);
+
+            return ReturnValue;
+        }
+
+        public void FinishUp_2 ()
+        {
+            if (ThisQuestVariable.Response != null)
+            {
+                ResponseTextBox.Text = ThisQuestVariable.Response.responseText;
+                ResponsePortraitBox.Text = ThisQuestVariable.Response.ThisOptionalFields.responsePortait;
+                PlaySoundBox.Text = ThisQuestVariable.Response.ThisOptionalFields.playSound;
+
+                ResponseOptionsList.ThisList.Refresh(ThisQuestVariable.Response.options);
+
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 1);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 2);
+            }
+        }
+
+        public override IComparer<QuestDialogueOptionsPanel> SortComparer()
+        {
+            return new ThisSortComparer();
+        }
+
+        public class ThisSortComparer : IComparer<QuestDialogueOptionsPanel>
+        {
+            public int Compare(QuestDialogueOptionsPanel x, QuestDialogueOptionsPanel y)
+            {
+                return 0;
+            }
+        }
+    }
+
+    public class QuestStageDialoguePanel : SortablePanel<QuestStageDialoguePanel, KVPair>
+    {
+        ModifyQuestVariableTable ThisTable;
+
+        public QuestStageDialoguePanel()
+        {
+            GenerateFunction = Generate_2;
+        }
+
+        public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent)
+        {
+        }
+
+        public void ModifyNPCName(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Key = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void ModifyDialogue(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Value = MainForm.GetTextFromComboBox(sender);
+        }
+
+        public static QuestStageDialoguePanel Generate_2 (KVPair Item, OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) {
+            QuestStageDialoguePanel ReturnValue = new QuestStageDialoguePanel(Parent);
+            ReturnValue.ThisTable = new ModifyQuestVariableTable();
+            ReturnValue.ThisTable.AddItem("NPC: ", new DefaultTextBox(Item.Key), ReturnValue.ModifyNPCName);
+            ReturnValue.ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections, false), ReturnValue.ModifyDialogue);
+            //ReturnValue.ThisTable.AddItem("Text Box: ", new DefaultDropDown(Item.Key, , true), ReturnValue.ModifyNPCName);
+            ReturnValue.AddControl(ReturnValue.ThisTable);
+            return ReturnValue;
+        }
+
+        public override IComparer<QuestStageDialoguePanel> SortComparer()
+        {
+            return new SortablePanel_IComparer();
         }
     }
 
@@ -1001,6 +1434,38 @@ namespace ReIncarnation_Quest_Maker
         }
     }
     */
+    /*public class DefaultPanelButton : Button
+    {
+        public DefaultPanelButton(string Text, Action<object, EventArgs> OnClick)
+        {
+            this.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.Location = new System.Drawing.Point(3, 3);
+            this.Name = "newqueststagetaskbutton";
+            this.Size = new System.Drawing.Size(185, 32);
+            this.TabIndex = 11;
+            this.Text = "New Task";
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.Click += new System.EventHandler(OnClick);
+        }
+    }*/
+
+    public class DefaultCheckBox : CheckBox {
+        public DefaultCheckBox(bool Checked = false) {
+            this.Checked = Checked;
+        }
+    }
+
+    public class DefaultPanel : Panel {
+        public DefaultPanel()
+        {
+            BackColor = System.Drawing.SystemColors.ControlDark;
+
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Dock = System.Windows.Forms.DockStyle.Fill;
+        }
+    }
+
     public class DefaultLabel : Label
     {
 
@@ -1036,7 +1501,6 @@ namespace ReIncarnation_Quest_Maker
         public DefaultTextBox() : base() {
             Dock = System.Windows.Forms.DockStyle.Fill;
             Location = new System.Drawing.Point(3, 3);
-            Name = "PrerequisiteValueBox";
             Size = new System.Drawing.Size(94, 20);
         }
     }
@@ -1053,27 +1517,56 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class DefaultButton : Button {
-        public DefaultButton(string Text = "") {
+    public class DefaultImagebutton : PictureBox
+    {
 
-            this.Size = new System.Drawing.Size(25, 25);
-            this.Location = new System.Drawing.Point(0, 0);
+        public DefaultImagebutton(Action<object, EventArgs> OnClick, Image ThisImage)
+        {
+            this.Image = ThisImage;
+            Location = new System.Drawing.Point(0, 0);
+            Margin = new Padding(0, 0, 0, 0);
+            AutoSize = true;
+            Click += new System.EventHandler(OnClick);
+            Padding = new Padding(0, 0, 0, 0);
+        }
+    }
+
+    public class DefaultButton : Button
+    {
+        public DefaultButton(Action<object, EventArgs> OnClick, string Text = "")
+        {
             this.Text = Text;
-            this.UseVisualStyleBackColor = true;
-            this.Margin = new Padding(0, 0, 0, 0);
+            Location = new System.Drawing.Point(0, 0);
+            UseVisualStyleBackColor = true;
+            Margin = new Padding(0, 0, 0, 0);
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Click += new System.EventHandler(OnClick);
+            Padding = new Padding(0, 0, 0, 0);
         }
     }
 
     public class DefaultDropDown : ComboBox
-    {
-        public DefaultDropDown()
+    { 
+        public DefaultDropDown(string Text, UniqueList<string> Options, bool IsSearchBox = false)
         {
-            Dock = System.Windows.Forms.DockStyle.Fill;
-            DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            if (IsSearchBox) {
+                DropDown += (sender, e) => {
+                    LinqExtensions.UpdatePossibleValues(this, Options, true);
+                };
+                Options.AddListener(obj => LinqExtensions.UpdatePossibleValues(this, obj, true));
+            }
+            else
+            {
+                Options.AddListener(obj => LinqExtensions.UpdatePossibleValues(this, obj));
+                DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            }
             FormattingEnabled = true;
             Location = new System.Drawing.Point(130, 78);
-            Size = new System.Drawing.Size(260, 21);
-            TabIndex = 20;
+            Size = new System.Drawing.Size(10, 21);
+            Dock = System.Windows.Forms.DockStyle.Fill;
+
+            this.Text = Text;
         }
     }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ReIncarnation_Quest_Maker.Made_in_Abyss.QuestFormat;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
 
 namespace ReIncarnation_Quest_Maker.Obsidius
 {
@@ -31,7 +31,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             CurrentQuestList.ThisEditorExternal.LargestQuestID = 1;
 
             SelectedQuest.name = "New Quest";
-            SelectedQuest.full_name = "neq_quest_internal_name";
+            SelectedQuest.full_name = "new_quest_internal_name";
             SelectedQuest.description = "Quest Description";
             SelectedQuest.portrait = "questgiver_portrait";
             SelectedQuest.typeIcon = "story";
@@ -93,6 +93,12 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             //ThisForm.OnNewAffectedNPC(NewAffectedNpc);
         }
 
+        public static void AddQuestDialogue()
+        {
+            QuestDialogue NewDialogue = QuestDialogue.Generate(SelectedQuest);
+            ThisForm.OnNewQuestDialogue(NewDialogue);
+        }
+
         //others
 
         public static void AddQuestStageTask(string TaskType)
@@ -100,6 +106,13 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             QuestTask NewStage = QuestTask.Generate(TaskType, SelectedQuestStage);
 
             ThisForm.OnNewQuestStageTask(NewStage);
+        }
+
+        public static void AddQuestStageDialogue ()
+        {
+            KVPair NewStageDialogue = new KVPair();
+            SelectedQuestStage.dialogue.Add(NewStageDialogue);
+            ThisForm.OnNewQuestStageDialogue(NewStageDialogue);
         }
 
         public static void LoadNewQuestList(QuestList NewQuestList, string FilePath)
