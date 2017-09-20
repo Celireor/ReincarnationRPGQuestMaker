@@ -179,13 +179,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class UniqueList<T> : List<T>
     {
-        public Func<T, T, bool> Predicate;
         public List<Action<UniqueList<T>>> Listeners = new List<Action<UniqueList<T>>>();
-
-        public UniqueList(Func<T, T, bool> Predicate)
-        {
-            this.Predicate = Predicate;
-        }
 
         public new void Remove(T Item)
         {

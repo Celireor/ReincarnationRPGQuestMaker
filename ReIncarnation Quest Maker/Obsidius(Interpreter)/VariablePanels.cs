@@ -359,7 +359,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void ModifyTalkToListenString(object sender, EventArgs e)
         {
-            ThisItem.listenString = MainForm.GetTextFromTextBox(sender);
+            ThisItem.listenString = MainForm.GetTextFromComboBox(sender);
         }
 
         public void ModifyTalkToCompletionString(object sender, EventArgs e)
@@ -379,7 +379,7 @@ namespace ReIncarnation_Quest_Maker
             ReturnValue.ThisItem = Item;
 
             ReturnValue.ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ReturnValue.ModifyTalkToDescription);
-            ReturnValue.ThisTable.AddItem("Listen String", new DefaultTextBox(Item.listenString), ReturnValue.ModifyTalkToListenString);
+            ReturnValue.ThisTable.AddItem("Listen String", new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings), ReturnValue.ModifyTalkToListenString);
             ReturnValue.ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ReturnValue.ModifyTalkToCompletionString);
 
             return ReturnValue;
@@ -600,7 +600,7 @@ namespace ReIncarnation_Quest_Maker
         public void OnSendListenStringChanged(object sender, EventArgs e)
         {
 
-            ThisQuestVariable.ThisOptionalFields.sendListenString = MainForm.GetTextFromTextBox(sender);
+            ThisQuestVariable.ThisOptionalFields.ChangeListenString(MainForm.GetTextFromTextBox(sender));
         }
 
         public void OnHasResponseChanged(object sender, EventArgs e)

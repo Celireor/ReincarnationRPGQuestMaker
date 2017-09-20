@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
+using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
@@ -43,10 +44,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public string FilePath;
             public int LargestQuestID;
-            public UniqueList<string> PossibleTypeIcons = new UniqueList<string>((a, b) => a == b);
-            public UniqueList<string> PossibleQuestPrerequisites = new UniqueList<string>((a, b) => a == b);
-            public UniqueList<string> PossibleQuestOptionSelectImage = new UniqueList<string>((a, b) => a == b);
+            public UniqueList<string> PossibleTypeIcons = new UniqueList<string>();
+            public UniqueList<string> PossibleQuestPrerequisites = new UniqueList<string>();
+            public UniqueList<string> PossibleQuestOptionSelectImage = new UniqueList<string>();
 
+
+            public UniqueList<string> PossibleListenStrings = new UniqueList<string>();
 
 
             public QuestList_EditorExternal()
@@ -189,7 +192,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public class Quest_EditorExternal : QuestVariableEditorExternal
         {
-            public UniqueList<String> PossibleDialogueInjections = new UniqueList<string>((a, b) => (a == b));
+            public UniqueList<String> PossibleDialogueInjections = new UniqueList<string>();
         }
     }
 
@@ -452,7 +455,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public string DialogueName = "";
             public Quest ThisQuest;
             bool IsAdded = false;
-            public void ChangeName(string NewName) {
+            public void ChangeName(string NewName)
+            {
                 ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Remove(DialogueName);
                 DialogueName = NewName;
                 ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Add(DialogueName);
@@ -509,6 +513,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public static QuestDialogueOption Generate(Quest Parent, List<QuestDialogueOption> ParentList) {
             QuestDialogueOption ReturnValue = new QuestDialogueOption();
             ReturnValue.ThisEditorExternal.Parent = Parent;
+            ReturnValue.ThisOptionalFields.ThisEditorExternal.Parent = Parent;
+            Parent.ThisEditorExternal.OnUpdateList.Add(ReturnValue.ThisOptionalFields.ChangeID);
             ParentList.Add(ReturnValue);
             return ReturnValue;
         }
@@ -552,6 +558,28 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             //public string questMarker = "";
             //public string selectBackground = "";
             public string sendListenString = "";
+
+            public QuestDialogueOption_OptionalFields_EditorExternal ThisEditorExternal = new QuestDialogueOption_OptionalFields_EditorExternal();
+
+            public void ChangeListenString(string sendListenString)
+            {
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                this.sendListenString = sendListenString;
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+            }
+
+            public void ChangeID() {
+
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
+            }
+
+            public class QuestDialogueOption_OptionalFields_EditorExternal : QuestVariableEditorExternal
+            {
+                public Quest Parent;
+                public int LastID;
+            }
         }
     }
 
