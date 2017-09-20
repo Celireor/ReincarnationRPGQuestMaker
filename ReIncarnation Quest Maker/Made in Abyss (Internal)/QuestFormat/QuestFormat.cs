@@ -1,6 +1,7 @@
 ﻿using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
 
@@ -183,13 +184,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             this.Predicate = Predicate;
         }
 
-        public void Remove(T Item) {
+        public new void Remove(T Item) {
             base.Remove(Item);
             Listeners.ForEach(obj => obj(this));
 
         }
 
-        public void Add(T Item)
+        public new void Add(T Item)
         {
             base.Add(Item);
             Listeners.ForEach(obj => obj(this));
@@ -240,6 +241,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public UniqueList<string> PossibleTypeIcons = new UniqueList<string>((a, b) => a == b);
             public UniqueList<string> PossibleQuestPrerequisites = new UniqueList<string>((a, b) => a == b);
             public UniqueList<string> PossibleQuestOptionSelectImage = new UniqueList<string>((a, b) => a == b);
+
+
 
             public QuestList_EditorExternal()
             {
@@ -294,15 +297,24 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             /* Contents of Quest */
             string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
 
-            //string injectionsString = QuestDialogue.co
+            /* Contents of Affected NPCs */
+
+            List<string> AffectedNPCNames = new List<string>();
+            string StagesString = QuestStage.ConvertToText_Full(stages, AffectedNPCNames, TabCount + 1);
+            string AffectedNPCString = "";
+            int x = 0;
+            AffectedNPCNames.Distinct().ToList().ForEach(obj =>
+            {
+                x++;
+                AffectedNPCString += new string('\t', TabCount + 2) + "\"" + x.ToString() + "\"\t\"" + obj + "\"" + Environment.NewLine;
+            });
+            StringToEncapsulate += PrintEncapsulation(AffectedNPCString, TabCount + 1, "affectedNpcs", true);
 
             /* Contents of Prerequisites */
             StringToEncapsulate += PrintListVariables(prerequisites, "prerequisites", TabCount + 1);
 
-
-            string affectedNPCsString;
             /* Contents of Stages */
-            StringToEncapsulate += QuestStage.ConvertToText_Full(stages, out affectedNPCsString, TabCount + 1);
+            StringToEncapsulate += StagesString;
 
             /* Contents of injections */
             string injectionsString = "";
@@ -437,6 +449,32 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                             });
                         }
                         break;
+                    case "Inject":
+                        {
+                            IterationKV.FolderValue.Items.ForEach(obj =>
+                            {
+                                switch (obj.Key)
+                                {
+                                    case "dialogue":
+                                        {
+                                            IterationKV.FolderValue.Items.ForEach(obj2 =>
+                                            {
+                                                ReturnValue.dialogue.Add(GenerateFromKeyValue<KVPair>(obj2));
+                                            });
+                                        }
+                                        break;
+                                    case "particle":
+                                        {
+                                            IterationKV.FolderValue.Items.ForEach(obj2 =>
+                                            {
+
+                                            });
+                                        }
+                                        break;
+                                }
+                            });
+                        }
+                        break;
                 }
             });
             return ReturnValue;
@@ -489,6 +527,17 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string stringtoencapsulate = ConvertToText_Iterate(TabCount + 1);
 
+            string InjectionsString = "";
+            if (dialogue.Count > 0) {
+                string DialogueString = "";
+                dialogue.ForEach(obj => DialogueString += obj.ConvertToText(TabCount + 3));
+                InjectionsString += PrintEncapsulation(DialogueString, TabCount + 2, "dialogue", true);
+            }
+
+            if (InjectionsString != "") {
+                stringtoencapsulate += PrintEncapsulation(InjectionsString, TabCount + 1, "inject", true);
+            }
+
             if (tasks.Count > 0)
             {
                 string TaskString = "";
@@ -508,37 +557,29 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                     KillTypeTaskList.Add(obj);
                 });
 
-                TaskString += GatherTaskList.Print(TabCount);
-                TaskString += LocationTasksList.Print(TabCount);
-                TaskString += TalkToTaskList.Print(TabCount);
-                TaskString += KillTypeTaskList.Print(TabCount);
-                TaskString += KillTaskList.Print(TabCount);
+                TaskString += GatherTaskList.Print(TabCount + 1);
+                TaskString += LocationTasksList.Print(TabCount + 1);
+                TaskString += TalkToTaskList.Print(TabCount + 1);
+                TaskString += KillTypeTaskList.Print(TabCount + 1);
+                TaskString += KillTaskList.Print(TabCount + 1);
 
-                stringtoencapsulate += PrintEncapsulation(TaskString, TabCount, "tasks", true);
+                stringtoencapsulate += PrintEncapsulation(TaskString, TabCount + 1, "tasks", true);
             }
 
             return PrintEncapsulation(stringtoencapsulate, TabCount, Convert.ToString(ThisEditorExternal.StageNum), true);
         }
 
-        public static string ConvertToText_Full(List<QuestStage> Group, out string affectedNPCsString, int TabCount = 0)
+        public static string ConvertToText_Full(List<QuestStage> Group, List<string>AffectedNPCNames, int TabCount = 0)
         {
             string ReturnValue = "";
 
-            string affectedNPCsString_ReturnValue = "";
-
             Group.ForEach(obj =>
             {
-                /*obj.affectedNPCs.ForEach(obj2 => {
-                    affectedNPCsString_ReturnValue += obj2.ConvertToText(TabCount + 1);
-                });*/
-
+                obj.dialogue.ForEach(obj2 => AffectedNPCNames.Add(obj2.Key));
                 ReturnValue += obj.ConvertToText(TabCount + 1);
             });
 
-            affectedNPCsString = PrintEncapsulation(affectedNPCsString_ReturnValue, TabCount, "affectedNpcs", true);
-
             return PrintEncapsulation(ReturnValue, TabCount, "stages", true);
-            //AffectedNPCsText = PrintEncapsulation(AffectedNPCsText_ReturnValue, TabCount, "affectedNPCs", true);
         }
 
         public static QuestStage Insert(int StageNum, Quest Parent)

@@ -147,7 +147,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public new string ConvertToText(int TabCount)
         {
-            return PrintEncapsulation(base.ConvertToText(TabCount + 1), TabCount, ThisEditorExternal.TargetName, true);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.TargetName, true);
         }
 
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
@@ -175,7 +175,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public new string ConvertToText(int TabCount)
         {
-            return PrintEncapsulation(base.ConvertToText(TabCount + 1), TabCount, ThisEditorExternal.ItemName, true);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.ItemName, true);
         }
 
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
@@ -204,7 +204,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public new string ConvertToText(int TabCount)
         {
-            return PrintEncapsulation(base.ConvertToText(TabCount + 1), TabCount, ThisEditorExternal.EnemyGroupName, true);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.EnemyGroupName, true);
         }
 
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
