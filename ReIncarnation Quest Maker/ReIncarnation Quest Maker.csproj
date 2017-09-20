@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Made in Abyss %28Internal%29\Parser\QuestFormatParser.cs" />
+    <Compile Include="Made in Abyss %28Internal%29\QuestFormat\Base.cs" />
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestTasks.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\LinqExtensions.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\UtilityFunctions.cs" />
