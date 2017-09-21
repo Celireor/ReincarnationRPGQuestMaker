@@ -208,7 +208,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
                 CurrentQuestList.ThisEditorExternal.LargestQuestID = NewValue;
             }
             int OldID = SelectedQuest.questID;
-            SelectedQuest.questID = NewValue;
+            SelectedQuest.SetQuestID (NewValue);
             if (OldID == CurrentQuestList.ThisEditorExternal.LargestQuestID) {
                 GetLargestQuestID();
             }

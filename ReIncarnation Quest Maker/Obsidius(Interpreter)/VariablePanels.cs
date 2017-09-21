@@ -24,7 +24,9 @@ namespace ReIncarnation_Quest_Maker
 
         public void moveAddon(QuestButton Other, int OtherPos)
         {
-            UtilityFunctions.Swap2Variables(ref ThisQuestVariable.questID, ref Other.ThisQuestVariable.questID);
+            int temp = ThisQuestVariable.questID;
+            ThisQuestVariable.SetQuestID(Other.ThisQuestVariable.questID);
+            Other.ThisQuestVariable.SetQuestID(temp);
             UpdateValues();
             Other.UpdateValues();
             Interpreter.ThisForm.UpdateScreen();
@@ -95,17 +97,7 @@ namespace ReIncarnation_Quest_Maker
         {
             public int Compare(QuestButton a, QuestButton b)
             {
-                QuestButton a_quest = (QuestButton)a;
-                QuestButton b_quest = (QuestButton)b;
-                if (a_quest.ThisQuestVariable.questID > b_quest.ThisQuestVariable.questID)
-                {
-                    return 1;
-                }
-                if (a_quest.ThisQuestVariable.questID < b_quest.ThisQuestVariable.questID)
-                {
-                    return -1;
-                }
-                return 0;
+                return a.ThisQuestVariable.questID.CompareTo(b.ThisQuestVariable.questID);
             }
         }
     }
@@ -379,7 +371,7 @@ namespace ReIncarnation_Quest_Maker
             ReturnValue.ThisItem = Item;
 
             ReturnValue.ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ReturnValue.ModifyTalkToDescription);
-            ReturnValue.ThisTable.AddItem("Listen String", new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings), ReturnValue.ModifyTalkToListenString);
+            ReturnValue.ThisTable.AddItem("Listen String", new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings, true), ReturnValue.ModifyTalkToListenString);
             ReturnValue.ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ReturnValue.ModifyTalkToCompletionString);
 
             return ReturnValue;

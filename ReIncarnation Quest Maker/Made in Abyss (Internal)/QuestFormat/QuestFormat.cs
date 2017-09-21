@@ -88,10 +88,16 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public Quest_EditorExternal ThisEditorExternal = new Quest_EditorExternal();
 
+        public void SetQuestID(int NewValue) {
+
+            questID = NewValue;
+            ThisEditorExternal.OnUpdate();
+        }
+
         public static Quest GenerateDefaultQuest(int questID)
         {
             Quest ReturnValue = new Quest();
-            ReturnValue.questID = questID;
+            ReturnValue.SetQuestID(questID);
             ReturnValue.typeIcon = "story";
             QuestStage.Generate(0, ReturnValue);
 
@@ -514,6 +520,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             QuestDialogueOption ReturnValue = new QuestDialogueOption();
             ReturnValue.ThisEditorExternal.Parent = Parent;
             ReturnValue.ThisOptionalFields.ThisEditorExternal.Parent = Parent;
+            ReturnValue.ThisOptionalFields.ThisEditorExternal.LastID = Parent.questID;
             Parent.ThisEditorExternal.OnUpdateList.Add(ReturnValue.ThisOptionalFields.ChangeID);
             ParentList.Add(ReturnValue);
             return ReturnValue;

@@ -8,7 +8,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
 {
     public static class UtilityFunctions
     {
-        public static void Swap2Variables<T>(ref T first, ref T second) {
+        public static void Swap2Variables<T>(ref T first, ref T second)
+        {
+            T temp = first;
+            first = second;
+            second = temp;
+        }
+        public static void Swap2Variables<T>(T first, T second)
+        {
             T temp = first;
             first = second;
             second = temp;

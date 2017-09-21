@@ -226,7 +226,7 @@ namespace ReIncarnation_Quest_Maker
 
         private void UpdateIDButton_Click(object sender, EventArgs e)
         {
-            Interpreter.UpdateSelectedQuestID((int) GetNumberFromNumericUpDown(sender));
+            Interpreter.UpdateSelectedQuestID((int) GetNumberFromNumericUpDown(QuestID));
             QuestButtons.SortControls();
         }
 

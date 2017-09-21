@@ -412,6 +412,7 @@
             this.UpdateIDButton.TabIndex = 0;
             this.UpdateIDButton.Text = "Update ID";
             this.UpdateIDButton.UseVisualStyleBackColor = true;
+            this.UpdateIDButton.Click += new System.EventHandler(this.UpdateIDButton_Click);
             // 
             // QuestName
             // 
