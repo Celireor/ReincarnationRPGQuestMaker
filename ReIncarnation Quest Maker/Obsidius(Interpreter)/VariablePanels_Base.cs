@@ -405,6 +405,7 @@ namespace ReIncarnation_Quest_Maker
 
                 NumericUpDown temp = VarControl as NumericUpDown;
                 temp.ValueChanged += OnValueChanged;
+                temp.KeyUp += new KeyEventHandler((obj, e) => OnValueChanged(obj, null));
             }
             else if (typeof(CheckBox).IsAssignableFrom(VarControlType))
             {

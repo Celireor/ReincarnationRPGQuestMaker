@@ -556,6 +556,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 ReturnValue += new string('\t', TabCount) + "\"" + "listeningQuest" + "\"\t\"" + ThisEditorExternal.listeningQuest + "\"" + Environment.NewLine; ;
             }*/
 
+            if (ThisOptionalFields.ThisEditorExternal.GivesQuest) {
+                ReturnValue += PrintKeyValue("giveQuest", ThisOptionalFields.ThisEditorExternal.giveQuest.ToString(), TabCount);
+            }
+
             if (Response != null) {
                 ReturnValue += PrintEncapsulation(Response.ConvertToText(TabCount + 1), TabCount, "goto", true);
             }
@@ -583,9 +587,20 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             QuestDialogueOption ReturnValue = Generate(Parent, ParentList);
 
             ReturnValue.GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, objType) => {
-                if (obj.Key == "goto")
+                switch (obj.Key)
                 {
-                    ReturnValue.Response = QuestDialogueResponse.KVGenerate(obj, Parent, ReturnValue);
+                    case "goto":
+                        {
+
+                            ReturnValue.Response = QuestDialogueResponse.KVGenerate(obj, Parent, ReturnValue);
+                        }
+                        break;
+                    case "giveQuest":
+                        {
+                            ReturnValue.ThisOptionalFields.ThisEditorExternal.giveQuest = Convert.ToInt32(obj.Value);
+                            ReturnValue.ThisOptionalFields.ThisEditorExternal.GivesQuest = true;
+                        }
+                        break;
                 }
                 /*if (obj.Key == "listeningQuest")
                 {
@@ -648,6 +663,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 public Quest Parent;
                 public int LastID;
+                public int giveQuest;
+                public bool GivesQuest;
             }
         }
     }

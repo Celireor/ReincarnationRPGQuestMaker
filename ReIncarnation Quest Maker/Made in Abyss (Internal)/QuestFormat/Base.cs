@@ -51,7 +51,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                     }
                     if (ConvertEmptyFields || Value != "")
                     {
-                        ReturnValue += new string('\t', TabCount) + "\"" + AllFields[x].Name + "\"\t\"" + Value + "\"" + Environment.NewLine;
+                        ReturnValue += QuestVariable.PrintKeyValue(AllFields[x].Name, Value, TabCount);
                     }
                 }
             }
@@ -115,6 +115,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
             return "";
         }
+        public static string PrintKeyValue(string Key, string Value, int TabCount = 0)
+        {
+
+            string ReturnValue = new string('\t', TabCount) + "\"" + Key + "\"\t\"" + Value + "\"" + Environment.NewLine;
+            return ReturnValue;
+        }
     }
 
     public class QuestVariableOptionalFields
@@ -173,7 +179,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public override string ConvertToText(int TabCount = 0)
         {
-            return new string('\t', TabCount) + "\"" + Key + "\"\t\"" + Value + "\"" + Environment.NewLine;
+            return PrintKeyValue(Key, Value, TabCount);
         }
     }
 

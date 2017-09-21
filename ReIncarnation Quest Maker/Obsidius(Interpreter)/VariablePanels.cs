@@ -594,6 +594,17 @@ namespace ReIncarnation_Quest_Maker
             ThisQuestVariable.ThisOptionalFields.ChangeListenString(MainForm.GetTextFromTextBox(sender));
         }
 
+        public void OnGivesQuestChanged(object sender, EventArgs e)
+        {
+
+            ThisQuestVariable.ThisOptionalFields.ThisEditorExternal.GivesQuest = MainForm.GetStateFromCheckBox(sender);
+        }
+
+        public void OnQuestGivenChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.ThisOptionalFields.ThisEditorExternal.giveQuest = (int)MainForm.GetNumberFromNumericUpDown(sender);
+        }
+
         public void OnHasResponseChanged(object sender, EventArgs e)
         {
             bool State = MainForm.GetStateFromCheckBox(sender);
@@ -650,6 +661,8 @@ namespace ReIncarnation_Quest_Maker
             ReturnValue.DialogueOptionsTable.AddItem("Selection Image", new DefaultDropDown(Item.selectImg, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestOptionSelectImage), ReturnValue.OnSelectionImageChanged);
             //ReturnValue.DialogueOptionsTable.AddItem("Quest Marker", new DefaultDropDown(Item.ThisOptionalFields.questMarker, new List<string>()), ReturnValue.OnQuestMarkerChanged);
             //ReturnValue.DialogueOptionsTable.AddItem("Select Background", new DefaultDropDown(Item.ThisOptionalFields.selectBackground, new List<string>()), ReturnValue.OnSelectBackgroundChanged);
+            ReturnValue.DialogueOptionsTable.AddItem("Gives Quest", new DefaultCheckBox(Item.ThisOptionalFields.ThisEditorExternal.GivesQuest), ReturnValue.OnGivesQuestChanged);
+            ReturnValue.DialogueOptionsTable.AddItem("Quest Given", new DefaultNumericUpDown(Item.ThisOptionalFields.ThisEditorExternal.giveQuest), ReturnValue.OnQuestGivenChanged);
             ReturnValue.DialogueOptionsTable.AddItem("Sent Listen String", new DefaultTextBox(Item.ThisOptionalFields.sendListenString), ReturnValue.OnSendListenStringChanged);
             ReturnValue.DialogueOptionsTable.AddItem("Has Response", new DefaultCheckBox(Item.Response != null), ReturnValue.OnHasResponseChanged);
 
