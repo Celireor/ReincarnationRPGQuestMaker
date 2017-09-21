@@ -54,6 +54,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public QuestList_EditorExternal()
             {
+
                 PossibleTypeIcons.Add("story");
                 PossibleTypeIcons.Add("class");
                 PossibleTypeIcons.Add("repeatable");
@@ -263,7 +264,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                             });
                         }
                         break;
-                    case "Inject":
+                    case "inject":
                         {
                             IterationKV.FolderValue.Items.ForEach(obj =>
                             {
@@ -271,7 +272,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                 {
                                     case "dialogue":
                                         {
-                                            IterationKV.FolderValue.Items.ForEach(obj2 =>
+                                            obj.FolderValue.Items.ForEach(obj2 =>
                                             {
                                                 ReturnValue.dialogue.Add(GenerateFromKeyValue<KVPair>(obj2));
                                             });
@@ -279,7 +280,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         break;
                                     case "particle":
                                         {
-                                            IterationKV.FolderValue.Items.ForEach(obj2 =>
+                                            obj.FolderValue.Items.ForEach(obj2 =>
                                             {
 
                                             });
@@ -581,7 +582,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             });
             if (ReturnValue.ThisOptionalFields.sendListenString != "") {
                 int NumberToRemove = ReturnValue.ThisEditorExternal.Parent.questID.ToString().Length + 1;
-                ReturnValue.ThisOptionalFields.sendListenString.Remove(0, NumberToRemove);
+                ReturnValue.ThisOptionalFields.ChangeListenString(ReturnValue.ThisOptionalFields.sendListenString.Remove(0, NumberToRemove));
             }
 
             return ReturnValue;
@@ -611,16 +612,24 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public void ChangeListenString(string sendListenString)
             {
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                if (this.sendListenString != "")
+                {
+                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                }
                 this.sendListenString = sendListenString;
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                if (this.sendListenString != "")
+                {
+                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                }
             }
 
             public void ChangeID() {
-
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
-                ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
+                if (this.sendListenString != "")
+                {
+                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
+                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                    ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
+                }
             }
 
             public class QuestDialogueOption_OptionalFields_EditorExternal : QuestVariableEditorExternal
