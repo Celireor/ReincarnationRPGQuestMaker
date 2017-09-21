@@ -452,7 +452,7 @@ namespace ReIncarnation_Quest_Maker
 
     public class DefaultDropDown : ComboBox
     { 
-        public DefaultDropDown(string Text, UniqueList<string> Options, bool IsSearchBox = false)
+        public DefaultDropDown(string Text, ListeningList<string> Options, bool IsSearchBox = false)
         {
             if (IsSearchBox) {
                 DropDown += (sender, e) => {

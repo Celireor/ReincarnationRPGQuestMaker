@@ -177,9 +177,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         }
     }
 
-    public class UniqueList<T> : List<T>
+    public class ListeningList<T> : List<T>
     {
-        public List<Action<UniqueList<T>>> Listeners = new List<Action<UniqueList<T>>>();
+        public List<Action<ListeningList<T>>> Listeners = new List<Action<ListeningList<T>>>();
 
         public new void Remove(T Item)
         {
@@ -194,7 +194,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             Listeners.ForEach(obj => obj(this));
         }
 
-        public void AddListener(Action<UniqueList<T>> Listener)
+        public void AddListener(Action<ListeningList<T>> Listener)
         {
             Listener(this);
             Listeners.Add(Listener);

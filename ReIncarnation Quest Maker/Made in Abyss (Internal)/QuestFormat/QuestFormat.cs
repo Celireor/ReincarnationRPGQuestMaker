@@ -44,12 +44,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public string FilePath;
             public int LargestQuestID;
-            public UniqueList<string> PossibleTypeIcons = new UniqueList<string>();
-            public UniqueList<string> PossibleQuestPrerequisites = new UniqueList<string>();
-            public UniqueList<string> PossibleQuestOptionSelectImage = new UniqueList<string>();
+            public ListeningList<string> PossibleTypeIcons = new ListeningList<string>();
+            public ListeningList<string> PossibleQuestPrerequisites = new ListeningList<string>();
+            public ListeningList<string> PossibleQuestOptionSelectImage = new ListeningList<string>();
 
 
-            public UniqueList<string> PossibleListenStrings = new UniqueList<string>();
+            public ListeningList<string> PossibleListenStrings = new ListeningList<string>();
 
 
             public QuestList_EditorExternal()
@@ -199,7 +199,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public class Quest_EditorExternal : QuestVariableEditorExternal
         {
-            public UniqueList<String> PossibleDialogueInjections = new UniqueList<string>();
+            public ListeningList<String> PossibleDialogueInjections = new ListeningList<string>();
         }
     }
 
@@ -416,7 +416,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestDialogue : QuestVariable
     {
-        public UniqueList<QuestDialogueOption> options = new UniqueList<QuestDialogueOption>();
+        public ListeningList<QuestDialogueOption> options = new ListeningList<QuestDialogueOption>();
 
         public QuestDialogue_EditorExternal ThisEditorExternal = new QuestDialogue_EditorExternal();
 
@@ -482,7 +482,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 }
             }
 
-            public void EnableName(UniqueList<QuestDialogueOption> ThisList)
+            public void EnableName(ListeningList<QuestDialogueOption> ThisList)
             {
 
                 if (!IsEmpty && ThisList.Count == 0)
@@ -556,7 +556,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        public static QuestDialogueOption Generate(Quest Parent, UniqueList<QuestDialogueOption> ParentList) {
+        public static QuestDialogueOption Generate(Quest Parent, ListeningList<QuestDialogueOption> ParentList) {
             QuestDialogueOption ReturnValue = new QuestDialogueOption();
             ReturnValue.ThisEditorExternal.Parent = Parent;
             ReturnValue.ThisEditorExternal.ParentList = ParentList;
@@ -567,13 +567,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        public static QuestDialogueOption KVGenerate(KVPair ThisKV, Quest Parent, UniqueList<QuestDialogueOption> ParentList) {
+        public static QuestDialogueOption KVGenerate(KVPair ThisKV, Quest Parent, ListeningList<QuestDialogueOption> ParentList) {
             QuestDialogueOption ReturnValue = Generate(Parent, ParentList);
 
             ReturnValue.GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, objType) => {
                 if (obj.Key == "goto")
                 {
-                    ReturnValue.Response = QuestDialogueResponse.KVGenerate(obj, Parent);
+                    ReturnValue.Response = QuestDialogueResponse.KVGenerate(obj, Parent, ReturnValue);
                 }
                 /*if (obj.Key == "listeningQuest")
                 {
@@ -597,7 +597,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public bool AutoGenerateListenStringID = true;
             public Quest Parent;
-            public UniqueList<QuestDialogueOption> ParentList;
+            public ListeningList<QuestDialogueOption> ParentList;
 
             //public int listeningQuest;
         }
@@ -643,7 +643,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     public class QuestDialogueResponse : QuestVariable
     {
         public string responseText = "";
-        public UniqueList<QuestDialogueOption> options = new UniqueList<QuestDialogueOption>();
+        public ListeningList<QuestDialogueOption> options = new ListeningList<QuestDialogueOption>();
         public List<KVPair> QuestsToGive = new List<KVPair>();
         public QuestDialogueResponse_OptionalFields ThisOptionalFields
         {
@@ -682,17 +682,27 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             throw new NotImplementedException();
         }
 
-        public static QuestDialogueResponse KVGenerate(KVPair ThisKV, Quest Parent)
+        public static QuestDialogueResponse KVGenerate(KVPair ThisKV, Quest Parent, QuestDialogueOption ThisOption)
         {
             QuestDialogueResponse ReturnValue = new QuestDialogueResponse();
 
             ReturnValue.GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, objType) => {
-                if (obj.Key == "options")
+                switch (obj.Key)
                 {
-                    obj.FolderValue.Items.ForEach(obj2 => {
-                        QuestDialogueOption.KVGenerate(obj2, Parent, ReturnValue.options);
-                    });
+                    case "options":
+                        {
+                            obj.FolderValue.Items.ForEach(obj2 => {
+                                QuestDialogueOption.KVGenerate(obj2, Parent, ReturnValue.options);
+                            });
+                        }
+                        break;
+                    case "sendListenString":
+                        {
+                            ThisOption.ThisOptionalFields.ChangeListenString(obj.Value);
+                        }
+                        break;
                 }
+                
             });
 
             return ReturnValue;

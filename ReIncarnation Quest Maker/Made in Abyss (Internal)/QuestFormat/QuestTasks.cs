@@ -8,7 +8,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
     public abstract class QuestTask : QuestVariable
     {
-        public static UniqueList<string> PossibleTaskTypes = new UniqueList<string>();
+        public static ListeningList<string> PossibleTaskTypes = new ListeningList<string>();
 
         public static Dictionary<string, Type> TaskTypeDictionary = new Dictionary<string, Type>();
         public QuestTask_EditorExternal ThisEditorExternal = new QuestTask_EditorExternal();
