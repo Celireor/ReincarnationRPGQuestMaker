@@ -347,10 +347,17 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             string stringtoencapsulate = ConvertToText_Iterate(TabCount + 1);
 
             string InjectionsString = "";
-            if (dialogue.Count > 0) {
+            if (dialogue.Count > 0)
+            {
                 string DialogueString = "";
                 dialogue.ForEach(obj => DialogueString += obj.ConvertToText(TabCount + 3));
                 InjectionsString += PrintEncapsulation(DialogueString, TabCount + 2, "dialogue", true);
+            }
+            if (particles.Count > 0)
+            {
+                string ParticleString = "";
+                particles.ForEach(obj => ParticleString += obj.ConvertToText(TabCount + 3));
+                InjectionsString += PrintEncapsulation(ParticleString, TabCount + 2, "particle", true);
             }
 
             if (InjectionsString != "") {
@@ -395,6 +402,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             Group.ForEach(obj =>
             {
                 obj.dialogue.ForEach(obj2 => AffectedNPCNames.Add(obj2.Key));
+                obj.particles.ForEach(obj2 => AffectedNPCNames.Add(obj2.Key));
                 ReturnValue += obj.ConvertToText(TabCount + 1);
             });
 
