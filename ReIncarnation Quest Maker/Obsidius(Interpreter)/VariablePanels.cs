@@ -490,8 +490,7 @@ namespace ReIncarnation_Quest_Maker
 
         public bool Trash()
         {
-            Interpreter.SelectedQuest.injections.Remove(ThisQuestVariable);
-            return true;
+            return ThisQuestVariable.Trash();
         }
 
         public void ModifyDialogueName(object sender, EventArgs e)
@@ -629,6 +628,7 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestDialogueOptionsPanel(OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent) : base(Parent)
         {
+
             FinishUpFunction = FinishUp_2;
 
             ThisTable = new DefaultTable(1, 3);
@@ -643,6 +643,8 @@ namespace ReIncarnation_Quest_Maker
         public static QuestDialogueOptionsPanel Generate_2(QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
         {
             QuestDialogueOptionsPanel ReturnValue = new QuestDialogueOptionsPanel(Parent);
+
+            ReturnValue.TrashFunction = Item.Trash;
 
             ReturnValue.DialogueOptionsTable.AddItem("Selection Text", new DefaultTextBox(Item.selectText), ReturnValue.OnSelectionTextChanged);
             ReturnValue.DialogueOptionsTable.AddItem("Selection Image", new DefaultDropDown(Item.selectImg, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestOptionSelectImage), ReturnValue.OnSelectionImageChanged);
@@ -695,6 +697,12 @@ namespace ReIncarnation_Quest_Maker
     {
         ModifyQuestVariableTable ThisTable;
 
+        public bool Trash()
+        {
+            Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
+            return true;
+        }
+
         public QuestStageDialoguePanel()
         {
             GenerateFunction = Generate_2;
@@ -702,6 +710,7 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent)
         {
+            TrashFunction = Trash;
         }
 
         public void ModifyNPCName(object sender, EventArgs e)

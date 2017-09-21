@@ -415,9 +415,15 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestDialogue : QuestVariable
     {
-        public List<QuestDialogueOption> options = new List<QuestDialogueOption>();
+        public UniqueList<QuestDialogueOption> options = new UniqueList<QuestDialogueOption>();
 
         public QuestDialogue_EditorExternal ThisEditorExternal = new QuestDialogue_EditorExternal();
+
+        public bool Trash() {
+            ThisEditorExternal.ThisQuest.injections.Remove(this);
+            ThisEditorExternal.ForceDisableName();
+            return true;
+        }
 
         public override string ConvertToText(int TabCount = 0)
         {
@@ -438,6 +444,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             QuestDialogue ReturnValue = new QuestDialogue();
             ReturnValue.ThisEditorExternal.ThisQuest = Parent;
+            ReturnValue.options.AddListener(ReturnValue.ThisEditorExternal.EnableName);
 
             Parent.injections.Add(ReturnValue);
             return ReturnValue;
@@ -460,12 +467,39 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public string DialogueName = "";
             public Quest ThisQuest;
-            bool IsAdded = false;
+            bool IsEmpty = true;
             public void ChangeName(string NewName)
             {
-                ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Remove(DialogueName);
+                if (!IsEmpty)
+                {
+                    ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Remove(DialogueName);
+                }
                 DialogueName = NewName;
-                ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Add(DialogueName);
+                if (!IsEmpty)
+                {
+                    ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Add(DialogueName);
+                }
+            }
+
+            public void EnableName(UniqueList<QuestDialogueOption> ThisList)
+            {
+
+                if (!IsEmpty && ThisList.Count == 0)
+                {
+                    ForceDisableName();
+                }
+
+                else if (IsEmpty && ThisList.Count > 0)
+                {
+                    ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Add(DialogueName);
+                    IsEmpty = false;
+                }
+            }
+
+            public void ForceDisableName() {
+
+                ThisQuest.ThisEditorExternal.PossibleDialogueInjections.Remove(DialogueName);
+                IsEmpty = true;
             }
         }
     }
@@ -483,6 +517,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public QuestDialogueOption() {
             OptionalFields = new QuestDialogueOption_OptionalFields();
+        }
+
+        public bool Trash() {
+            ThisEditorExternal.ParentList.Remove(this);
+            return true;
         }
 
         public QuestDialogueOption_EditorExternal ThisEditorExternal = new QuestDialogueOption_EditorExternal();
@@ -516,9 +555,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        public static QuestDialogueOption Generate(Quest Parent, List<QuestDialogueOption> ParentList) {
+        public static QuestDialogueOption Generate(Quest Parent, UniqueList<QuestDialogueOption> ParentList) {
             QuestDialogueOption ReturnValue = new QuestDialogueOption();
             ReturnValue.ThisEditorExternal.Parent = Parent;
+            ReturnValue.ThisEditorExternal.ParentList = ParentList;
             ReturnValue.ThisOptionalFields.ThisEditorExternal.Parent = Parent;
             ReturnValue.ThisOptionalFields.ThisEditorExternal.LastID = Parent.questID;
             Parent.ThisEditorExternal.OnUpdateList.Add(ReturnValue.ThisOptionalFields.ChangeID);
@@ -526,7 +566,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        public static QuestDialogueOption KVGenerate(KVPair ThisKV, Quest Parent, List<QuestDialogueOption> ParentList) {
+        public static QuestDialogueOption KVGenerate(KVPair ThisKV, Quest Parent, UniqueList<QuestDialogueOption> ParentList) {
             QuestDialogueOption ReturnValue = Generate(Parent, ParentList);
 
             ReturnValue.GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, objType) => {
@@ -556,6 +596,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public bool AutoGenerateListenStringID = true;
             public Quest Parent;
+            public UniqueList<QuestDialogueOption> ParentList;
 
             //public int listeningQuest;
         }
@@ -593,9 +634,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     public class QuestDialogueResponse : QuestVariable
     {
         public string responseText = "";
-        public List<QuestDialogueOption> options = new List<QuestDialogueOption>();
+        public UniqueList<QuestDialogueOption> options = new UniqueList<QuestDialogueOption>();
         public List<KVPair> QuestsToGive = new List<KVPair>();
-        public QuestDialogueResponse_OptionalFields ThisOptionalFields {
+        public QuestDialogueResponse_OptionalFields ThisOptionalFields
+        {
             get
             {
                 return OptionalFields as QuestDialogueResponse_OptionalFields;
