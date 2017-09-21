@@ -114,6 +114,12 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             SelectedQuestStage.dialogue.Add(NewStageDialogue);
             ThisForm.OnNewQuestStageDialogue(NewStageDialogue);
         }
+        public static void AddQuestStageParticle()
+        {
+            KVPair NewStageParticle = new KVPair();
+            SelectedQuestStage.particles.Add(NewStageParticle);
+            ThisForm.OnNewQuestStageParticle(NewStageParticle);
+        }
 
         public static void LoadNewQuestList(QuestList NewQuestList, string FilePath)
         {

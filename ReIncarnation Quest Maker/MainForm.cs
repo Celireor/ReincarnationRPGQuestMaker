@@ -23,6 +23,7 @@ namespace ReIncarnation_Quest_Maker
         public OrganizedControlList<QuestDialoguePanel, QuestDialogue> QuestDialoguePanels;
         public OrganizedControlList<QuestTaskPanel, QuestTask> QuestTaskPanels;
         public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageDialoguePanels;
+        public OrganizedControlList<QuestStageParticlePanel, KVPair> QuestStageParticlePanels;
         //public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageParticlePanels;
         //public OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue> AffectedNPCsPanels;
         //public 
@@ -36,10 +37,11 @@ namespace ReIncarnation_Quest_Maker
             QuestDialoguePanels = OrganizedControlList<QuestDialoguePanel, QuestDialogue>.GenerateOrganizedControlList(QuestDialogueList, QuestDialoguePanel.Sort());
             QuestTaskPanels = OrganizedControlList<QuestTaskPanel, QuestTask>.GenerateOrganizedControlList(QuestStageTaskList, QuestTaskPanel.Sort());
             QuestStageDialoguePanels = OrganizedControlList<QuestStageDialoguePanel, KVPair>.GenerateOrganizedControlList(questStageDialogueList, QuestStageDialoguePanel.Sort());
+            QuestStageParticlePanels = OrganizedControlList<QuestStageParticlePanel, KVPair>.GenerateOrganizedControlList(questStageParticleList, QuestStageParticlePanel.Sort());
 
-            //AffectedNPCsPanels = OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue>.GenerateOrganizedControlList(AffectedNPCsList, AffectedNPCsPanel.Sort());
+        //AffectedNPCsPanels = OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue>.GenerateOrganizedControlList(AffectedNPCsList, AffectedNPCsPanel.Sort());
 
-            Interpreter.ThisForm = this;
+        Interpreter.ThisForm = this;
             Interpreter.GenerateDefaultQuestList();
             InitialiseScreen();
 
@@ -82,6 +84,7 @@ namespace ReIncarnation_Quest_Maker
             QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.description;
             QuestTaskPanels.Refresh(Interpreter.SelectedQuestStage.tasks);
             QuestStageDialoguePanels.Refresh(Interpreter.SelectedQuestStage.dialogue);
+            QuestStageParticlePanels.Refresh(Interpreter.SelectedQuestStage.particles);
             //AffectedNPCsPanel.MassGenerate(Interpreter.SelectedQuestStage.affectedNPCs.ToArray(), AffectedNPCsPanels);
         }
 
@@ -129,6 +132,12 @@ namespace ReIncarnation_Quest_Maker
 
         public void OnNewQuestStageDialogue(KVPair NewStageDialogue) {
             QuestStageDialoguePanel.Generate(NewStageDialogue, QuestStageDialoguePanels);
+        }
+        
+
+        public void OnNewQuestStageParticle(KVPair NewStageParticle)
+        {
+            QuestStageParticlePanel.Generate(NewStageParticle, QuestStageParticlePanels);
         }
 
         /*public void OnNewAffectedNPC(QuestInjectDialogue NewAffectedNPC)
@@ -291,6 +300,11 @@ namespace ReIncarnation_Quest_Maker
         private void NewStageDialogueButton_Click(object sender, EventArgs e)
         {
             Interpreter.AddQuestStageDialogue();
+        }
+
+        private void NewStageParticle_Click(object sender, EventArgs e)
+        {
+            Interpreter.AddQuestStageParticle();
         }
     }
 

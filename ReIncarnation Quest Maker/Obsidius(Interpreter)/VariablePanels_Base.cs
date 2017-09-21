@@ -389,31 +389,67 @@ namespace ReIncarnation_Quest_Maker
             Controls.Add(VarControl, 1, RowCount - 1);
 
             Type VarControlType = VarControl.GetType();
-            if (VarControlType == typeof(DefaultTextBox))
+            if (typeof(TextBox).IsAssignableFrom(VarControlType))
             {
                 TextBox temp = VarControl as TextBox;
                 temp.TextChanged += OnValueChanged;
             }
-            else if (VarControlType == typeof(DefaultDropDown))
+            else if (typeof(ComboBox).IsAssignableFrom(VarControlType))
             {
 
                 ComboBox temp = VarControl as ComboBox;
                 temp.TextChanged += OnValueChanged;
             }
-            else if (VarControlType == typeof(DefaultNumericUpDown))
+            else if (typeof(NumericUpDown).IsAssignableFrom(VarControlType))
             {
 
-                DefaultNumericUpDown temp = VarControl as DefaultNumericUpDown;
+                NumericUpDown temp = VarControl as NumericUpDown;
                 temp.ValueChanged += OnValueChanged;
             }
-            else if (VarControlType == typeof(DefaultCheckBox))
+            else if (typeof(CheckBox).IsAssignableFrom(VarControlType))
             {
 
-                DefaultCheckBox temp = VarControl as DefaultCheckBox;
+                CheckBox temp = VarControl as CheckBox;
                 temp.CheckedChanged += OnValueChanged;
             }
 
             RowCount++;
         }
     }
+
+    /*public class KVPanel<T> : SortablePanel<T, KVPair> where T : KVPanel<T>, new()
+    {
+        public ModifyQuestVariableTable ThisTable;
+
+        string KeyString;
+        string ValueString;
+
+        public KVPanel()
+        {
+
+        }
+
+        public KVPanel(OrganizedControlList<T, KVPair> Parent) : base(Parent)
+        {
+        }
+
+
+        public static T Generate_2(KVPair Item, OrganizedControlList<T, KVPair> Parent)
+        {
+            T KVPanelValues_temp = new T();
+            KVPanel<T> ReturnValue = new KVPanel<T>(Parent);
+
+            ReturnValue.ThisTable = new ModifyQuestVariableTable();
+            ReturnValue.ThisTable.AddItem(KVPanelValues_temp.KeyString, new DefaultTextBox(Item.Key), ReturnValue.ModifyNPCName);
+            ReturnValue.ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections, false), ReturnValue.ModifyDialogue);
+            //ReturnValue.ThisTable.AddItem("Text Box: ", new DefaultDropDown(Item.Key, , true), ReturnValue.ModifyNPCName);
+            ReturnValue.AddControl(ReturnValue.ThisTable);
+            return (T) ReturnValue;
+        }
+
+        public override IComparer<T> SortComparer()
+        {
+            throw new NotImplementedException();
+        }
+    }*/
 }

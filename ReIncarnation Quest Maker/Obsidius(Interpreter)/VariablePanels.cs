@@ -728,13 +728,59 @@ namespace ReIncarnation_Quest_Maker
             QuestStageDialoguePanel ReturnValue = new QuestStageDialoguePanel(Parent);
             ReturnValue.ThisTable = new ModifyQuestVariableTable();
             ReturnValue.ThisTable.AddItem("NPC: ", new DefaultTextBox(Item.Key), ReturnValue.ModifyNPCName);
-            ReturnValue.ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections, false), ReturnValue.ModifyDialogue);
+            ReturnValue.ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections), ReturnValue.ModifyDialogue);
             //ReturnValue.ThisTable.AddItem("Text Box: ", new DefaultDropDown(Item.Key, , true), ReturnValue.ModifyNPCName);
             ReturnValue.AddControl(ReturnValue.ThisTable);
             return ReturnValue;
         }
 
         public override IComparer<QuestStageDialoguePanel> SortComparer()
+        {
+            return new SortablePanel_IComparer();
+        }
+    }
+
+    public class QuestStageParticlePanel : SortablePanel<QuestStageParticlePanel, KVPair>
+    {
+        ModifyQuestVariableTable ThisTable;
+
+        public bool Trash()
+        {
+            Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
+            return true;
+        }
+
+        public QuestStageParticlePanel()
+        {
+            GenerateFunction = Generate_2;
+        }
+
+        public QuestStageParticlePanel(OrganizedControlList<QuestStageParticlePanel, KVPair> Parent) : base(Parent)
+        {
+            TrashFunction = Trash;
+        }
+
+        public void ModifyNPCName(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Key = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void ModifyDialogue(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Value = MainForm.GetTextFromComboBox(sender);
+        }
+
+        public static QuestStageParticlePanel Generate_2(KVPair Item, OrganizedControlList<QuestStageParticlePanel, KVPair> Parent)
+        {
+            QuestStageParticlePanel ReturnValue = new QuestStageParticlePanel(Parent);
+            ReturnValue.ThisTable = new ModifyQuestVariableTable();
+            ReturnValue.ThisTable.AddItem("NPC: ", new DefaultTextBox(Item.Key), ReturnValue.ModifyNPCName);
+            ReturnValue.ThisTable.AddItem("Particle: ", new DefaultDropDown(Item.Value, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleParticles), ReturnValue.ModifyDialogue);
+            ReturnValue.AddControl(ReturnValue.ThisTable);
+            return ReturnValue;
+        }
+
+        public override IComparer<QuestStageParticlePanel> SortComparer()
         {
             return new SortablePanel_IComparer();
         }

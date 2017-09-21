@@ -47,7 +47,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public ListeningList<string> PossibleTypeIcons = new ListeningList<string>();
             public ListeningList<string> PossibleQuestPrerequisites = new ListeningList<string>();
             public ListeningList<string> PossibleQuestOptionSelectImage = new ListeningList<string>();
-
+            public ListeningList<string> PossibleParticles = new ListeningList<string>();
 
             public ListeningList<string> PossibleListenStrings = new ListeningList<string>();
 
@@ -65,6 +65,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 PossibleQuestOptionSelectImage.Add("story_repeatable");
                 PossibleQuestOptionSelectImage.Add("check");
                 PossibleQuestOptionSelectImage.Add("chat");
+
+                PossibleParticles.Add("quest_return");
+                PossibleParticles.Add("quest_start");
+                PossibleParticles.Add("chat");
             }
         }
     }
@@ -282,7 +286,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
-
+                                                ReturnValue.particles.Add(GenerateFromKeyValue<KVPair>(obj2));
                                             });
                                         }
                                         break;
