@@ -53,7 +53,7 @@ namespace ReIncarnation_Quest_Maker
         public void LoadValues()
         {
             Interpreter.CurrentQuestList.ThisEditorExternal.PossibleTypeIcons.AddListener((obj, useless) => QuestTypeIcon.UpdatePossibleValues(obj));
-            QuestTask.PossibleTaskTypes.AddListener((obj, useless)  => QuestStageTaskType.UpdatePossibleValues(obj));
+            QuestTask.PossibleTaskTypes.AddListener((obj, useless) => QuestStageTaskType.UpdatePossibleValues(obj));
             QuestStageTaskType.Text = "kill";
         }
 

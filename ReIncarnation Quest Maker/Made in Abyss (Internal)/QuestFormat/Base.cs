@@ -234,7 +234,44 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         }
     }
 
-    public abstract class IndexableVariable : QuestVariable {
+    public abstract class MultiTypeVariable<T> : QuestVariable where T : MultiTypeVariable<T>
+    {
         public abstract string ConvertToText_Full(int Index, int TabCount = 0);
+
+        public override string ConvertToText(int TabCount = 0)
+        {
+            string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
+            return StringToEncapsulate;
+        }
+        public static ListeningList<string> PossibleTaskTypes = new ListeningList<string>();
+
+        public static Dictionary<string, Type> TaskTypeDictionary = new Dictionary<string, Type>();
+
+        public static T GetNewT(string TypeString)
+        {
+            Type NewType;
+            bool Exists = TaskTypeDictionary.TryGetValue(TypeString, out NewType);
+            if (Exists && NewType.BaseType == typeof(T))
+            {
+                T ReturnValue = Activator.CreateInstance(NewType) as T;
+                return ReturnValue;
+            }
+#if DEBUG
+
+            if (Exists && !(NewType.BaseType == typeof(T)))
+            {
+                throw new ArgumentException(NewType.ToString() + " is not a " + typeof(T).ToString());
+            }
+            throw new ArgumentException(NewType.ToString() + " is not listed.");
+#else
+            return null;
+#endif
+        }
+
+        public static void AddPossibleTaskType(string TypeString, Type TaskType)
+        {
+            PossibleTaskTypes.Add(TypeString);
+            TaskTypeDictionary.Add(TypeString, TaskType);
+        }
     }
 }

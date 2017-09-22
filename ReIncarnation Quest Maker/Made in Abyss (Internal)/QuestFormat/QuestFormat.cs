@@ -311,7 +311,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        class QuestIndexableVariableStringConverter<T, U> where T : IndexableVariable, U
+        class QuestIndexableVariableStringConverter<T, U> where T : U where U : MultiTypeVariable<U>
         {
             List<T> VarList = new List<T>();
             string VarType;
@@ -760,4 +760,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public string playSound = "";
         }
     }
+
+    /*public abstract class QuestDialogueOptionHideIf : IndexableVariable
+    {
+
+    }*/
 }

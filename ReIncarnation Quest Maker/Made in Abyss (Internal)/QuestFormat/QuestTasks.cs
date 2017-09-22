@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
-    public abstract class QuestTask : IndexableVariable
+    public abstract class QuestTask : MultiTypeVariable<QuestTask>
     {
-        public static ListeningList<string> PossibleTaskTypes = new ListeningList<string>();
+        public static new ListeningList<string> PossibleTaskTypes = new ListeningList<string>();
 
-        public static Dictionary<string, Type> TaskTypeDictionary = new Dictionary<string, Type>();
         public QuestTask_EditorExternal ThisEditorExternal = new QuestTask_EditorExternal();
+
+
+        public override string ConvertToText(int TabCount = 0)
+        {
+            string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
+            return StringToEncapsulate;
+        }
+
+        //public abstract string ConvertToText_Full(int Index, int TabCount = 0);
 
         public bool Trash()
         {
@@ -39,23 +47,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public static QuestTask Generate(string TypeString, QuestStage Parent)
         {
-            Type NewType;
-            bool Exists = TaskTypeDictionary.TryGetValue(TypeString, out NewType);
-            if (Exists && NewType.BaseType == typeof(QuestTask))
-            {
-                QuestTask ReturnValue = GenerateEmpty(Activator.CreateInstance(NewType) as QuestTask, Parent);
-                return ReturnValue;
-            }
-#if DEBUG
+            return GenerateEmpty(GetNewT(TypeString), Parent);
+        }
 
-            if (Exists && !(NewType.BaseType == typeof(QuestTask)))
-            {
-                throw new ArgumentException(NewType.ToString() + " is not a QuestTask");
-            }
-            throw new ArgumentException(NewType.ToString() + " is not listed.");
-#else
-            return null;
-#endif
+        public static new void AddPossibleTaskType(string TypeString, Type TaskType)
+        {
+            MultiTypeVariable<QuestTask>.AddPossibleTaskType(TypeString, TaskType);
+            PossibleTaskTypes.Add(TypeString);
         }
 
         static QuestTask GenerateEmpty(QuestTask InputValue, QuestStage Parent)
@@ -65,18 +63,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             ReturnValue.ThisEditorExternal.GenerateDefaultValues?.Invoke();
             Parent.tasks.Add(ReturnValue);
             return ReturnValue;
-        }
-
-        public static void AddPossibleTaskType(string TypeString, Type TaskType)
-        {
-            PossibleTaskTypes.Add(TypeString);
-            TaskTypeDictionary.Add(TypeString, TaskType);
-        }
-
-        public override string ConvertToText(int TabCount = 0)
-        {
-            string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
-            return StringToEncapsulate;
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
@@ -143,18 +129,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             ThisEditorExternal.TargetName = ThisKV.Key;
         }
 
-        public new string ConvertToText(int TabCount)
-        {
-            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.TargetName, true);
-        }
-
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
         {
             public string TargetName;
         }
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
-            return ConvertToText(TabCount);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.TargetName, true);
         }
 
     }
@@ -199,6 +180,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public string EnemyGroupName;
         }
+
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
             return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.EnemyGroupName, true);
