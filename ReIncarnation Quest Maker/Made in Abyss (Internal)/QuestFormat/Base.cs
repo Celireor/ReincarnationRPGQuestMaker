@@ -146,6 +146,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string Value;
         public KVPairFolder FolderValue;
 
+        public KVPairEditorExternal ThisEditorExternal = new KVPairEditorExternal();
+
         public KVPair() { /*Generates an empty KVPair*/ }
 
         public KVPair(string Key, string Value)
@@ -171,6 +173,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
         }
 
+        public void Trash() {
+            if (ThisEditorExternal.EncapsulatingList != null) {
+                ThisEditorExternal.EncapsulatingList.Remove(this);
+            }
+        }
+
         public override void GenerateFromKV(KVPair ThisKV)
         {
             Key = ThisKV.Key;
@@ -181,35 +189,58 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             return PrintKeyValue(Key, Value, TabCount);
         }
+
+        public class KVPairEditorExternal : QuestVariableEditorExternal {
+            public List<KVPair> EncapsulatingList;
+        }
+    }
+
+    public class KVList : ListeningList<KVPair> {
+        public KVList() {
+            AddListener(SetEncapsulatingList, false, true, false);
+        }
+
+        void SetEncapsulatingList(ListeningList<KVPair> Useless, KVPair NewPair) {
+            NewPair.ThisEditorExternal.EncapsulatingList = this;
+        }
     }
 
     public class ListeningList<T> : List<T>
     {
-        public List<Action<ListeningList<T>>> Listeners = new List<Action<ListeningList<T>>>();
+        public delegate void Listener(ListeningList<T> ThisList, T NewItem = default(T));
+        List<Listener> AddListners = new List<Listener>();
+        List<Listener> RemoveListeners = new List<Listener>();
 
         public new void Remove(T Item)
         {
             base.Remove(Item);
-            Listeners.ForEach(obj => obj(this));
+            RemoveListeners.ForEach(obj => obj(this, Item));
 
         }
 
         public new void Add(T Item)
         {
             base.Add(Item);
-            Listeners.ForEach(obj => obj(this));
+            AddListners.ForEach(obj => obj(this, Item));
         }
 
-        public void AddListener(Action<ListeningList<T>> Listener)
+        public void AddListener(Listener NewListener, bool InstantlyRun = true, bool OnAdd = true, bool OnRemove = true)
         {
-            Listener(this);
-            Listeners.Add(Listener);
+            if (InstantlyRun) {
+                NewListener(this, default(T));
+            }
+            if (OnAdd)
+            {
+                AddListners.Add(NewListener);
+            }
+            if (OnRemove)
+            {
+                RemoveListeners.Add(NewListener);
+            }
         }
     }
 
     public abstract class IndexableVariable : QuestVariable {
-
-
         public abstract string ConvertToText_Full(int Index, int TabCount = 0);
     }
 }

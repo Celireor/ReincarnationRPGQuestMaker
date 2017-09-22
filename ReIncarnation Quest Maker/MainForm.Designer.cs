@@ -84,11 +84,11 @@
             this.QuestStageList = new System.Windows.Forms.Panel();
             this.newqueststagebutton = new System.Windows.Forms.Button();
             this.QuestDialoguePage = new System.Windows.Forms.TabPage();
+            this.QuestDialogueList = new System.Windows.Forms.Panel();
+            this.NewQuestDialogueButton = new System.Windows.Forms.Button();
             this.QuestList = new System.Windows.Forms.Panel();
             this.newquestbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.NewQuestDialogueButton = new System.Windows.Forms.Button();
-            this.QuestDialogueList = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Quest_QuestList_Split)).BeginInit();
             this.Quest_QuestList_Split.Panel1.SuspendLayout();
@@ -785,6 +785,28 @@
             this.QuestDialoguePage.Text = "Quest Dialogue";
             this.QuestDialoguePage.UseVisualStyleBackColor = true;
             // 
+            // QuestDialogueList
+            // 
+            this.QuestDialogueList.AutoScroll = true;
+            this.QuestDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.QuestDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.QuestDialogueList.Location = new System.Drawing.Point(3, 3);
+            this.QuestDialogueList.Name = "QuestDialogueList";
+            this.QuestDialogueList.Size = new System.Drawing.Size(623, 454);
+            this.QuestDialogueList.TabIndex = 6;
+            // 
+            // NewQuestDialogueButton
+            // 
+            this.NewQuestDialogueButton.AutoSize = true;
+            this.NewQuestDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.NewQuestDialogueButton.Location = new System.Drawing.Point(3, 457);
+            this.NewQuestDialogueButton.Name = "NewQuestDialogueButton";
+            this.NewQuestDialogueButton.Size = new System.Drawing.Size(623, 50);
+            this.NewQuestDialogueButton.TabIndex = 5;
+            this.NewQuestDialogueButton.Text = "New Dialogue";
+            this.NewQuestDialogueButton.UseVisualStyleBackColor = true;
+            this.NewQuestDialogueButton.Click += new System.EventHandler(this.NewQuestDialogueButton_Click);
+            // 
             // QuestList
             // 
             this.QuestList.AutoScroll = true;
@@ -817,28 +839,6 @@
             this.label1.Size = new System.Drawing.Size(67, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "Quest ID";
-            // 
-            // NewQuestDialogueButton
-            // 
-            this.NewQuestDialogueButton.AutoSize = true;
-            this.NewQuestDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.NewQuestDialogueButton.Location = new System.Drawing.Point(3, 457);
-            this.NewQuestDialogueButton.Name = "NewQuestDialogueButton";
-            this.NewQuestDialogueButton.Size = new System.Drawing.Size(623, 50);
-            this.NewQuestDialogueButton.TabIndex = 5;
-            this.NewQuestDialogueButton.Text = "New Dialogue";
-            this.NewQuestDialogueButton.UseVisualStyleBackColor = true;
-            this.NewQuestDialogueButton.Click += new System.EventHandler(this.NewQuestDialogueButton_Click);
-            // 
-            // QuestDialogueList
-            // 
-            this.QuestDialogueList.AutoScroll = true;
-            this.QuestDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.QuestDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestDialogueList.Location = new System.Drawing.Point(3, 3);
-            this.QuestDialogueList.Name = "QuestDialogueList";
-            this.QuestDialogueList.Size = new System.Drawing.Size(623, 454);
-            this.QuestDialogueList.TabIndex = 6;
             // 
             // MainForm
             // 

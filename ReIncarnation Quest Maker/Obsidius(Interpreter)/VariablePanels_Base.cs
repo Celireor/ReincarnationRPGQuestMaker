@@ -434,38 +434,25 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    /*public class MultiTypePanel<T, U> : SortablePanel<T, U> where T : SortablePanel<T, U>
+    public abstract class MultiTypePanel<T, U> : SortablePanel<T, U> where T : SortablePanel<T, U>
     {
-        public static Dictionary<Type, Type> TaskToGenerateFunction = new Dictionary<Type, Type>();
-        public ModifyQuestVariableTable ThisTable;
+        public Dictionary<Type, Type> ItemToPanel;
 
         public MultiTypePanel(OrganizedControlList<T, U> Parent) : base(Parent)
         {
-            ThisTable = new ModifyQuestVariableTable();
-            AddControl(ThisTable);
-            //Move_Addon = moveAddon;
         }
 
-        /*static MultiTypePanel()
-        {
-            TaskToGenerateFunction.Add(typeof(QuestTask_location), typeof(QuestTaskPanel_location));
-            TaskToGenerateFunction.Add(typeof(QuestTask_talkto), typeof(QuestTaskPanel_talkto));
-            TaskToGenerateFunction.Add(typeof(QuestTask_kill), typeof(QuestTaskPanel_kill));
-            TaskToGenerateFunction.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
-            TaskToGenerateFunction.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
-        }*/
-
-        /*public override QuestTaskPanel CreateInstanceAddon(T Item, OrganizedControlList<T, U> Parent)
+        public override T CreateInstanceAddon(U Item, OrganizedControlList<T, U> Parent)
         {
             Type ReturnType;
-            TaskToGenerateFunction.TryGetValue(Item.GetType(), out ReturnType);
+            ItemToPanel.TryGetValue(Item.GetType(), out ReturnType);
 #if DEBUG
-            if (ReturnType.BaseType != typeof(QuestTaskPanel))
+            if (ReturnType.BaseType != typeof(T))
             {
                 throw new ArgumentNullException("put returntype in wtf");
             }
 #endif
-            QuestTaskPanel ReturnValue = (QuestTaskPanel)Activator.CreateInstance(ReturnType, Parent);
+            T ReturnValue = (T)Activator.CreateInstance(ReturnType, Parent);
 
             return ReturnValue;
         }
@@ -477,39 +464,15 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    /*public class KVPanel<T> : SortablePanel<T, KVPair> where T : KVPanel<T>, new()
+    public abstract class KVPanel<T> : SortablePanel<T, KVPair> where T : KVPanel<T>
     {
-        public ModifyQuestVariableTable ThisTable;
 
-        string KeyString;
-        string ValueString;
+        public KVPanel(OrganizedControlList<T, KVPair> Parent) : base(Parent) { }
 
-        public KVPanel()
+        public override bool Trash_Addon()
         {
-
+            ThisQuestVariable.Trash();
+            return true;
         }
-
-        public KVPanel(OrganizedControlList<T, KVPair> Parent) : base(Parent)
-        {
-        }
-
-
-        public static T Generate_2(KVPair Item, OrganizedControlList<T, KVPair> Parent)
-        {
-            T KVPanelValues_temp = new T();
-            KVPanel<T> ReturnValue = new KVPanel<T>(Parent);
-
-            ReturnValue.ThisTable = new ModifyQuestVariableTable();
-            ReturnValue.ThisTable.AddItem(KVPanelValues_temp.KeyString, new DefaultTextBox(Item.Key), ReturnValue.ModifyNPCName);
-            ReturnValue.ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections, false), ReturnValue.ModifyDialogue);
-            //ReturnValue.ThisTable.AddItem("Text Box: ", new DefaultDropDown(Item.Key, , true), ReturnValue.ModifyNPCName);
-            ReturnValue.AddControl(ReturnValue.ThisTable);
-            return (T) ReturnValue;
-        }
-
-        public override IComparer<T> SortComparer()
-        {
-            throw new NotImplementedException();
-        }
-    }*/
+    }
 }

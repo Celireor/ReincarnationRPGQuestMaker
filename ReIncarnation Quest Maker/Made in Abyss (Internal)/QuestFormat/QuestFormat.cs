@@ -86,7 +86,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string typeIcon;
         public bool cantAbandon;
 
-        public List<KVPair> prerequisites = new List<KVPair>();
+        public KVList prerequisites = new KVList();
 
         public List<QuestStage> stages = new List<QuestStage>();
 
@@ -158,7 +158,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 {
                     case "prerequisites":
                         {
-                            prerequisites = FillFromKeyValueFolder<KVPair>(IterationKV.FolderValue);
+                            prerequisites = (KVList)FillFromKeyValueFolder<KVPair>(IterationKV.FolderValue);
                         }
                         break;
                     /*case "affectedNpcs":
@@ -216,8 +216,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         //public List<QuestInjectDialogue> affectedNPCs = new List<QuestInjectDialogue>();
 
         public List<QuestTask> tasks = new List<QuestTask>();
-        public List<KVPair> dialogue = new List<KVPair>();
-        public List<KVPair> particles = new List<KVPair>();
+        public KVList dialogue = new KVList();
+        public KVList particles = new KVList();
 
         public QuestStage_EditorExternal ThisEditorExternal = new QuestStage_EditorExternal();
 
@@ -280,6 +280,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
                                                 ReturnValue.dialogue.Add(GenerateFromKeyValue<KVPair>(obj2));
+                                                obj2.ThisEditorExternal.EncapsulatingList = ReturnValue.dialogue;
                                             });
                                         }
                                         break;
@@ -288,6 +289,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
                                                 ReturnValue.particles.Add(GenerateFromKeyValue<KVPair>(obj2));
+                                                obj2.ThisEditorExternal.EncapsulatingList = ReturnValue.particles;
                                             });
                                         }
                                         break;
@@ -495,7 +497,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 }
             }
 
-            public void EnableName(ListeningList<QuestDialogueOption> ThisList)
+            public void EnableName(ListeningList<QuestDialogueOption> ThisList, QuestDialogueOption UselessField = null)
             {
 
                 if (!IsEmpty && ThisList.Count == 0)
@@ -523,7 +525,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string selectText;
         public string selectImg;
 
-        public List<KVPair> giveQuests = new List<KVPair>();
+        public KVList giveQuests = new KVList();
 
         public QuestDialogueResponse Response;
 
@@ -688,7 +690,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     {
         public string responseText = "";
         public ListeningList<QuestDialogueOption> options = new ListeningList<QuestDialogueOption>();
-        public List<KVPair> QuestsToGive = new List<KVPair>();
+        public KVList QuestsToGive = new KVList();
         public QuestDialogueResponse_OptionalFields ThisOptionalFields
         {
             get

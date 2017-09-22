@@ -52,8 +52,8 @@ namespace ReIncarnation_Quest_Maker
 
         public void LoadValues()
         {
-            Interpreter.CurrentQuestList.ThisEditorExternal.PossibleTypeIcons.AddListener(obj => QuestTypeIcon.UpdatePossibleValues(obj));
-            QuestTask.PossibleTaskTypes.AddListener(obj => QuestStageTaskType.UpdatePossibleValues(obj));
+            Interpreter.CurrentQuestList.ThisEditorExternal.PossibleTypeIcons.AddListener((obj, useless) => QuestTypeIcon.UpdatePossibleValues(obj));
+            QuestTask.PossibleTaskTypes.AddListener((obj, useless)  => QuestStageTaskType.UpdatePossibleValues(obj));
             QuestStageTaskType.Text = "kill";
         }
 
@@ -472,11 +472,11 @@ namespace ReIncarnation_Quest_Maker
                 DropDown += (sender, e) => {
                     LinqExtensions.UpdatePossibleValues(this, Options, true);
                 };
-                Options.AddListener(obj => LinqExtensions.UpdatePossibleValues(this, obj, true));
+                Options.AddListener((obj, useless) => LinqExtensions.UpdatePossibleValues(this, obj, true));
             }
             else
             {
-                Options.AddListener(obj => LinqExtensions.UpdatePossibleValues(this, obj));
+                Options.AddListener((obj, useless) => LinqExtensions.UpdatePossibleValues(this, obj));
                 DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             }
             FormattingEnabled = true;

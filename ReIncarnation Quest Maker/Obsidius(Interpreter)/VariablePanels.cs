@@ -90,7 +90,7 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class PrerequisitePanel : SortablePanel<PrerequisitePanel, KVPair>
+    public class PrerequisitePanel : KVPanel<PrerequisitePanel>
     {
         ModifyQuestVariableTable ThisTable;
 
@@ -106,12 +106,6 @@ namespace ReIncarnation_Quest_Maker
         public void UpdateValue(object sender, EventArgs e)
         {
             ThisQuestVariable.Value = MainForm.GetTextFromTextBox(sender);
-        }
-
-        public override bool Trash_Addon()
-        {
-            Interpreter.SelectedQuest.prerequisites.Remove(ThisQuestVariable);
-            return true;
         }
 
         public PrerequisitePanel(OrganizedControlList<PrerequisitePanel, KVPair> Parent) : base(Parent) { }
@@ -230,10 +224,9 @@ namespace ReIncarnation_Quest_Maker
             }
         }
     }
-
-    public class QuestTaskPanel : SortablePanel<QuestTaskPanel, QuestTask>
+    public class QuestTaskPanel : MultiTypePanel<QuestTaskPanel, QuestTask>
     {
-        public static Dictionary<Type, Type> TaskToGenerateFunction = new Dictionary<Type, Type>();
+        public static new Dictionary<Type, Type> ItemToPanel = new Dictionary<Type, Type>();
         public ModifyQuestVariableTable ThisTable;
 
         public override bool Trash_Addon()
@@ -243,42 +236,23 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestTaskPanel(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent)
         {
+            base.ItemToPanel = ItemToPanel;
             ThisTable = new ModifyQuestVariableTable();
             AddControl(ThisTable);
         }
 
         static QuestTaskPanel()
         {
-            TaskToGenerateFunction.Add(typeof(QuestTask_location), typeof(QuestTaskPanel_location));
-            TaskToGenerateFunction.Add(typeof(QuestTask_talkto), typeof(QuestTaskPanel_talkto));
-            TaskToGenerateFunction.Add(typeof(QuestTask_kill), typeof(QuestTaskPanel_kill));
-            TaskToGenerateFunction.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
-            TaskToGenerateFunction.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
+            ItemToPanel.Add(typeof(QuestTask_location), typeof(QuestTaskPanel_location));
+            ItemToPanel.Add(typeof(QuestTask_talkto), typeof(QuestTaskPanel_talkto));
+            ItemToPanel.Add(typeof(QuestTask_kill), typeof(QuestTaskPanel_kill));
+            ItemToPanel.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
+            ItemToPanel.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
         }
 
         public override void Move_Addon(QuestTaskPanel OtherObject, int OtherPosition)
         {
             ThisQuestVariable.ThisEditorExternal.ParentStage.tasks.Swap(ListPosition, OtherPosition);
-        }
-
-        public override QuestTaskPanel CreateInstanceAddon(QuestTask Item, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
-        {
-            Type ReturnType;
-            TaskToGenerateFunction.TryGetValue(Item.GetType(), out ReturnType);
-#if DEBUG
-            if (ReturnType.BaseType != typeof(QuestTaskPanel))
-            {
-                throw new ArgumentNullException("put returntype in wtf");
-            }
-#endif
-            QuestTaskPanel ReturnValue = (QuestTaskPanel)Activator.CreateInstance(ReturnType, Parent);
-
-            return ReturnValue;
-        }
-
-        public override void Generate_Addon(QuestTask Item, OrganizedControlList<QuestTaskPanel, QuestTask> Parent) {
-            throw new NotImplementedException();
-            //implement in inherited classes
         }
     }
 
@@ -505,6 +479,7 @@ namespace ReIncarnation_Quest_Maker
         public ModifyQuestVariableTable DialogueResponseTable;
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
+        //public ListPa
 
         DefaultTextBox ResponseTextBox;
         DefaultTextBox ResponsePortraitBox;
@@ -529,16 +504,6 @@ namespace ReIncarnation_Quest_Maker
         {
             ThisQuestVariable.selectImg = MainForm.GetTextFromComboBox(sender);
         }
-
-        /*public void OnQuestMarkerChanged(object sender, EventArgs e)
-        {
-            ThisQuestVariable.ThisOptionalFields.questMarker = MainForm.GetTextFromComboBox(sender);
-        }
-
-        public void OnSelectBackgroundChanged(object sender, EventArgs e)
-        {
-            ThisQuestVariable.ThisOptionalFields.selectBackground = MainForm.GetTextFromComboBox(sender);
-        }*/
 
         public void OnSendListenStringChanged(object sender, EventArgs e)
         {
@@ -643,14 +608,12 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestDialogueGivesQuestPanel : SortablePanel<QuestDialogueGivesQuestPanel, KVPair>
+    public class QuestDialogueGivesQuestPanel : KVPanel<QuestDialogueGivesQuestPanel>
     {
-        public QuestDialogueGivesQuestPanel()
-        {
-        }
 
         public QuestDialogueGivesQuestPanel(OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent) : base(Parent)
         {
+
         }
 
         public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent)
@@ -659,15 +622,9 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestStageDialoguePanel : SortablePanel<QuestStageDialoguePanel, KVPair>
+    public class QuestStageDialoguePanel : KVPanel<QuestStageDialoguePanel>
     {
         ModifyQuestVariableTable ThisTable;
-
-        public override bool Trash_Addon()
-        {
-            Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
-            return true;
-        }
 
         public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent) { }
 
@@ -693,15 +650,9 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestStageParticlePanel : SortablePanel<QuestStageParticlePanel, KVPair>
+    public class QuestStageParticlePanel : KVPanel<QuestStageParticlePanel>
     {
         ModifyQuestVariableTable ThisTable;
-
-        public override bool Trash_Addon()
-        {
-            Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
-            return true;
-        }
 
         public QuestStageParticlePanel(OrganizedControlList<QuestStageParticlePanel, KVPair> Parent) : base(Parent)
         {
