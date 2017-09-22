@@ -206,4 +206,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             Listeners.Add(Listener);
         }
     }
+
+    public abstract class IndexableVariable : QuestVariable {
+
+
+        public abstract string ConvertToText_Full(int Index, int TabCount = 0);
+    }
 }

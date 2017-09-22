@@ -15,7 +15,7 @@ using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker
 {
-    public class OrganizedControlList<T, U> where T : SortablePanel<T, U>, new()
+    public class OrganizedControlList<T, U> where T : SortablePanel<T, U>
     {
         public U ThisQuestVariable;
 
@@ -98,7 +98,7 @@ namespace ReIncarnation_Quest_Maker
     }
 
 
-    public abstract class SortablePanel<T, U> : Panel where T : SortablePanel<T, U>, new()
+    public abstract class SortablePanel<T, U> : Panel where T : SortablePanel<T, U>
     {
         DefaultTable ThisTable;
         public Panel DownContentsPanel;
@@ -118,12 +118,11 @@ namespace ReIncarnation_Quest_Maker
 
         public U ThisQuestVariable;
 
-        public Func<U, OrganizedControlList<T, U>, T> GenerateFunction;
         public Action FinishUpFunction;
 
         public static IComparer<T> Sort()
         {
-            return new T().SortComparer();
+            return new IComparer_Finder();
         }
 
         public void Trash(object sender, EventArgs e)
@@ -264,11 +263,20 @@ namespace ReIncarnation_Quest_Maker
 
         public static T Generate(U Item, OrganizedControlList<T, U> Parent)
         {
-            T ReturnValue = new T().GenerateFunction(Item, Parent);
+            //fix
+            T ReturnValue = (T)Activator.CreateInstance(typeof(T), Parent);
+            ReturnValue = ReturnValue.CreateInstanceAddon(Item, Parent);
+            ReturnValue.Generate_Addon(Item, Parent);
             ReturnValue.ThisQuestVariable = Item;
             ReturnValue.FinishUp();
             return ReturnValue;
         }
+
+        public virtual T CreateInstanceAddon(U Item, OrganizedControlList<T, U> Parent) {
+            return (T)this;
+        }
+
+        public abstract void Generate_Addon(U Item, OrganizedControlList<T, U> Parent);
 
         public void AddControl(Control Item, bool AddToDownContentsPanel = false)
         {
@@ -306,7 +314,9 @@ namespace ReIncarnation_Quest_Maker
             ResetSize(ParentControlList);
         }
 
-        public abstract IComparer<T> SortComparer();
+        public virtual IComparer<T> SortComparer() {
+            return new SortablePanel_IComparer();
+        }
 
         public class SortablePanel_IComparer : IComparer<T>
         {
@@ -315,9 +325,17 @@ namespace ReIncarnation_Quest_Maker
                 return a.ListPosition.CompareTo(b.ListPosition);
             }
         }
+
+        public class IComparer_Finder : IComparer<T>
+        {
+            public int Compare(T a, T b) //Compare TA to TB kappa ta loses
+            {
+                return a.SortComparer().Compare(a, b);
+            }
+        }
     }
 
-    public class ListPanel<T, U> : Panel where T : SortablePanel<T, U>, new()
+    public class ListPanel<T, U> : Panel where T : SortablePanel<T, U>
     {
         public DefaultTable ThisTable;
         public DefaultPanel ThisPanel;

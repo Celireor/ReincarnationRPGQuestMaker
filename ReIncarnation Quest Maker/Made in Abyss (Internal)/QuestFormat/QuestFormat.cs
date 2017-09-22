@@ -24,6 +24,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public override void GenerateFromKV(KVPair ThisKV)
         {
+
             KVPairFolder ThisKVPairFolder = ThisKV.FolderValue;
             ThisKVPairFolder.Items.ForEach(obj =>
             {
@@ -308,35 +309,35 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        class QuestTaskStringConverter<T> where T : QuestTask
+        class QuestIndexableVariableStringConverter<T, U> where T : IndexableVariable, U
         {
-            List<T> TaskList = new List<T>();
-            string TaskType;
+            List<T> VarList = new List<T>();
+            string VarType;
 
-            public QuestTaskStringConverter(string TaskType) { this.TaskType = TaskType; }
+            public QuestIndexableVariableStringConverter(string VarType) { this.VarType = VarType; }
 
-            public void Add(QuestTask obj)
+            public void Add(U obj)
             {
                 Type ObjType = obj.GetType();
                 if (ObjType == typeof(T))
                 {
-                    TaskList.Add(obj as T);
+                    VarList.Add(obj as T);
                 }
             }
 
             public string Print(int TabCount)
             {
 
-                if (TaskList.Count > 0)
+                if (VarList.Count > 0)
                 {
                     int index = 0;
                     string taskstring = "";
-                    TaskList.ForEach(obj =>
+                    VarList.ForEach(obj =>
                     {
                         taskstring += obj.ConvertToText_Full(index, TabCount + 2);
                         index++;
                     });
-                    return PrintEncapsulation(taskstring, TabCount + 1, TaskType, true);
+                    return PrintEncapsulation(taskstring, TabCount + 1, VarType, true);
                 }
                 return "";
             }
@@ -368,11 +369,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 string TaskString = "";
 
-                QuestTaskStringConverter<QuestTask_gather> GatherTaskList = new QuestTaskStringConverter<QuestTask_gather>("gather");
-                QuestTaskStringConverter<QuestTask_location> LocationTasksList = new QuestTaskStringConverter<QuestTask_location>("location");
-                QuestTaskStringConverter<QuestTask_talkto> TalkToTaskList = new QuestTaskStringConverter<QuestTask_talkto>("talkto");
-                QuestTaskStringConverter<QuestTask_kill> KillTaskList = new QuestTaskStringConverter<QuestTask_kill>("kill");
-                QuestTaskStringConverter<QuestTask_killType> KillTypeTaskList = new QuestTaskStringConverter<QuestTask_killType>("killType");
+                QuestIndexableVariableStringConverter<QuestTask_gather, QuestTask> GatherTaskList = new QuestIndexableVariableStringConverter<QuestTask_gather, QuestTask>("gather");
+                QuestIndexableVariableStringConverter<QuestTask_location, QuestTask> LocationTasksList = new QuestIndexableVariableStringConverter<QuestTask_location, QuestTask>("location");
+                QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask> TalkToTaskList = new QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask>("talkto");
+                QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask> KillTaskList = new QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask>("kill");
+                QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask> KillTypeTaskList = new QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask>("killType");
 
                 tasks.ForEach(obj =>
                 {
@@ -522,7 +523,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string selectText;
         public string selectImg;
 
+        public List<KVPair> giveQuests = new List<KVPair>();
+
         public QuestDialogueResponse Response;
+
+        //public List<QuestDialogueOption_hideIf> hideIf = new List<QuestDialogueOption_hideIf>();
 
         public QuestDialogueOption_OptionalFields ThisOptionalFields {
             get { return (QuestDialogueOption_OptionalFields)OptionalFields; }
@@ -556,8 +561,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 ReturnValue += new string('\t', TabCount) + "\"" + "listeningQuest" + "\"\t\"" + ThisEditorExternal.listeningQuest + "\"" + Environment.NewLine; ;
             }*/
 
-            if (ThisOptionalFields.ThisEditorExternal.GivesQuest) {
-                ReturnValue += PrintKeyValue("giveQuest", ThisOptionalFields.ThisEditorExternal.giveQuest.ToString(), TabCount);
+            if (giveQuests.Count > 0) {
+                string giveQuestsString = "";
+                giveQuests.ForEach(obj => {
+                    giveQuestsString += obj.ConvertToText(TabCount + 1);
+                });
+                ReturnValue += PrintEncapsulation(giveQuestsString, TabCount, "giveQuests", true);
             }
 
             if (Response != null) {
@@ -597,8 +606,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                         break;
                     case "giveQuest":
                         {
-                            ReturnValue.ThisOptionalFields.ThisEditorExternal.giveQuest = Convert.ToInt32(obj.Value);
-                            ReturnValue.ThisOptionalFields.ThisEditorExternal.GivesQuest = true;
+                            ReturnValue.giveQuests.Add(new KVPair(obj.Value, "false"));
+                        }
+                        break;
+                    case "giveQuests":
+                        {
+                            obj.FolderValue.Items.ForEach(obj2 => {
+                                ReturnValue.giveQuests.Add(GenerateFromKeyValue<KVPair>(obj2));
+                                });
                         }
                         break;
                 }
@@ -663,8 +678,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 public Quest Parent;
                 public int LastID;
-                public int giveQuest;
-                public bool GivesQuest;
+                /*public int giveQuest;
+                public bool GivesQuest;*/
             }
         }
     }

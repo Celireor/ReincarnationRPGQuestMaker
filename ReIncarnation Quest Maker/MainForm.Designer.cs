@@ -78,17 +78,17 @@
             this.QuestStageDialogue = new System.Windows.Forms.TabPage();
             this.questStageDialogueList = new System.Windows.Forms.Panel();
             this.NewDialogueButton = new System.Windows.Forms.Button();
-            this.QuestStageList = new System.Windows.Forms.Panel();
-            this.newqueststagebutton = new System.Windows.Forms.Button();
-            this.QuestDialoguePage = new System.Windows.Forms.TabPage();
-            this.QuestDialogueList = new System.Windows.Forms.Panel();
-            this.NewQuestDialogueButton = new System.Windows.Forms.Button();
-            this.QuestList = new System.Windows.Forms.Panel();
-            this.newquestbutton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.QuestStageParticleTabPage = new System.Windows.Forms.TabPage();
             this.questStageParticleList = new System.Windows.Forms.Panel();
             this.NewQuestStageParticle = new System.Windows.Forms.Button();
+            this.QuestStageList = new System.Windows.Forms.Panel();
+            this.newqueststagebutton = new System.Windows.Forms.Button();
+            this.QuestDialoguePage = new System.Windows.Forms.TabPage();
+            this.QuestList = new System.Windows.Forms.Panel();
+            this.newquestbutton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.NewQuestDialogueButton = new System.Windows.Forms.Button();
+            this.QuestDialogueList = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Quest_QuestList_Split)).BeginInit();
             this.Quest_QuestList_Split.Panel1.SuspendLayout();
@@ -118,8 +118,8 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.QuestStageDialogue.SuspendLayout();
-            this.QuestDialoguePage.SuspendLayout();
             this.QuestStageParticleTabPage.SuspendLayout();
+            this.QuestDialoguePage.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -717,6 +717,40 @@
             this.NewDialogueButton.UseVisualStyleBackColor = true;
             this.NewDialogueButton.Click += new System.EventHandler(this.NewStageDialogueButton_Click);
             // 
+            // QuestStageParticleTabPage
+            // 
+            this.QuestStageParticleTabPage.Controls.Add(this.questStageParticleList);
+            this.QuestStageParticleTabPage.Controls.Add(this.NewQuestStageParticle);
+            this.QuestStageParticleTabPage.Location = new System.Drawing.Point(4, 22);
+            this.QuestStageParticleTabPage.Name = "QuestStageParticleTabPage";
+            this.QuestStageParticleTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.QuestStageParticleTabPage.Size = new System.Drawing.Size(395, 340);
+            this.QuestStageParticleTabPage.TabIndex = 2;
+            this.QuestStageParticleTabPage.Text = "Particles";
+            this.QuestStageParticleTabPage.UseVisualStyleBackColor = true;
+            // 
+            // questStageParticleList
+            // 
+            this.questStageParticleList.AutoScroll = true;
+            this.questStageParticleList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.questStageParticleList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questStageParticleList.Location = new System.Drawing.Point(3, 3);
+            this.questStageParticleList.Name = "questStageParticleList";
+            this.questStageParticleList.Size = new System.Drawing.Size(389, 284);
+            this.questStageParticleList.TabIndex = 7;
+            // 
+            // NewQuestStageParticle
+            // 
+            this.NewQuestStageParticle.AutoSize = true;
+            this.NewQuestStageParticle.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.NewQuestStageParticle.Location = new System.Drawing.Point(3, 287);
+            this.NewQuestStageParticle.Name = "NewQuestStageParticle";
+            this.NewQuestStageParticle.Size = new System.Drawing.Size(389, 50);
+            this.NewQuestStageParticle.TabIndex = 6;
+            this.NewQuestStageParticle.Text = "New Particle";
+            this.NewQuestStageParticle.UseVisualStyleBackColor = true;
+            this.NewQuestStageParticle.Click += new System.EventHandler(this.NewStageParticle_Click);
+            // 
             // QuestStageList
             // 
             this.QuestStageList.AutoScroll = true;
@@ -751,28 +785,6 @@
             this.QuestDialoguePage.Text = "Quest Dialogue";
             this.QuestDialoguePage.UseVisualStyleBackColor = true;
             // 
-            // QuestDialogueList
-            // 
-            this.QuestDialogueList.AutoScroll = true;
-            this.QuestDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.QuestDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestDialogueList.Location = new System.Drawing.Point(3, 3);
-            this.QuestDialogueList.Name = "QuestDialogueList";
-            this.QuestDialogueList.Size = new System.Drawing.Size(623, 454);
-            this.QuestDialogueList.TabIndex = 2;
-            // 
-            // NewQuestDialogueButton
-            // 
-            this.NewQuestDialogueButton.AutoSize = true;
-            this.NewQuestDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.NewQuestDialogueButton.Location = new System.Drawing.Point(3, 457);
-            this.NewQuestDialogueButton.Name = "NewQuestDialogueButton";
-            this.NewQuestDialogueButton.Size = new System.Drawing.Size(623, 50);
-            this.NewQuestDialogueButton.TabIndex = 1;
-            this.NewQuestDialogueButton.Text = "New Dialogue";
-            this.NewQuestDialogueButton.UseVisualStyleBackColor = true;
-            this.NewQuestDialogueButton.Click += new System.EventHandler(this.NewQuestDialogueButton_Click);
-            // 
             // QuestList
             // 
             this.QuestList.AutoScroll = true;
@@ -806,39 +818,27 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Quest ID";
             // 
-            // QuestStageParticleTabPage
+            // NewQuestDialogueButton
             // 
-            this.QuestStageParticleTabPage.Controls.Add(this.questStageParticleList);
-            this.QuestStageParticleTabPage.Controls.Add(this.NewQuestStageParticle);
-            this.QuestStageParticleTabPage.Location = new System.Drawing.Point(4, 22);
-            this.QuestStageParticleTabPage.Name = "QuestStageParticleTabPage";
-            this.QuestStageParticleTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.QuestStageParticleTabPage.Size = new System.Drawing.Size(395, 340);
-            this.QuestStageParticleTabPage.TabIndex = 2;
-            this.QuestStageParticleTabPage.Text = "Particles";
-            this.QuestStageParticleTabPage.UseVisualStyleBackColor = true;
+            this.NewQuestDialogueButton.AutoSize = true;
+            this.NewQuestDialogueButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.NewQuestDialogueButton.Location = new System.Drawing.Point(3, 457);
+            this.NewQuestDialogueButton.Name = "NewQuestDialogueButton";
+            this.NewQuestDialogueButton.Size = new System.Drawing.Size(623, 50);
+            this.NewQuestDialogueButton.TabIndex = 5;
+            this.NewQuestDialogueButton.Text = "New Dialogue";
+            this.NewQuestDialogueButton.UseVisualStyleBackColor = true;
+            this.NewQuestDialogueButton.Click += new System.EventHandler(this.NewQuestDialogueButton_Click);
             // 
-            // questStageParticleList
+            // QuestDialogueList
             // 
-            this.questStageParticleList.AutoScroll = true;
-            this.questStageParticleList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.questStageParticleList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.questStageParticleList.Location = new System.Drawing.Point(3, 3);
-            this.questStageParticleList.Name = "questStageParticleList";
-            this.questStageParticleList.Size = new System.Drawing.Size(389, 284);
-            this.questStageParticleList.TabIndex = 7;
-            // 
-            // NewQuestStageParticle
-            // 
-            this.NewQuestStageParticle.AutoSize = true;
-            this.NewQuestStageParticle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.NewQuestStageParticle.Location = new System.Drawing.Point(3, 287);
-            this.NewQuestStageParticle.Name = "NewQuestStageParticle";
-            this.NewQuestStageParticle.Size = new System.Drawing.Size(389, 50);
-            this.NewQuestStageParticle.TabIndex = 6;
-            this.NewQuestStageParticle.Text = "New Particle";
-            this.NewQuestStageParticle.UseVisualStyleBackColor = true;
-            this.NewQuestStageParticle.Click += new System.EventHandler(this.NewStageParticle_Click);
+            this.QuestDialogueList.AutoScroll = true;
+            this.QuestDialogueList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.QuestDialogueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.QuestDialogueList.Location = new System.Drawing.Point(3, 3);
+            this.QuestDialogueList.Name = "QuestDialogueList";
+            this.QuestDialogueList.Size = new System.Drawing.Size(623, 454);
+            this.QuestDialogueList.TabIndex = 6;
             // 
             // MainForm
             // 
@@ -887,10 +887,10 @@
             this.tableLayoutPanel3.PerformLayout();
             this.QuestStageDialogue.ResumeLayout(false);
             this.QuestStageDialogue.PerformLayout();
-            this.QuestDialoguePage.ResumeLayout(false);
-            this.QuestDialoguePage.PerformLayout();
             this.QuestStageParticleTabPage.ResumeLayout(false);
             this.QuestStageParticleTabPage.PerformLayout();
+            this.QuestDialoguePage.ResumeLayout(false);
+            this.QuestDialoguePage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -951,13 +951,13 @@
         private System.Windows.Forms.Panel QuestStageTaskList;
         private System.Windows.Forms.ComboBox QuestStageTaskType;
         private System.Windows.Forms.TabPage QuestDialoguePage;
-        private System.Windows.Forms.Panel QuestDialogueList;
-        private System.Windows.Forms.Button NewQuestDialogueButton;
         private System.Windows.Forms.Panel questStageDialogueList;
         private System.Windows.Forms.Button NewDialogueButton;
         private System.Windows.Forms.TabPage QuestStageParticleTabPage;
         private System.Windows.Forms.Panel questStageParticleList;
         private System.Windows.Forms.Button NewQuestStageParticle;
+        private System.Windows.Forms.Panel QuestDialogueList;
+        private System.Windows.Forms.Button NewQuestDialogueButton;
     }
 }
 

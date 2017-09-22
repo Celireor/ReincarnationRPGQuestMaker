@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
-    public abstract class QuestTask : QuestVariable
+    public abstract class QuestTask : IndexableVariable
     {
         public static ListeningList<string> PossibleTaskTypes = new ListeningList<string>();
 
@@ -78,8 +78,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
             return StringToEncapsulate;
         }
-
-        public abstract string ConvertToText_Full(int Index, int TabCount = 0);
 
         public override void GenerateFromKV(KVPair ThisKV)
         {
@@ -173,18 +171,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             ThisEditorExternal.ItemName = ThisKV.Key;
         }
 
-        public new string ConvertToText(int TabCount)
-        {
-            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.ItemName, true);
-        }
-
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
         {
             public string ItemName;
         }
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
-            return ConvertToText(TabCount);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.ItemName, true);
         }
     }
     public class QuestTask_killType : QuestTask
@@ -202,18 +195,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public QuestTask_killType() { }
 
-        public new string ConvertToText(int TabCount)
-        {
-            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.EnemyGroupName, true);
-        }
-
         public class QuestTaskLocation_EditorExternal : QuestTask_EditorExternal
         {
             public string EnemyGroupName;
         }
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
-            return ConvertToText(TabCount);
+            return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.EnemyGroupName, true);
         }
     }
 }
