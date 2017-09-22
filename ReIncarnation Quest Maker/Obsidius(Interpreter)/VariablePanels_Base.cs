@@ -113,8 +113,6 @@ namespace ReIncarnation_Quest_Maker
         public OrganizedControlList<T, U> ParentControlList;
 
         public int ListPosition;
-        public Action<T, int> Move_Addon;
-        public Func<bool> TrashFunction;
 
         public U ThisQuestVariable;
 
@@ -127,11 +125,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void Trash(object sender, EventArgs e)
         {
-            bool CanTrash = true;
-            if (TrashFunction != null)
-            {
-                CanTrash = TrashFunction();
-            }
+            bool CanTrash = Trash_Addon();
             if (CanTrash)
             {
                 ParentControlList.Remove((T)this);
@@ -140,6 +134,8 @@ namespace ReIncarnation_Quest_Maker
                 });
             }
         }
+
+        public virtual bool Trash_Addon() { return true; }
 
         public void MoveUp(object sender, EventArgs e)
         {
@@ -158,11 +154,13 @@ namespace ReIncarnation_Quest_Maker
                 return;
             }
             T OtherItem = ParentControlList.ThisList.Swap(ListPosition, ListPosition + Displacement);
-            Move_Addon?.Invoke(OtherItem, ListPosition + Displacement);
+            Move_Addon(OtherItem, ListPosition + Displacement);
             ListPosition += Displacement;
             OtherItem.ListPosition -= Displacement;
             ParentControlList.SortControls();
         }
+
+        public virtual void Move_Addon(T OtherItem, int OtherPos) { }
 
         public void UpdateLocation(int Offset)
         {
@@ -433,6 +431,49 @@ namespace ReIncarnation_Quest_Maker
             }
 
             RowCount++;
+        }
+    }
+
+    /*public class MultiTypePanel<T, U> : SortablePanel<T, U> where T : SortablePanel<T, U>
+    {
+        public static Dictionary<Type, Type> TaskToGenerateFunction = new Dictionary<Type, Type>();
+        public ModifyQuestVariableTable ThisTable;
+
+        public MultiTypePanel(OrganizedControlList<T, U> Parent) : base(Parent)
+        {
+            ThisTable = new ModifyQuestVariableTable();
+            AddControl(ThisTable);
+            //Move_Addon = moveAddon;
+        }
+
+        /*static MultiTypePanel()
+        {
+            TaskToGenerateFunction.Add(typeof(QuestTask_location), typeof(QuestTaskPanel_location));
+            TaskToGenerateFunction.Add(typeof(QuestTask_talkto), typeof(QuestTaskPanel_talkto));
+            TaskToGenerateFunction.Add(typeof(QuestTask_kill), typeof(QuestTaskPanel_kill));
+            TaskToGenerateFunction.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
+            TaskToGenerateFunction.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
+        }*/
+
+        /*public override QuestTaskPanel CreateInstanceAddon(T Item, OrganizedControlList<T, U> Parent)
+        {
+            Type ReturnType;
+            TaskToGenerateFunction.TryGetValue(Item.GetType(), out ReturnType);
+#if DEBUG
+            if (ReturnType.BaseType != typeof(QuestTaskPanel))
+            {
+                throw new ArgumentNullException("put returntype in wtf");
+            }
+#endif
+            QuestTaskPanel ReturnValue = (QuestTaskPanel)Activator.CreateInstance(ReturnType, Parent);
+
+            return ReturnValue;
+        }
+
+        public override void Generate_Addon(U Item, OrganizedControlList<T, U> Parent)
+        {
+            throw new NotImplementedException();
+            //implement in inherited classes
         }
     }
 

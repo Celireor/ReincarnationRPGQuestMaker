@@ -22,7 +22,7 @@ namespace ReIncarnation_Quest_Maker
         private DefaultLabel QuestButtonQuestName;
         // this.newquestbutton = new System.Windows.Forms.Button();
 
-        public void moveAddon(QuestButton Other, int OtherPos)
+        public override void Move_Addon(QuestButton Other, int OtherPos)
         {
             int temp = ThisQuestVariable.questID;
             ThisQuestVariable.SetQuestID(Other.ThisQuestVariable.questID);
@@ -32,7 +32,7 @@ namespace ReIncarnation_Quest_Maker
             Interpreter.ThisForm.UpdateScreen();
         }
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             if (ParentControlList.ThisList.Count > 1)
             {
@@ -57,9 +57,6 @@ namespace ReIncarnation_Quest_Maker
         public override void Generate_Addon(Quest NewQuest, OrganizedControlList<QuestButton, Quest> Parent)
         {
             //QuestButton ReturnValue = new QuestButton(Parent);
-
-            Move_Addon = moveAddon;
-            TrashFunction = Trash;
 
             QuestButtonQuestName = new DefaultLabel("(ID: " + NewQuest.questID.ToString() + ") " + NewQuest.name);
 
@@ -97,7 +94,7 @@ namespace ReIncarnation_Quest_Maker
     {
         ModifyQuestVariableTable ThisTable;
 
-        public void moveAddon(PrerequisitePanel other, int OtherPos)
+        public override void Move_Addon(PrerequisitePanel other, int OtherPos)
         {
             Interpreter.SelectedQuest.prerequisites.Swap(ListPosition, OtherPos);
         }
@@ -111,7 +108,7 @@ namespace ReIncarnation_Quest_Maker
             ThisQuestVariable.Value = MainForm.GetTextFromTextBox(sender);
         }
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             Interpreter.SelectedQuest.prerequisites.Remove(ThisQuestVariable);
             return true;
@@ -124,9 +121,6 @@ namespace ReIncarnation_Quest_Maker
             //PrerequisitePanel ReturnValue = new PrerequisitePanel(Parent);
             ThisTable = new ModifyQuestVariableTable();
             AddControl(ThisTable);
-
-            Move_Addon = moveAddon;
-            TrashFunction = Trash;
 
             ThisTable.AddItem("Type: ", new DefaultDropDown(Item.Key, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestPrerequisites), UpdateType);
             ThisTable.AddItem("Value: ", new DefaultTextBox(Item.Value), UpdateValue);
@@ -155,7 +149,7 @@ namespace ReIncarnation_Quest_Maker
         public DefaultLabel stagenumlabel;
         public TextBox QuestStageNameTextBox;
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             if (ParentControlList.ThisList.Count > 1)
             {
@@ -166,7 +160,7 @@ namespace ReIncarnation_Quest_Maker
             return false;
         }
 
-        public void moveAddon(QuestStagePanel other, int otherpos)
+        public override void Move_Addon(QuestStagePanel other, int otherpos)
         {
             ThisQuestVariable.ThisEditorExternal.Parent.stages.Swap(ListPosition, otherpos);
             UtilityFunctions.Swap2Variables(ref ThisQuestVariable.ThisEditorExternal.StageNum, ref other.ThisQuestVariable.ThisEditorExternal.StageNum);
@@ -211,8 +205,6 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestStagePanel(OrganizedControlList<QuestStagePanel, QuestStage> Parent) : base(Parent)
         {
-            TrashFunction = Trash;
-            Move_Addon = moveAddon;
 
             table1 = new DefaultTable(3, 1);
 
@@ -244,11 +236,15 @@ namespace ReIncarnation_Quest_Maker
         public static Dictionary<Type, Type> TaskToGenerateFunction = new Dictionary<Type, Type>();
         public ModifyQuestVariableTable ThisTable;
 
+        public override bool Trash_Addon()
+        {
+            return ThisQuestVariable.Trash();
+        }
+
         public QuestTaskPanel(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent)
         {
             ThisTable = new ModifyQuestVariableTable();
             AddControl(ThisTable);
-            Move_Addon = moveAddon;
         }
 
         static QuestTaskPanel()
@@ -260,7 +256,7 @@ namespace ReIncarnation_Quest_Maker
             TaskToGenerateFunction.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
         }
 
-        public void moveAddon(QuestTaskPanel OtherObject, int OtherPosition)
+        public override void Move_Addon(QuestTaskPanel OtherObject, int OtherPosition)
         {
             ThisQuestVariable.ThisEditorExternal.ParentStage.tasks.Swap(ListPosition, OtherPosition);
         }
@@ -276,7 +272,6 @@ namespace ReIncarnation_Quest_Maker
             }
 #endif
             QuestTaskPanel ReturnValue = (QuestTaskPanel)Activator.CreateInstance(ReturnType, Parent);
-            ReturnValue.TrashFunction = Item.Trash;
 
             return ReturnValue;
         }
@@ -445,7 +440,7 @@ namespace ReIncarnation_Quest_Maker
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ThisOptionsList;
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             return ThisQuestVariable.Trash();
         }
@@ -457,7 +452,6 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestDialoguePanel(OrganizedControlList<QuestDialoguePanel, QuestDialogue> Parent) : base(Parent)
         {
-            TrashFunction = Trash;
             FinishUpFunction = FinishUpFunction_2;
         }
 
@@ -515,6 +509,11 @@ namespace ReIncarnation_Quest_Maker
         DefaultTextBox ResponseTextBox;
         DefaultTextBox ResponsePortraitBox;
         DefaultTextBox PlaySoundBox;
+
+        public override bool Trash_Addon()
+        {
+            return ThisQuestVariable.Trash();
+        }
 
         public QuestDialogueOption NewQuestDialogueOption()
         {
@@ -608,8 +607,6 @@ namespace ReIncarnation_Quest_Maker
         {
             //QuestDialogueOptionsPanel ReturnValue = new QuestDialogueOptionsPanel(Parent);
 
-            TrashFunction = Item.Trash;
-
             DialogueOptionsTable.AddItem("Selection Text", new DefaultTextBox(Item.selectText), OnSelectionTextChanged);
             DialogueOptionsTable.AddItem("Selection Image", new DefaultDropDown(Item.selectImg, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestOptionSelectImage), OnSelectionImageChanged);
             //DialogueOptionsTable.AddItem("Quest Marker", new DefaultDropDown(Item.ThisOptionalFields.questMarker, new List<string>()), OnQuestMarkerChanged);
@@ -666,16 +663,13 @@ namespace ReIncarnation_Quest_Maker
     {
         ModifyQuestVariableTable ThisTable;
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
             return true;
         }
 
-        public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent)
-        {
-            TrashFunction = Trash;
-        }
+        public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent) { }
 
         public void ModifyNPCName(object sender, EventArgs e)
         {
@@ -703,7 +697,7 @@ namespace ReIncarnation_Quest_Maker
     {
         ModifyQuestVariableTable ThisTable;
 
-        public bool Trash()
+        public override bool Trash_Addon()
         {
             Interpreter.SelectedQuestStage.dialogue.Remove(ThisQuestVariable);
             return true;
@@ -711,7 +705,6 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestStageParticlePanel(OrganizedControlList<QuestStageParticlePanel, KVPair> Parent) : base(Parent)
         {
-            TrashFunction = Trash;
         }
 
         public void ModifyNPCName(object sender, EventArgs e)
