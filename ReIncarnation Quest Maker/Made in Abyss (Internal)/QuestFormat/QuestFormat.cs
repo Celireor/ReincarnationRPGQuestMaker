@@ -158,7 +158,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 {
                     case "prerequisites":
                         {
-                            prerequisites = (KVList)FillFromKeyValueFolder<KVPair>(IterationKV.FolderValue);
+                            prerequisites = new KVList(FillFromKeyValueFolder<KVPair>(IterationKV.FolderValue));
                         }
                         break;
                     /*case "affectedNpcs":

@@ -479,7 +479,7 @@ namespace ReIncarnation_Quest_Maker
         public ModifyQuestVariableTable DialogueResponseTable;
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
-        //public ListPa
+        public ListPanel<QuestDialogueGivesQuestPanel, KVPair> giveQuestsList;
 
         DefaultTextBox ResponseTextBox;
         DefaultTextBox ResponsePortraitBox;
@@ -493,6 +493,12 @@ namespace ReIncarnation_Quest_Maker
         public QuestDialogueOption NewQuestDialogueOption()
         {
             return QuestDialogueOption.Generate(Interpreter.SelectedQuest, ThisQuestVariable.Response.options);
+        }
+
+        public KVPair NewQuestDialogueGivesQuestPanel() {
+            KVPair ReturnValue = new KVPair();
+            ThisQuestVariable.giveQuests.Add(ReturnValue);
+            return ReturnValue;
         }
 
         public void OnSelectionTextChanged(object sender, EventArgs e)
@@ -559,14 +565,17 @@ namespace ReIncarnation_Quest_Maker
 
             FinishUpFunction = FinishUp_2;
 
-            ThisTable = new DefaultTable(1, 3);
+            ThisTable = new DefaultTable(1, 4);
 
             DialogueOptionsTable = new ModifyQuestVariableTable();
             DialogueResponseTable = new ModifyQuestVariableTable();
-            ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, QuestDialogueOptionsPanel.Sort());
+            ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, Sort());
+            giveQuestsList = new ListPanel<QuestDialogueGivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, QuestDialogueGivesQuestPanel.Sort());
 
             AddControl(ThisTable, true);
-            ThisTable.Controls.Add(DialogueOptionsTable, 0, 0);
+
+            ThisTable.Controls.Add(giveQuestsList, 0, 0);
+            ThisTable.Controls.Add(DialogueOptionsTable, 0, 1);
         }
         public override void Generate_Addon (QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
         {
@@ -576,8 +585,6 @@ namespace ReIncarnation_Quest_Maker
             DialogueOptionsTable.AddItem("Selection Image", new DefaultDropDown(Item.selectImg, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestOptionSelectImage), OnSelectionImageChanged);
             //DialogueOptionsTable.AddItem("Quest Marker", new DefaultDropDown(Item.ThisOptionalFields.questMarker, new List<string>()), OnQuestMarkerChanged);
             //DialogueOptionsTable.AddItem("Select Background", new DefaultDropDown(Item.ThisOptionalFields.selectBackground, new List<string>()), OnSelectBackgroundChanged);
-           // DialogueOptionsTable.AddItem("Gives Quest", new DefaultCheckBox(Item.ThisOptionalFields.ThisEditorExternal.GivesQuest), OnGivesQuestChanged);
-           // DialogueOptionsTable.AddItem("Quest Given", new DefaultNumericUpDown(Item.ThisOptionalFields.ThisEditorExternal.giveQuest), OnQuestGivenChanged);
             DialogueOptionsTable.AddItem("Sent Listen String", new DefaultTextBox(Item.ThisOptionalFields.sendListenString), OnSendListenStringChanged);
             DialogueOptionsTable.AddItem("Has Response", new DefaultCheckBox(Item.Response != null), OnHasResponseChanged);
 
@@ -594,6 +601,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void FinishUp_2()
         {
+            giveQuestsList.ThisList.Refresh(ThisQuestVariable.giveQuests);
             if (ThisQuestVariable.Response != null)
             {
                 ResponseTextBox.Text = ThisQuestVariable.Response.responseText;
@@ -601,24 +609,36 @@ namespace ReIncarnation_Quest_Maker
                 PlaySoundBox.Text = ThisQuestVariable.Response.ThisOptionalFields.playSound;
 
                 ResponseOptionsList.ThisList.Refresh(ThisQuestVariable.Response.options);
-
-                ThisTable.Controls.Add(DialogueResponseTable, 0, 1);
-                ThisTable.Controls.Add(ResponseOptionsList, 0, 2);
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 2);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 3);
             }
         }
     }
 
     public class QuestDialogueGivesQuestPanel : KVPanel<QuestDialogueGivesQuestPanel>
     {
+        public ModifyQuestVariableTable ThisTable;
+
+        public void QuestIDOnChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Key = ((int)MainForm.GetNumberFromNumericUpDown(sender)).ToString();
+        }
+        public void ForceGiveQuestChanged(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Value = MainForm.GetStateFromCheckBox(sender).ToString().ToLower();
+        }
 
         public QuestDialogueGivesQuestPanel(OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent) : base(Parent)
         {
-
+            ThisTable = new ModifyQuestVariableTable();
         }
 
         public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent)
         {
-            throw new NotImplementedException();
+            ThisTable.AddItem("Quest ID", new DefaultNumericUpDown(Convert.ToInt32(Item.Key)), QuestIDOnChanged);
+            ThisTable.AddItem("Force Give", new DefaultCheckBox(Convert.ToBoolean(Item.Value)), ForceGiveQuestChanged);
+
+            AddControl(ThisTable);
         }
     }
 

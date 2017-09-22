@@ -33,21 +33,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 if (typeof(IConvertible).IsAssignableFrom(AllFields[x].FieldType))
                 {
-                    string Value;
+                    string Value = Convert.ToString(AllFields[x].GetValue(ThisObject)); ;
                     if (AllFields[x].FieldType == typeof(bool))
                     {
-                        if ((bool)AllFields[x].GetValue(ThisObject))
-                        {
-                            Value = "true";
-                        }
-                        else
-                        {
-                            Value = "false";
-                        }
-                    }
-                    else
-                    {
-                        Value = Convert.ToString(AllFields[x].GetValue(ThisObject));
+                        Value = Value.ToLower();
                     }
                     if (ConvertEmptyFields || Value != "")
                     {
@@ -196,6 +185,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     }
 
     public class KVList : ListeningList<KVPair> {
+        public KVList(List<KVPair> ThisList) : base()
+        {
+            ThisList.ForEach(obj => Add(obj));
+        }
+
         public KVList() {
             AddListener(SetEncapsulatingList, false, true, false);
         }
