@@ -226,7 +226,6 @@ namespace ReIncarnation_Quest_Maker
     }
     public class QuestTaskPanel : MultiTypePanel<QuestTaskPanel, QuestTask>
     {
-        public static new Dictionary<Type, Type> ItemToPanel = new Dictionary<Type, Type>();
         public ModifyQuestVariableTable ThisTable;
 
         public override bool Trash_Addon()
@@ -236,7 +235,6 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestTaskPanel(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent)
         {
-            base.ItemToPanel = ItemToPanel;
             ThisTable = new ModifyQuestVariableTable();
             AddControl(ThisTable);
         }
@@ -480,6 +478,7 @@ namespace ReIncarnation_Quest_Maker
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
         public ListPanel<QuestDialogueGivesQuestPanel, KVPair> giveQuestsList;
+        public ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> hideIfList;
 
         DefaultTextBox ResponseTextBox;
         DefaultTextBox ResponsePortraitBox;
@@ -499,6 +498,10 @@ namespace ReIncarnation_Quest_Maker
             KVPair ReturnValue = new KVPair();
             ThisQuestVariable.giveQuests.Add(ReturnValue);
             return ReturnValue;
+        }
+
+        public QuestDialogueOptionHideIf NewHideIf() {
+            return QuestDialogueOptionHideIf.Generate("quests", ThisQuestVariable);
         }
 
         public void OnSelectionTextChanged(object sender, EventArgs e)
@@ -565,17 +568,19 @@ namespace ReIncarnation_Quest_Maker
 
             FinishUpFunction = FinishUp_2;
 
-            ThisTable = new DefaultTable(1, 4);
+            ThisTable = new DefaultTable(1, 5);
 
             DialogueOptionsTable = new ModifyQuestVariableTable();
             DialogueResponseTable = new ModifyQuestVariableTable();
             ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, Sort());
             giveQuestsList = new ListPanel<QuestDialogueGivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, QuestDialogueGivesQuestPanel.Sort());
+            hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, QuestDialogueHideIfPanel.Sort());
 
             AddControl(ThisTable, true);
 
-            ThisTable.Controls.Add(giveQuestsList, 0, 0);
-            ThisTable.Controls.Add(DialogueOptionsTable, 0, 1);
+            ThisTable.Controls.Add(hideIfList, 0, 0);
+            ThisTable.Controls.Add(giveQuestsList, 0, 1);
+            ThisTable.Controls.Add(DialogueOptionsTable, 0, 2);
         }
         public override void Generate_Addon (QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
         {
@@ -601,6 +606,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void FinishUp_2()
         {
+            hideIfList.ThisList.Refresh(ThisQuestVariable.hideIf);
             giveQuestsList.ThisList.Refresh(ThisQuestVariable.giveQuests);
             if (ThisQuestVariable.Response != null)
             {
@@ -609,8 +615,8 @@ namespace ReIncarnation_Quest_Maker
                 PlaySoundBox.Text = ThisQuestVariable.Response.ThisOptionalFields.playSound;
 
                 ResponseOptionsList.ThisList.Refresh(ThisQuestVariable.Response.options);
-                ThisTable.Controls.Add(DialogueResponseTable, 0, 2);
-                ThisTable.Controls.Add(ResponseOptionsList, 0, 3);
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 3);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 4);
             }
         }
     }
@@ -639,6 +645,60 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.AddItem("Force Give", new DefaultCheckBox(Convert.ToBoolean(Item.Value)), ForceGiveQuestChanged);
 
             AddControl(ThisTable);
+        }
+    }
+
+    public class QuestDialogueHideIfPanel : MultiTypePanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>
+    {
+        public ModifyQuestVariableTable ThisTable;
+        public override bool Trash_Addon()
+        {
+            return base.Trash_Addon();
+        }
+
+        static QuestDialogueHideIfPanel() {
+            ItemToPanel.Add(typeof(QuestDialogueOptionHideIf_Quest), typeof(QuestDialogueHideIfPanel_Quest));
+        }
+
+        public QuestDialogueHideIfPanel(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent)
+        {
+            ThisTable = new ModifyQuestVariableTable();
+            AddControl(ThisTable);
+        }
+
+        public override void Move_Addon(QuestDialogueHideIfPanel OtherObject, int OtherPosition)
+        {
+            ThisQuestVariable.ThisEditorExternal.ParentOption.hideIf.Swap(ListPosition, OtherPosition);
+        }
+    }
+
+    public class QuestDialogueHideIfPanel_Quest : QuestDialogueHideIfPanel
+    {
+        public QuestDialogueHideIfPanel_Quest(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent) { }
+
+        public new QuestDialogueOptionHideIf_Quest ThisQuestVariable {
+            get {
+                return (QuestDialogueOptionHideIf_Quest)base.ThisQuestVariable;
+            }
+        }
+
+        public void ModifyQuestID(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Quest = (int) MainForm.GetNumberFromNumericUpDown(sender);
+        }
+
+        public void ModifyQuestState(object sender, EventArgs e)
+        {
+            ThisQuestVariable.QuestState = MainForm.GetTextFromComboBox(sender);
+        }
+
+
+        public override void Generate_Addon(QuestDialogueOptionHideIf Item_raw, OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent)
+        {
+            QuestDialogueOptionHideIf_Quest Item = (QuestDialogueOptionHideIf_Quest)Item_raw;
+
+            ThisTable.AddItem("Quest ID", new DefaultNumericUpDown(Item.Quest), ModifyQuestID);
+            ThisTable.AddItem("Quest State", new DefaultDropDown(Item.QuestState, QuestDialogueOptionHideIf_Quest.PossibleQuestStates), ModifyQuestState);
         }
     }
 

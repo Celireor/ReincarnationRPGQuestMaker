@@ -12,6 +12,16 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public QuestTask_EditorExternal ThisEditorExternal = new QuestTask_EditorExternal();
 
+        public static void MassGenerate<T>(QuestStage Parent, KVPair obj, string typeString) where T : QuestTask, new()
+        {
+            if (obj.Key == typeString)
+            {
+                obj.FolderValue.Items.ForEach(obj2 =>
+                {
+                    QuestTask.KVGenerate<T>(Parent, obj2);
+                });
+            }
+        }
 
         public override string ConvertToText(int TabCount = 0)
         {
@@ -21,7 +31,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         //public abstract string ConvertToText_Full(int Index, int TabCount = 0);
 
-        public bool Trash()
+        public override bool Trash()
         {
             ThisEditorExternal.ParentStage.tasks.Remove(this);
             return true;
@@ -60,7 +70,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             QuestTask ReturnValue = InputValue;
             ReturnValue.ThisEditorExternal.ParentStage = Parent;
-            ReturnValue.ThisEditorExternal.GenerateDefaultValues?.Invoke();
             Parent.tasks.Add(ReturnValue);
             return ReturnValue;
         }
@@ -74,7 +83,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     public class QuestTask_EditorExternal : QuestVariableEditorExternal
     {
         public QuestStage ParentStage;
-        public Action GenerateDefaultValues;
     }
 
     public class QuestTask_location : QuestTask

@@ -52,6 +52,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     {
         public QuestVariableOptionalFields OptionalFields = new QuestVariableOptionalFields();
 
+        public virtual bool Trash() {
+            return true;
+        }
+
         public static T GenerateFromKeyValue<T>(KVPair ThisKV) where T : QuestVariable, new()
         {
             T ReturnValue = new T();
@@ -162,10 +166,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
         }
 
-        public void Trash() {
+        public override bool Trash() {
             if (ThisEditorExternal.EncapsulatingList != null) {
                 ThisEditorExternal.EncapsulatingList.Remove(this);
             }
+            return true;
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
@@ -272,6 +277,38 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             PossibleTaskTypes.Add(TypeString);
             TaskTypeDictionary.Add(TypeString, TaskType);
+        }
+    }
+    public class QuestIndexableVariableStringConverter<T, U> where T : U where U : MultiTypeVariable<U>
+    {
+        List<T> VarList = new List<T>();
+        string VarType;
+
+        public QuestIndexableVariableStringConverter(string VarType) { this.VarType = VarType; }
+
+        public void Add(U obj)
+        {
+            Type ObjType = obj.GetType();
+            if (ObjType == typeof(T))
+            {
+                VarList.Add(obj as T);
+            }
+        }
+
+        public string Print(int TabCount)
+        {
+            if (VarList.Count > 0)
+            {
+                int index = 0;
+                string taskstring = "";
+                VarList.ForEach(obj =>
+                {
+                    taskstring += obj.ConvertToText_Full(index, TabCount + 2);
+                    index++;
+                });
+                return QuestVariable.PrintEncapsulation(taskstring, TabCount + 1, VarType, true);
+            }
+            return "";
         }
     }
 }

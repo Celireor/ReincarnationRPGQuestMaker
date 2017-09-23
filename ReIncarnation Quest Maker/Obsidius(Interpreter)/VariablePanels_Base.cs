@@ -436,7 +436,7 @@ namespace ReIncarnation_Quest_Maker
 
     public abstract class MultiTypePanel<T, U> : SortablePanel<T, U> where T : SortablePanel<T, U>
     {
-        public Dictionary<Type, Type> ItemToPanel;
+        public static Dictionary<Type, Type> ItemToPanel = new Dictionary<Type, Type>();
 
         public MultiTypePanel(OrganizedControlList<T, U> Parent) : base(Parent)
         {
