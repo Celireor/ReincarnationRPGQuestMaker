@@ -340,11 +340,22 @@ namespace ReIncarnation_Quest_Maker
         public DefaultButton ThisButton;
         public OrganizedControlList<T, U> ThisList;
 
-        public Func<U> NewDefaultItem;
+        public DefaultDropDown ThisDefaultQuestTypeSelector;
+
+        public Func<string, U> NewDefaultItem;
 
         public void OnClick(object sender, EventArgs e)
         {
-            SortablePanel<T, U>.Generate(NewDefaultItem(), ThisList);
+            string InputText = "";
+            try
+            {
+                InputText = ThisDefaultQuestTypeSelector.Text;
+            }
+            catch (Exception)
+            {
+
+            }
+            SortablePanel<T, U>.Generate(NewDefaultItem(InputText), ThisList);
         }
 
         public void ResetSize(object sender, EventArgs e)
@@ -356,7 +367,7 @@ namespace ReIncarnation_Quest_Maker
             ThisButton.MaximumSize = NewMaxSize;
         }
 
-        public ListPanel(string ThisButtonText, Func<U> NewDefaultItem, IComparer<T> SortMetric)
+        public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, IComparer<T> SortMetric, DefaultDropDown ElementTypeSelector = null)
         {
             ThisTable = new DefaultTable(1, 2);
             ThisTable.Margin = new Padding(0, 0, 0, 0);
@@ -373,7 +384,21 @@ namespace ReIncarnation_Quest_Maker
             ThisButton.Dock = System.Windows.Forms.DockStyle.Top;
             ThisTable.Dock = DockStyle.Top;
 
-            ThisTable.Controls.Add(ThisButton, 0, 1);
+            DefaultTable ButtonContainerTable = new DefaultTable(2, 1);
+
+            ButtonContainerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            ButtonContainerTable.Controls.Add(ThisButton, 0, 0);
+            if (ElementTypeSelector != null)
+            {
+                ButtonContainerTable.Controls.Add(ElementTypeSelector, 1, 0);
+                ThisDefaultQuestTypeSelector = ElementTypeSelector;
+                ButtonContainerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            }
+
+            ButtonContainerTable.Dock = DockStyle.Fill;
+
+            ThisTable.Controls.Add(ButtonContainerTable, 0, 1);
+
             ThisTable.Controls.Add(ThisPanel, 0, 0);
             Controls.Add(ThisTable);
 

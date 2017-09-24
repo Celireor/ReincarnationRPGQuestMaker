@@ -427,7 +427,7 @@ namespace ReIncarnation_Quest_Maker
             FinishUpFunction = FinishUpFunction_2;
         }
 
-        public QuestDialogueOption NewQuestDialogueOption()
+        public QuestDialogueOption NewQuestDialogueOption(string Useless)
         {
             return QuestDialogueOption.Generate(Interpreter.SelectedQuest, ThisQuestVariable.options);
         }
@@ -489,19 +489,19 @@ namespace ReIncarnation_Quest_Maker
             return ThisQuestVariable.Trash();
         }
 
-        public QuestDialogueOption NewQuestDialogueOption()
+        public QuestDialogueOption NewQuestDialogueOption(string useless)
         {
             return QuestDialogueOption.Generate(Interpreter.SelectedQuest, ThisQuestVariable.Response.options);
         }
 
-        public KVPair NewQuestDialogueGivesQuestPanel() {
+        public KVPair NewQuestDialogueGivesQuestPanel(string HideIfTypeStringHideIfTypeString) {
             KVPair ReturnValue = new KVPair();
             ThisQuestVariable.giveQuests.Add(ReturnValue);
             return ReturnValue;
         }
 
-        public QuestDialogueOptionHideIf NewHideIf() {
-            return QuestDialogueOptionHideIf.Generate("quests", ThisQuestVariable);
+        public QuestDialogueOptionHideIf NewHideIf(string InString) {
+            return QuestDialogueOptionHideIf.Generate(InString, ThisQuestVariable);
         }
 
         public void OnSelectionTextChanged(object sender, EventArgs e)
@@ -574,7 +574,7 @@ namespace ReIncarnation_Quest_Maker
             DialogueResponseTable = new ModifyQuestVariableTable();
             ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, Sort());
             giveQuestsList = new ListPanel<QuestDialogueGivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, QuestDialogueGivesQuestPanel.Sort());
-            hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, QuestDialogueHideIfPanel.Sort());
+            hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, QuestDialogueHideIfPanel.Sort(), new DefaultDropDown("quests", Interpreter.CurrentQuestList.ThisEditorExternal.PossibleHideIfStrings));
 
             AddControl(ThisTable, true);
 

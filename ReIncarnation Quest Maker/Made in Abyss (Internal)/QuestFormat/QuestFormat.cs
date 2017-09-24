@@ -52,6 +52,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public ListeningList<string> PossibleListenStrings = new ListeningList<string>();
 
+            public ListeningList<string> PossibleHideIfStrings = new ListeningList<string>();
 
             public QuestList_EditorExternal()
             {
@@ -70,6 +71,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 PossibleParticles.Add("quest_return");
                 PossibleParticles.Add("quest_start");
                 PossibleParticles.Add("chat");
+
+                PossibleHideIfStrings.Add("quests");
             }
         }
     }
@@ -660,8 +663,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 public Quest Parent;
                 public int LastID;
-                /*public int giveQuest;
-                public bool GivesQuest;*/
             }
         }
     }
