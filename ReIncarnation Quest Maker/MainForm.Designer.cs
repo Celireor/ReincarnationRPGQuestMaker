@@ -183,7 +183,7 @@
             // CompileButton
             // 
             this.CompileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.CompileButton.Image = ((System.Drawing.Image)(resources.GetObject("CompileButton.Image")));
+            //this.CompileButton.Image = ((System.Drawing.Image)(resources.GetObject("CompileButton.Image")));
             this.CompileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CompileButton.Name = "CompileButton";
             this.CompileButton.Size = new System.Drawing.Size(56, 22);

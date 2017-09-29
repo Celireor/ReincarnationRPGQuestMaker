@@ -444,11 +444,8 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.Controls.Add(ThisOptionsList, 0, 1);
 
             AddControl(ThisTable);
-            //ThisTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
             NameBox.TextChanged += ModifyDialogueName;
-
-            //return ReturnValue;
         }
 
         public void FinishUpFunction_2()

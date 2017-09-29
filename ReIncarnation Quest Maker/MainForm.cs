@@ -12,10 +12,54 @@ using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
 using ReIncarnation_Quest_Maker.Obsidius;
+using System.Runtime.InteropServices;
 
 namespace ReIncarnation_Quest_Maker
 {
-    public partial class MainForm : Form
+    public abstract class FreezableForm : Form
+    {
+        private const int WM_SETREDRAW = 0x000B;
+        private const int WM_USER = 0x400;
+        private const int EM_GETEVENTMASK = (WM_USER + 59);
+        private const int EM_SETEVENTMASK = (WM_USER + 69);
+
+        [DllImport("user32", CharSet = CharSet.Auto)]
+        private extern static IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
+
+        IntPtr eventMask = IntPtr.Zero;
+
+        int drawStopCount = 0;
+
+        public void StopDrawing()
+        {
+            if (drawStopCount == 0)
+            {
+                // Stop redrawing:
+                SendMessage(this.Handle, WM_SETREDRAW, 0, IntPtr.Zero);
+                // Stop sending of events:
+                eventMask = SendMessage(this.Handle, EM_GETEVENTMASK, 0, IntPtr.Zero);
+            }
+            drawStopCount++;
+        }
+
+        public void StartDrawing()
+        {
+            drawStopCount--;
+            if (drawStopCount == 0)
+            {
+                // turn on events
+                SendMessage(this.Handle, EM_SETEVENTMASK, 0, eventMask);
+
+                // turn on redrawing
+                SendMessage(this.Handle, WM_SETREDRAW, 1, IntPtr.Zero);
+
+                Invalidate();
+                Refresh();
+            }
+        }
+    }
+
+    public partial class MainForm : FreezableForm
     {
         public OrganizedControlList<QuestButton, Quest> QuestButtons;
         public OrganizedControlList<QuestStagePanel, QuestStage> QuestStagePanels;
@@ -59,6 +103,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void UpdateScreen()
         {
+           // StopDrawing();
             QuestName.Text = Interpreter.SelectedQuest.name;
             QuestInternalName.Text = Interpreter.SelectedQuest.full_name;
             QuestDescriptionTextBox.Text = Interpreter.SelectedQuest.description;
@@ -67,25 +112,31 @@ namespace ReIncarnation_Quest_Maker
             QuestID.Value = Interpreter.SelectedQuest.questID;
             QuestRepeatable.Checked = Interpreter.SelectedQuest.repeatable;
             QuestCantAbandon.Checked = Interpreter.SelectedQuest.cantAbandon;
+          //  StartDrawing();
         }
 
         public void UpdateQuestData()
         {
+            //StopDrawing();
             PrerequisitePanels.Refresh(Interpreter.SelectedQuest.prerequisites);
             QuestStagePanels.Refresh(Interpreter.SelectedQuest.stages);
             QuestDialoguePanels.Refresh(Interpreter.SelectedQuest.injections);
             //
 
             UpdateStageData();
+           // StartDrawing();
         }
 
         public void UpdateStageData()
         {
+            //StopDrawing();
             QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.description;
             QuestTaskPanels.Refresh(Interpreter.SelectedQuestStage.tasks);
             QuestStageDialoguePanels.Refresh(Interpreter.SelectedQuestStage.dialogue);
             QuestStageParticlePanels.Refresh(Interpreter.SelectedQuestStage.particles);
             //AffectedNPCsPanel.MassGenerate(Interpreter.SelectedQuestStage.affectedNPCs.ToArray(), AffectedNPCsPanels);
+            // SendMessage(parent.Handle, WM_SETREDRAW, false, 0);
+            //StartDrawing();
         }
 
         public void ClearScreen()
@@ -378,7 +429,6 @@ namespace ReIncarnation_Quest_Maker
         {
             BackColor = System.Drawing.SystemColors.ControlDark;
 
-            AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Dock = System.Windows.Forms.DockStyle.Fill;
         }
@@ -395,7 +445,6 @@ namespace ReIncarnation_Quest_Maker
         public DefaultLabel() : base()
         {
             Location = new System.Drawing.Point(0, 0);
-            AutoSize = true;
             MaximumSize = new Size(0, 25);
             TabIndex = 1;
             TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -403,10 +452,11 @@ namespace ReIncarnation_Quest_Maker
             ForeColor = SystemColors.ControlLight;
             Anchor = System.Windows.Forms.AnchorStyles.Top;
             Dock = DockStyle.Fill;
+            AutoSize = true;
         }
     }
-    public class DefaultTextBox : TextBox {
-
+    public class DefaultTextBox : TextBox
+    {
         public DefaultTextBox(string Text, bool Multiline = false) : this()
         {
             this.Text = Text;
@@ -423,15 +473,61 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class DefaultTable : TableLayoutPanel {
+    public class DefaultTable : TableLayoutPanel
+    {
+        /*static int nextID = 0;
+
+        int thisID;*/
+
+        static short ChangeinitNum = 0;
+
+        public static LinkedList<DefaultTable> AutoSizeStack = new LinkedList<DefaultTable>();
+
+        public static void StartInit()
+        {
+            ChangeinitNum++;
+        }
+        public static void EndInit()
+        {
+            ChangeinitNum--;
+            if (ChangeinitNum == 0) {
+                ActivateAutosize();
+            }
+        }
+
+        static void ActivateAutosize() {
+            LinkedListNode<DefaultTable> NextTable = AutoSizeStack.First;
+            for (int x = 0; x < AutoSizeStack.Count; x++) {
+                NextTable.Value.AutoSize = true;
+                NextTable.Value.ResumeLayout();
+                NextTable = NextTable.Next;
+            }
+        }
+
+        /*int numsizechanged = 0;
+
+        public override string ToString()
+        {
+            return thisID + "asd";
+        }*/
+
         public DefaultTable(int ColumnCount, int RowCount)
         {
+            SuspendLayout();
             this.RowCount = RowCount;
             this.ColumnCount = ColumnCount;
             Dock = DockStyle.Fill;
             TabIndex = 5;
-            AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeStack.AddFirst(this);
+            /*SizeChanged += new System.EventHandler( (a, b) =>{
+                numsizechanged++;
+                if (numsizechanged >= 2) {
+                }
+
+            });
+            thisID = nextID;
+            nextID++;*/
         }
     }
 
@@ -443,9 +539,9 @@ namespace ReIncarnation_Quest_Maker
             this.Image = ThisImage;
             Location = new System.Drawing.Point(0, 0);
             Margin = new Padding(0, 0, 0, 0);
-            AutoSize = true;
             Click += new System.EventHandler(OnClick);
             Padding = new Padding(0, 0, 0, 0);
+            AutoSize = true;
         }
     }
 
@@ -457,10 +553,10 @@ namespace ReIncarnation_Quest_Maker
             Location = new System.Drawing.Point(0, 0);
             UseVisualStyleBackColor = true;
             Margin = new Padding(0, 0, 0, 0);
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Click += new System.EventHandler(OnClick);
             Padding = new Padding(0, 0, 0, 0);
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
     }
 

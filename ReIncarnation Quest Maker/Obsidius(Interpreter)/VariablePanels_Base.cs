@@ -45,10 +45,12 @@ namespace ReIncarnation_Quest_Maker
 
         public void Add(T Item)
         {
+            DefaultTable.StartInit();
             ThisList.Add(Item);
             PositionNewItem(Item);
             BaseControl.Controls.Add(Item);
             //RepositionItems();
+            DefaultTable.EndInit();
         }
 
         public void Remove(T Item)
@@ -82,18 +84,18 @@ namespace ReIncarnation_Quest_Maker
 
         public void Clear()
         {
-            ThisList.ForEach(obj =>
-            {
-                BaseControl.Controls.Remove(obj);
-            });
+            BaseControl.Controls.Clear();
+            ThisList.ForEach(obj => obj.Dispose());
             ThisList.Clear();
             NextPos = 0;
         }
 
         public void Refresh(List<U> RefreshList)
         {
+            DefaultTable.StartInit();
             Clear();
-            SortablePanel<T, U>.MassGenerate(RefreshList.ToArray(), this);
+            BaseControl.Controls.AddRange(SortablePanel<T, U>.MassGenerate(RefreshList.ToArray(), this));
+            DefaultTable.EndInit();
         }
     }
 
@@ -194,9 +196,7 @@ namespace ReIncarnation_Quest_Maker
 
         public SortablePanel(OrganizedControlList<T, U> Parent)
         {
-
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SuspendLayout();
 
             ThisTable = new DefaultTable(1, 2);
             DownContentsPanel = new Panel();
@@ -217,15 +217,10 @@ namespace ReIncarnation_Quest_Maker
             ParentControlList = Parent;
 
             BackColor = SystemColors.ControlDarkDark;
-
-            ContentsPanel.AutoSize = true;
-            ContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ContentsPanel.Margin = new Padding(0, 0, 0, 0);
 
             ContentsPanel.Dock = DockStyle.Fill;
 
-            DownContentsPanel.AutoSize = true;
-            DownContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             DownContentsPanel.Dock = DockStyle.Fill;
             DownContentsPanel.Margin = new Padding(0, 0, 0, 0);
 
@@ -244,7 +239,6 @@ namespace ReIncarnation_Quest_Maker
 
             ThisTable.Controls.Add(ContentsTable, 0, 0);
             ThisTable.Controls.Add(DownContentsPanel, 0, 1);
-            //ThisTable.Dock = DockStyle.Fill;
 
             Controls.Add(ThisTable);
         }
@@ -254,19 +248,23 @@ namespace ReIncarnation_Quest_Maker
             List<T> ReturnValue = new List<T>();
             for (int x = 0; x < Item.Length; x++)
             {
-                ReturnValue.Add(Generate(Item[x], Parent));
+                T NewItem = Generate(Item[x], Parent, false);
+                ReturnValue.Add(NewItem);
+                Parent.ThisList.Add(NewItem);
+                Parent.PositionNewItem(NewItem);
             }
             return ReturnValue.ToArray();
         }
 
-        public static T Generate(U Item, OrganizedControlList<T, U> Parent)
+        public static T Generate(U Item, OrganizedControlList<T, U> Parent, bool ShouldAddToParentControlList = true)
         {
             //fix
             T ReturnValue = (T)Activator.CreateInstance(typeof(T), Parent);
             ReturnValue = ReturnValue.CreateInstanceAddon(Item, Parent);
             ReturnValue.Generate_Addon(Item, Parent);
             ReturnValue.ThisQuestVariable = Item;
-            ReturnValue.FinishUp();
+            ReturnValue.FinishUp(ShouldAddToParentControlList);
+            ReturnValue.ResumeLayout();
             return ReturnValue;
         }
 
@@ -296,7 +294,7 @@ namespace ReIncarnation_Quest_Maker
             ContentsPanel.Controls.Remove(Item);
         }
 
-        public void FinishUp()
+        public void FinishUp(bool ShouldAddToParentControlList)
         {
             Dock = DockStyle.Fill;
             Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
@@ -305,11 +303,20 @@ namespace ReIncarnation_Quest_Maker
 
             FinishUpFunction?.Invoke();
 
-            SizeChanged += OnSizeChanged;
+            ContentsPanel.AutoSize = true;
+            ContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-            ParentControlList.Add((T)this);
+            DownContentsPanel.AutoSize = true;
+            DownContentsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             ResetSize(ParentControlList);
+
+            SizeChanged += OnSizeChanged;
+
+            if (ShouldAddToParentControlList) { ParentControlList.Add((T)this); }
         }
 
         public virtual IComparer<T> SortComparer() {
@@ -378,8 +385,6 @@ namespace ReIncarnation_Quest_Maker
             ThisButton = new DefaultButton(OnClick, ThisButtonText);
             ThisList = OrganizedControlList<T, U>.GenerateOrganizedControlList(ThisPanel, SortMetric);
 
-            //ThisPanel.AutoSize = true;
-
             ThisPanel.Dock = DockStyle.Top;
             ThisButton.Dock = System.Windows.Forms.DockStyle.Top;
             ThisTable.Dock = DockStyle.Top;
@@ -396,22 +401,16 @@ namespace ReIncarnation_Quest_Maker
             }
 
             ButtonContainerTable.Dock = DockStyle.Fill;
-
             ThisTable.Controls.Add(ButtonContainerTable, 0, 1);
 
             ThisTable.Controls.Add(ThisPanel, 0, 0);
             Controls.Add(ThisTable);
 
-            //ThisTable.Dock = DockStyle.Top;
-
-            //ThisPanel.AutoSize = true;
-            //ThisPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ThisPanel.AutoSize = true;
 
             Dock = DockStyle.Top;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
-            //Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
             SizeChanged += ResetSize;
         }
