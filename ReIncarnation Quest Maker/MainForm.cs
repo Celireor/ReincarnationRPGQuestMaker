@@ -541,7 +541,8 @@ namespace ReIncarnation_Quest_Maker
             Margin = new Padding(0, 0, 0, 0);
             Click += new System.EventHandler(OnClick);
             Padding = new Padding(0, 0, 0, 0);
-            AutoSize = true;
+            this.Width = Image.Width;
+            this.Height = Image.Height;
         }
     }
 

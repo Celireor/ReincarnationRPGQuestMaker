@@ -111,7 +111,8 @@ namespace ReIncarnation_Quest_Maker
         DefaultImagebutton TrashButton;
         DefaultImagebutton UpButton;
         DefaultImagebutton DownButton;
-        TableLayoutPanel UpDownButtonTable;
+        DefaultPanel UpDownButtonPanel;
+        //TableLayoutPanel UpDownButtonTable;
         public OrganizedControlList<T, U> ParentControlList;
 
         public int ListPosition;
@@ -204,7 +205,7 @@ namespace ReIncarnation_Quest_Maker
             ContentsTable = new DefaultTable(3, 1);
             ContentsPanel = new Panel();
             TrashButton = new DefaultImagebutton(Trash, new Bitmap(Properties.Resources.Trash));
-            UpDownButtonTable = new DefaultTable(1, 2);
+            UpDownButtonPanel = new DefaultPanel();
             UpButton = new DefaultImagebutton(MoveUp, new Bitmap(ReIncarnation_Quest_Maker.Properties.Resources.UpArrow));
             DownButton = new DefaultImagebutton(MoveDown, new Bitmap(ReIncarnation_Quest_Maker.Properties.Resources.DownArrow));
 
@@ -227,12 +228,17 @@ namespace ReIncarnation_Quest_Maker
             ContentsTable.Margin = new Padding(0, 0, 0, 0);
             ContentsTable.TabIndex = 5;
 
-            UpDownButtonTable.Margin = new Padding(0, 0, 0, 0);
+            UpDownButtonPanel.Margin = new Padding(0, 0, 0, 0);
+            UpDownButtonPanel.BackColor = SystemColors.ControlDarkDark;
 
-            UpDownButtonTable.Controls.Add(UpButton, 0, 0);
-            UpDownButtonTable.Controls.Add(DownButton, 0, 1);
+            UpDownButtonPanel.Controls.Add(UpButton);
+            UpDownButtonPanel.Controls.Add(DownButton);
 
-            ContentsTable.Controls.Add(UpDownButtonTable, 0, 0);
+            DownButton.Location = new Point(0, UpButton.Height);
+
+            UpDownButtonPanel.Size = new Size(UpButton.Width, UpButton.Height * 2);
+
+            ContentsTable.Controls.Add(UpDownButtonPanel, 0, 0);
             ContentsTable.Controls.Add(ContentsPanel, 1, 0);
             ContentsTable.Controls.Add(TrashButton, 2, 0);
             //ContentsTable.Dock = DockStyle.Fill;
@@ -347,6 +353,9 @@ namespace ReIncarnation_Quest_Maker
         public DefaultButton ThisButton;
         public OrganizedControlList<T, U> ThisList;
 
+        public DefaultImagebutton MinimiseButton;
+        bool MinimisedState = true;
+
         public DefaultDropDown ThisDefaultQuestTypeSelector;
 
         public Func<string, U> NewDefaultItem;
@@ -372,6 +381,17 @@ namespace ReIncarnation_Quest_Maker
             NewMaxSize.Width -= 6;
             ThisPanel.MaximumSize = NewMaxSize;
             ThisButton.MaximumSize = NewMaxSize;
+        }
+
+        public void Minimise(object sender, EventArgs e)
+        {
+            if (MinimisedState) {
+                MinimisedState = false;
+                ThisTable.Controls.Add(ThisPanel, 0, 0);
+                return;
+            }
+            MinimisedState = true;
+            ThisTable.Controls.Remove(ThisPanel);
         }
 
         public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, IComparer<T> SortMetric, DefaultDropDown ElementTypeSelector = null)
@@ -402,8 +422,7 @@ namespace ReIncarnation_Quest_Maker
 
             ButtonContainerTable.Dock = DockStyle.Fill;
             ThisTable.Controls.Add(ButtonContainerTable, 0, 1);
-
-            ThisTable.Controls.Add(ThisPanel, 0, 0);
+            Minimise(null, null);
             Controls.Add(ThisTable);
 
             ThisPanel.AutoSize = true;
