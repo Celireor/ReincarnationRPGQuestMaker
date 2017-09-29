@@ -57,6 +57,18 @@ namespace ReIncarnation_Quest_Maker
                 Refresh();
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // FreezableForm
+            // 
+            this.ClientSize = new System.Drawing.Size(820, 394);
+            this.Name = "FreezableForm";
+            this.ResumeLayout(false);
+
+        }
     }
 
     public partial class MainForm : FreezableForm

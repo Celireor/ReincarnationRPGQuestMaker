@@ -278,13 +278,12 @@ namespace ReIncarnation_Quest_Maker
         public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
         {
             QuestTask_location Item = (QuestTask_location)Item_raw;
-            QuestTaskPanel_location ReturnValue = new QuestTaskPanel_location(Parent);
 
             ThisItem = Item;
 
             ThisTable.AddItem("Name", new DefaultTextBox(Item.name), ModifyLocationName);
             ThisTable.AddItem("Location Name", new DefaultTextBox(Item.locationString), ModifyLocationInternalName);
-            ThisTable.AddItem("Radius", new DefaultNumericUpDown(Item.radius), ReturnValue.ModifyLocationRadius);
+            ThisTable.AddItem("Radius", new DefaultNumericUpDown(Item.radius), ModifyLocationRadius);
         }
     }
     public class QuestTaskPanel_talkto : QuestTaskPanel

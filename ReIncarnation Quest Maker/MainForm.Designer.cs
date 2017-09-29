@@ -21,7 +21,6 @@
         }
 
         #region Windows Form Designer generated code
-
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -311,6 +310,7 @@
             this.QuestNameLabel.Size = new System.Drawing.Size(49, 16);
             this.QuestNameLabel.TabIndex = 2;
             this.QuestNameLabel.Text = "Name";
+            this.QuestName.TextChanged += QuestName_TextChanged;
             // 
             // InternalNameLabel
             // 
@@ -442,6 +442,7 @@
             this.QuestPortrait.Name = "QuestPortrait";
             this.QuestPortrait.Size = new System.Drawing.Size(260, 20);
             this.QuestPortrait.TabIndex = 6;
+            this.QuestPortrait.TextChanged += QuestPortrait_TextChanged;
             // 
             // QuestTypeIcon
             // 
@@ -485,6 +486,7 @@
             this.QuestDescriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.QuestDescriptionTextBox.Size = new System.Drawing.Size(260, 323);
             this.QuestDescriptionTextBox.TabIndex = 16;
+            this.QuestDescriptionTextBox.TextChanged += QuestDescriptionTextBox_TextChanged;
             // 
             // PrerequisiteList
             // 
