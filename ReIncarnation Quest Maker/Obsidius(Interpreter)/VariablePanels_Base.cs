@@ -109,10 +109,11 @@ namespace ReIncarnation_Quest_Maker
         public Panel ContentsPanel;
 
         DefaultImagebutton TrashButton;
+
         DefaultImagebutton UpButton;
         DefaultImagebutton DownButton;
         DefaultPanel UpDownButtonPanel;
-        //TableLayoutPanel UpDownButtonTable;
+
         public OrganizedControlList<T, U> ParentControlList;
 
         public int ListPosition;
@@ -353,7 +354,7 @@ namespace ReIncarnation_Quest_Maker
         public DefaultButton ThisButton;
         public OrganizedControlList<T, U> ThisList;
 
-        public DefaultImagebutton MinimiseButton;
+        public DefaultButton MinimiseButton;
         bool MinimisedState = true;
 
         public DefaultDropDown ThisDefaultQuestTypeSelector;
@@ -387,7 +388,7 @@ namespace ReIncarnation_Quest_Maker
         {
             if (MinimisedState) {
                 MinimisedState = false;
-                ThisTable.Controls.Add(ThisPanel, 0, 0);
+                ThisTable.Controls.Add(ThisPanel, 1, 0);
                 return;
             }
             MinimisedState = true;
@@ -396,7 +397,11 @@ namespace ReIncarnation_Quest_Maker
 
         public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, IComparer<T> SortMetric, DefaultDropDown ElementTypeSelector = null)
         {
-            ThisTable = new DefaultTable(1, 2);
+            MinimiseButton = new DefaultButton(Minimise, "Minimise/Maxmise");
+            MinimiseButton.Location = new Point(0, MinimiseButton.Height);
+
+
+            ThisTable = new DefaultTable(1, 3);
             ThisTable.Margin = new Padding(0, 0, 0, 0);
             ThisTable.Padding = new Padding(0, 0, 0, 0);
 
@@ -419,10 +424,10 @@ namespace ReIncarnation_Quest_Maker
                 ThisDefaultQuestTypeSelector = ElementTypeSelector;
                 ButtonContainerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             }
+            ThisTable.Controls.Add(MinimiseButton, 0, 0);
 
             ButtonContainerTable.Dock = DockStyle.Fill;
-            ThisTable.Controls.Add(ButtonContainerTable, 0, 1);
-            Minimise(null, null);
+            ThisTable.Controls.Add(ButtonContainerTable, 0, 2);
             Controls.Add(ThisTable);
 
             ThisPanel.AutoSize = true;
