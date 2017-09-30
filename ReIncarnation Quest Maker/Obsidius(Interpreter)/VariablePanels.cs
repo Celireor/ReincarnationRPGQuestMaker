@@ -117,7 +117,7 @@ namespace ReIncarnation_Quest_Maker
             AddControl(ThisTable);
 
             ThisTable.AddItem("Type: ", new DefaultDropDown(Item.Key, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestPrerequisites), UpdateType);
-            ThisTable.AddItem("Value: ", new DefaultTextBox(Item.Value), UpdateValue);
+            ThisTable.AddItem("Value: ", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateValue);
 
             //return ReturnValue;
         }
@@ -534,8 +534,8 @@ namespace ReIncarnation_Quest_Maker
             if (State)
             {
                 ThisQuestVariable.Response = new QuestDialogueResponse();
-                ThisTable.Controls.Add(DialogueResponseTable, 0, 1);
-                ThisTable.Controls.Add(ResponseOptionsList, 0, 2);
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 4);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 5);
                 return;
             }
 

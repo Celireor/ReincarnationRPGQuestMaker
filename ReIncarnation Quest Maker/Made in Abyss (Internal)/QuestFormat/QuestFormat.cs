@@ -80,7 +80,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     public class Quest : QuestVariable
     {
 
-        public string full_name;
+        //public string full_name;
         public string name;
         public string description;
         public bool repeatable;

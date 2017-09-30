@@ -31,7 +31,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             CurrentQuestList.ThisEditorExternal.LargestQuestID = 1;
 
             SelectedQuest.name = "New Quest";
-            SelectedQuest.full_name = "new_quest_internal_name";
+           // SelectedQuest.full_name = "new_quest_internal_name";
             SelectedQuest.description = "Quest Description";
             SelectedQuest.portrait = "questgiver_portrait";
             SelectedQuest.typeIcon = "story";
@@ -81,7 +81,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         public static void AddPrerequisite()
         {
-            KVPair NewPrerequisite = new KVPair();
+            KVPair NewPrerequisite = new KVPair("level", "");
             SelectedQuest.prerequisites.Add(NewPrerequisite);
             ThisForm.OnNewPrerequisite(NewPrerequisite);
         }
@@ -168,7 +168,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
         }
         public static void UpdateSelectedQuestInternalName(string NewValue)
         {
-            SelectedQuest.full_name = NewValue;
+            //SelectedQuest.full_name = NewValue;
             SelectedQuest.ThisEditorExternal.OnUpdate();
         }
 

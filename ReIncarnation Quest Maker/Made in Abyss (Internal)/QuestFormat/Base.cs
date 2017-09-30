@@ -299,7 +299,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             if (VarList.Count > 0)
             {
-                int index = 0;
+                int index = 1;
                 string taskstring = "";
                 VarList.ForEach(obj =>
                 {

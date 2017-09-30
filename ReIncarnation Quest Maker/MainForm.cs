@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace ReIncarnation_Quest_Maker
 {
-    public abstract class FreezableForm : Form
+    /*public abstract class FreezableForm : Form
     {
         private const int WM_SETREDRAW = 0x000B;
         private const int WM_USER = 0x400;
@@ -69,9 +69,9 @@ namespace ReIncarnation_Quest_Maker
             this.ResumeLayout(false);
 
         }
-    }
+    }*/
 
-    public partial class MainForm : FreezableForm
+    public partial class MainForm : Form
     {
         public OrganizedControlList<QuestButton, Quest> QuestButtons;
         public OrganizedControlList<QuestStagePanel, QuestStage> QuestStagePanels;
@@ -117,7 +117,7 @@ namespace ReIncarnation_Quest_Maker
         {
            // StopDrawing();
             QuestName.Text = Interpreter.SelectedQuest.name;
-            QuestInternalName.Text = Interpreter.SelectedQuest.full_name;
+            //QuestInternalName.Text = Interpreter.SelectedQuest.full_name;
             QuestDescriptionTextBox.Text = Interpreter.SelectedQuest.description;
             QuestPortrait.Text = Interpreter.SelectedQuest.portrait;
             QuestTypeIcon.Text = Interpreter.SelectedQuest.typeIcon;
@@ -300,6 +300,16 @@ namespace ReIncarnation_Quest_Maker
         {
             Interpreter.UpdateSelectedQuestID((int) GetNumberFromNumericUpDown(QuestID));
             QuestButtons.SortControls();
+        }
+
+        private void XPOnCompletion_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GoldOnCompletion_ValueChanged(object sender, EventArgs e)
+        {
+
         }
 
         //usefulfuncs

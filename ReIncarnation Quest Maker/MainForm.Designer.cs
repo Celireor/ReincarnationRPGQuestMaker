@@ -27,7 +27,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,7 +42,6 @@
             this.QuestBasicInfoTable = new System.Windows.Forms.TableLayoutPanel();
             this.QuestIDLabel = new System.Windows.Forms.Label();
             this.QuestNameLabel = new System.Windows.Forms.Label();
-            this.InternalNameLabel = new System.Windows.Forms.Label();
             this.QuestPortraitLabel = new System.Windows.Forms.Label();
             this.QuestTypeIconLabel = new System.Windows.Forms.Label();
             this.QuestCantAbandonLabel = new System.Windows.Forms.Label();
@@ -53,7 +51,6 @@
             this.QuestID = new System.Windows.Forms.NumericUpDown();
             this.UpdateIDButton = new System.Windows.Forms.Button();
             this.QuestName = new System.Windows.Forms.TextBox();
-            this.QuestInternalName = new System.Windows.Forms.TextBox();
             this.QuestPortrait = new System.Windows.Forms.TextBox();
             this.QuestTypeIcon = new System.Windows.Forms.ComboBox();
             this.QuestCantAbandon = new System.Windows.Forms.CheckBox();
@@ -64,13 +61,17 @@
             this.Stages = new System.Windows.Forms.TabPage();
             this.QuestStageInfo_QuestStageList_Split = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.QuestStageDescriptionPanel_table = new System.Windows.Forms.TableLayoutPanel();
-            this.QuestStageDescriptionLabel = new System.Windows.Forms.Label();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.GoldOnCompletion = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.XPOnCompletion = new System.Windows.Forms.NumericUpDown();
             this.QuestStageDescriptionBox = new System.Windows.Forms.TextBox();
+            this.QuestStageDescriptionLabel = new System.Windows.Forms.Label();
             this.QuestStageTabs = new System.Windows.Forms.TabControl();
             this.QuestStageTasks = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.NewTaskNewTaskOptionDivider = new System.Windows.Forms.TableLayoutPanel();
             this.QuestStageTaskType = new System.Windows.Forms.ComboBox();
             this.newqueststagetaskbutton = new System.Windows.Forms.Button();
             this.QuestStageTaskList = new System.Windows.Forms.Panel();
@@ -111,11 +112,13 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.QuestStageDescriptionPanel_table.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GoldOnCompletion)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XPOnCompletion)).BeginInit();
             this.QuestStageTabs.SuspendLayout();
             this.QuestStageTasks.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.NewTaskNewTaskOptionDivider.SuspendLayout();
             this.QuestStageDialogue.SuspendLayout();
             this.QuestStageParticleTabPage.SuspendLayout();
             this.QuestDialoguePage.SuspendLayout();
@@ -182,7 +185,6 @@
             // CompileButton
             // 
             this.CompileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            //this.CompileButton.Image = ((System.Drawing.Image)(resources.GetObject("CompileButton.Image")));
             this.CompileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CompileButton.Name = "CompileButton";
             this.CompileButton.Size = new System.Drawing.Size(56, 22);
@@ -259,25 +261,22 @@
             this.QuestBasicInfoTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.QuestBasicInfoTable.Controls.Add(this.QuestIDLabel, 0, 0);
             this.QuestBasicInfoTable.Controls.Add(this.QuestNameLabel, 0, 1);
-            this.QuestBasicInfoTable.Controls.Add(this.InternalNameLabel, 0, 2);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestPortraitLabel, 0, 3);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestTypeIconLabel, 0, 4);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestCantAbandonLabel, 0, 5);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestRepeatableLabel, 0, 6);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestDescriptionLabel, 0, 7);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestPortraitLabel, 0, 2);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestTypeIconLabel, 0, 3);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestCantAbandonLabel, 0, 4);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestRepeatableLabel, 0, 5);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestDescriptionLabel, 0, 6);
             this.QuestBasicInfoTable.Controls.Add(this.tableLayoutPanel2, 1, 0);
             this.QuestBasicInfoTable.Controls.Add(this.QuestName, 1, 1);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestInternalName, 1, 2);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestPortrait, 1, 3);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestTypeIcon, 1, 4);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestCantAbandon, 1, 5);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestRepeatable, 1, 6);
-            this.QuestBasicInfoTable.Controls.Add(this.QuestDescriptionTextBox, 1, 7);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestPortrait, 1, 2);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestTypeIcon, 1, 3);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestCantAbandon, 1, 4);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestRepeatable, 1, 5);
+            this.QuestBasicInfoTable.Controls.Add(this.QuestDescriptionTextBox, 1, 6);
             this.QuestBasicInfoTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestBasicInfoTable.Location = new System.Drawing.Point(0, 0);
             this.QuestBasicInfoTable.Name = "QuestBasicInfoTable";
-            this.QuestBasicInfoTable.RowCount = 8;
-            this.QuestBasicInfoTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.QuestBasicInfoTable.RowCount = 7;
             this.QuestBasicInfoTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.QuestBasicInfoTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.QuestBasicInfoTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -310,25 +309,13 @@
             this.QuestNameLabel.Size = new System.Drawing.Size(49, 16);
             this.QuestNameLabel.TabIndex = 2;
             this.QuestNameLabel.Text = "Name";
-            this.QuestName.TextChanged += QuestName_TextChanged;
-            // 
-            // InternalNameLabel
-            // 
-            this.InternalNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.InternalNameLabel.AutoSize = true;
-            this.InternalNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InternalNameLabel.Location = new System.Drawing.Point(3, 54);
-            this.InternalNameLabel.Name = "InternalNameLabel";
-            this.InternalNameLabel.Size = new System.Drawing.Size(104, 16);
-            this.InternalNameLabel.TabIndex = 21;
-            this.InternalNameLabel.Text = "Internal Name";
             // 
             // QuestPortraitLabel
             // 
             this.QuestPortraitLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.QuestPortraitLabel.AutoSize = true;
             this.QuestPortraitLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuestPortraitLabel.Location = new System.Drawing.Point(3, 79);
+            this.QuestPortraitLabel.Location = new System.Drawing.Point(3, 54);
             this.QuestPortraitLabel.Name = "QuestPortraitLabel";
             this.QuestPortraitLabel.Size = new System.Drawing.Size(102, 16);
             this.QuestPortraitLabel.TabIndex = 4;
@@ -340,7 +327,7 @@
             this.QuestTypeIconLabel.AutoSize = true;
             this.QuestTypeIconLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.QuestTypeIconLabel.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.QuestTypeIconLabel.Location = new System.Drawing.Point(3, 104);
+            this.QuestTypeIconLabel.Location = new System.Drawing.Point(3, 79);
             this.QuestTypeIconLabel.Name = "QuestTypeIconLabel";
             this.QuestTypeIconLabel.Size = new System.Drawing.Size(121, 16);
             this.QuestTypeIconLabel.TabIndex = 3;
@@ -350,7 +337,7 @@
             // 
             this.QuestCantAbandonLabel.AutoSize = true;
             this.QuestCantAbandonLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuestCantAbandonLabel.Location = new System.Drawing.Point(3, 131);
+            this.QuestCantAbandonLabel.Location = new System.Drawing.Point(3, 106);
             this.QuestCantAbandonLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.QuestCantAbandonLabel.Name = "QuestCantAbandonLabel";
             this.QuestCantAbandonLabel.Size = new System.Drawing.Size(109, 16);
@@ -362,7 +349,7 @@
             this.QuestRepeatableLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.QuestRepeatableLabel.AutoSize = true;
             this.QuestRepeatableLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuestRepeatableLabel.Location = new System.Drawing.Point(3, 154);
+            this.QuestRepeatableLabel.Location = new System.Drawing.Point(3, 129);
             this.QuestRepeatableLabel.Name = "QuestRepeatableLabel";
             this.QuestRepeatableLabel.Size = new System.Drawing.Size(90, 16);
             this.QuestRepeatableLabel.TabIndex = 19;
@@ -372,7 +359,7 @@
             // 
             this.QuestDescriptionLabel.AutoSize = true;
             this.QuestDescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuestDescriptionLabel.Location = new System.Drawing.Point(3, 181);
+            this.QuestDescriptionLabel.Location = new System.Drawing.Point(3, 156);
             this.QuestDescriptionLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.QuestDescriptionLabel.Name = "QuestDescriptionLabel";
             this.QuestDescriptionLabel.Size = new System.Drawing.Size(87, 16);
@@ -425,31 +412,23 @@
             this.QuestName.Name = "QuestName";
             this.QuestName.Size = new System.Drawing.Size(260, 20);
             this.QuestName.TabIndex = 1;
-            // 
-            // QuestInternalName
-            // 
-            this.QuestInternalName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestInternalName.Location = new System.Drawing.Point(130, 53);
-            this.QuestInternalName.Name = "QuestInternalName";
-            this.QuestInternalName.Size = new System.Drawing.Size(260, 20);
-            this.QuestInternalName.TabIndex = 22;
-            this.QuestInternalName.TextChanged += new System.EventHandler(this.InternalName_TextChanged);
+            this.QuestName.TextChanged += new System.EventHandler(this.QuestName_TextChanged);
             // 
             // QuestPortrait
             // 
             this.QuestPortrait.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestPortrait.Location = new System.Drawing.Point(130, 78);
+            this.QuestPortrait.Location = new System.Drawing.Point(130, 53);
             this.QuestPortrait.Name = "QuestPortrait";
             this.QuestPortrait.Size = new System.Drawing.Size(260, 20);
             this.QuestPortrait.TabIndex = 6;
-            this.QuestPortrait.TextChanged += QuestPortrait_TextChanged;
+            this.QuestPortrait.TextChanged += new System.EventHandler(this.QuestPortrait_TextChanged);
             // 
             // QuestTypeIcon
             // 
             this.QuestTypeIcon.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestTypeIcon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.QuestTypeIcon.FormattingEnabled = true;
-            this.QuestTypeIcon.Location = new System.Drawing.Point(130, 103);
+            this.QuestTypeIcon.Location = new System.Drawing.Point(130, 78);
             this.QuestTypeIcon.Name = "QuestTypeIcon";
             this.QuestTypeIcon.Size = new System.Drawing.Size(260, 21);
             this.QuestTypeIcon.TabIndex = 20;
@@ -459,7 +438,7 @@
             // 
             this.QuestCantAbandon.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.QuestCantAbandon.AutoSize = true;
-            this.QuestCantAbandon.Location = new System.Drawing.Point(130, 130);
+            this.QuestCantAbandon.Location = new System.Drawing.Point(130, 105);
             this.QuestCantAbandon.Name = "QuestCantAbandon";
             this.QuestCantAbandon.Size = new System.Drawing.Size(15, 14);
             this.QuestCantAbandon.TabIndex = 15;
@@ -470,7 +449,7 @@
             // 
             this.QuestRepeatable.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.QuestRepeatable.AutoSize = true;
-            this.QuestRepeatable.Location = new System.Drawing.Point(130, 155);
+            this.QuestRepeatable.Location = new System.Drawing.Point(130, 130);
             this.QuestRepeatable.Name = "QuestRepeatable";
             this.QuestRepeatable.Size = new System.Drawing.Size(15, 14);
             this.QuestRepeatable.TabIndex = 18;
@@ -480,13 +459,13 @@
             // QuestDescriptionTextBox
             // 
             this.QuestDescriptionTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestDescriptionTextBox.Location = new System.Drawing.Point(130, 178);
+            this.QuestDescriptionTextBox.Location = new System.Drawing.Point(130, 153);
             this.QuestDescriptionTextBox.Multiline = true;
             this.QuestDescriptionTextBox.Name = "QuestDescriptionTextBox";
             this.QuestDescriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.QuestDescriptionTextBox.Size = new System.Drawing.Size(260, 323);
+            this.QuestDescriptionTextBox.Size = new System.Drawing.Size(260, 348);
             this.QuestDescriptionTextBox.TabIndex = 16;
-            this.QuestDescriptionTextBox.TextChanged += QuestDescriptionTextBox_TextChanged;
+            this.QuestDescriptionTextBox.TextChanged += new System.EventHandler(this.QuestDescriptionTextBox_TextChanged);
             // 
             // PrerequisiteList
             // 
@@ -550,7 +529,9 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.splitContainer1.Panel1.Controls.Add(this.QuestStageDescriptionPanel_table);
+            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel3);
+            this.splitContainer1.Panel1.Controls.Add(this.QuestStageDescriptionBox);
+            this.splitContainer1.Panel1.Controls.Add(this.QuestStageDescriptionLabel);
             // 
             // splitContainer1.Panel2
             // 
@@ -559,42 +540,90 @@
             this.splitContainer1.SplitterDistance = 134;
             this.splitContainer1.TabIndex = 0;
             // 
-            // QuestStageDescriptionPanel_table
+            // tableLayoutPanel3
             // 
-            this.QuestStageDescriptionPanel_table.ColumnCount = 1;
-            this.QuestStageDescriptionPanel_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.QuestStageDescriptionPanel_table.Controls.Add(this.QuestStageDescriptionLabel, 0, 0);
-            this.QuestStageDescriptionPanel_table.Controls.Add(this.QuestStageDescriptionBox, 0, 1);
-            this.QuestStageDescriptionPanel_table.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestStageDescriptionPanel_table.Location = new System.Drawing.Point(0, 0);
-            this.QuestStageDescriptionPanel_table.Name = "QuestStageDescriptionPanel_table";
-            this.QuestStageDescriptionPanel_table.RowCount = 2;
-            this.QuestStageDescriptionPanel_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.QuestStageDescriptionPanel_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.QuestStageDescriptionPanel_table.Size = new System.Drawing.Size(403, 134);
-            this.QuestStageDescriptionPanel_table.TabIndex = 2;
+            this.tableLayoutPanel3.AutoSize = true;
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.GoldOnCompletion, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label5, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label4, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.XPOnCompletion, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 82);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(403, 52);
+            this.tableLayoutPanel3.TabIndex = 0;
             // 
-            // QuestStageDescriptionLabel
+            // GoldOnCompletion
             // 
-            this.QuestStageDescriptionLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.QuestStageDescriptionLabel.AutoSize = true;
-            this.QuestStageDescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuestStageDescriptionLabel.Location = new System.Drawing.Point(3, 4);
-            this.QuestStageDescriptionLabel.Name = "QuestStageDescriptionLabel";
-            this.QuestStageDescriptionLabel.Size = new System.Drawing.Size(132, 16);
-            this.QuestStageDescriptionLabel.TabIndex = 1;
-            this.QuestStageDescriptionLabel.Text = "Stage Description";
+            this.GoldOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GoldOnCompletion.Location = new System.Drawing.Point(153, 29);
+            this.GoldOnCompletion.Name = "GoldOnCompletion";
+            this.GoldOnCompletion.Size = new System.Drawing.Size(247, 20);
+            this.GoldOnCompletion.TabIndex = 10;
+            this.GoldOnCompletion.ValueChanged += new System.EventHandler(this.GoldOnCompletion_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(3, 33);
+            this.label5.Margin = new System.Windows.Forms.Padding(3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(144, 16);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Gold on Completion";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(3, 7);
+            this.label4.Margin = new System.Windows.Forms.Padding(3);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(144, 16);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "XP on Completion";
+            // 
+            // XPOnCompletion
+            // 
+            this.XPOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.XPOnCompletion.Location = new System.Drawing.Point(153, 3);
+            this.XPOnCompletion.Name = "XPOnCompletion";
+            this.XPOnCompletion.Size = new System.Drawing.Size(247, 20);
+            this.XPOnCompletion.TabIndex = 9;
+            this.XPOnCompletion.ValueChanged += new System.EventHandler(this.XPOnCompletion_ValueChanged);
             // 
             // QuestStageDescriptionBox
             // 
             this.QuestStageDescriptionBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestStageDescriptionBox.Location = new System.Drawing.Point(3, 28);
+            this.QuestStageDescriptionBox.Location = new System.Drawing.Point(0, 16);
+            this.QuestStageDescriptionBox.Margin = new System.Windows.Forms.Padding(6);
             this.QuestStageDescriptionBox.Multiline = true;
             this.QuestStageDescriptionBox.Name = "QuestStageDescriptionBox";
             this.QuestStageDescriptionBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.QuestStageDescriptionBox.Size = new System.Drawing.Size(397, 103);
-            this.QuestStageDescriptionBox.TabIndex = 0;
+            this.QuestStageDescriptionBox.Size = new System.Drawing.Size(403, 118);
+            this.QuestStageDescriptionBox.TabIndex = 7;
             this.QuestStageDescriptionBox.TextChanged += new System.EventHandler(this.QuestStageDescriptionBox_TextChanged);
+            // 
+            // QuestStageDescriptionLabel
+            // 
+            this.QuestStageDescriptionLabel.AutoSize = true;
+            this.QuestStageDescriptionLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.QuestStageDescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.QuestStageDescriptionLabel.Location = new System.Drawing.Point(0, 0);
+            this.QuestStageDescriptionLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.QuestStageDescriptionLabel.Name = "QuestStageDescriptionLabel";
+            this.QuestStageDescriptionLabel.Size = new System.Drawing.Size(132, 16);
+            this.QuestStageDescriptionLabel.TabIndex = 4;
+            this.QuestStageDescriptionLabel.Text = "Stage Description";
             // 
             // QuestStageTabs
             // 
@@ -624,7 +653,7 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.NewTaskNewTaskOptionDivider, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.QuestStageTaskList, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
@@ -635,41 +664,43 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(389, 334);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // tableLayoutPanel3
+            // NewTaskNewTaskOptionDivider
             // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.QuestStageTaskType, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.newqueststagetaskbutton, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 302);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(383, 29);
-            this.tableLayoutPanel3.TabIndex = 0;
+            this.NewTaskNewTaskOptionDivider.AutoSize = true;
+            this.NewTaskNewTaskOptionDivider.ColumnCount = 2;
+            this.NewTaskNewTaskOptionDivider.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.NewTaskNewTaskOptionDivider.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.NewTaskNewTaskOptionDivider.Controls.Add(this.QuestStageTaskType, 0, 0);
+            this.NewTaskNewTaskOptionDivider.Controls.Add(this.newqueststagetaskbutton, 0, 0);
+            this.NewTaskNewTaskOptionDivider.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NewTaskNewTaskOptionDivider.Location = new System.Drawing.Point(0, 307);
+            this.NewTaskNewTaskOptionDivider.Margin = new System.Windows.Forms.Padding(0);
+            this.NewTaskNewTaskOptionDivider.Name = "NewTaskNewTaskOptionDivider";
+            this.NewTaskNewTaskOptionDivider.RowCount = 1;
+            this.NewTaskNewTaskOptionDivider.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.NewTaskNewTaskOptionDivider.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            this.NewTaskNewTaskOptionDivider.Size = new System.Drawing.Size(389, 27);
+            this.NewTaskNewTaskOptionDivider.TabIndex = 0;
             // 
             // QuestStageTaskType
             // 
             this.QuestStageTaskType.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestStageTaskType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.QuestStageTaskType.FormattingEnabled = true;
-            this.QuestStageTaskType.Location = new System.Drawing.Point(194, 3);
+            this.QuestStageTaskType.Location = new System.Drawing.Point(197, 3);
             this.QuestStageTaskType.Name = "QuestStageTaskType";
-            this.QuestStageTaskType.Size = new System.Drawing.Size(186, 21);
+            this.QuestStageTaskType.Size = new System.Drawing.Size(189, 21);
             this.QuestStageTaskType.TabIndex = 21;
             // 
             // newqueststagetaskbutton
             // 
             this.newqueststagetaskbutton.AutoSize = true;
             this.newqueststagetaskbutton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.newqueststagetaskbutton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.newqueststagetaskbutton.Location = new System.Drawing.Point(3, 3);
+            this.newqueststagetaskbutton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.newqueststagetaskbutton.Location = new System.Drawing.Point(0, 0);
+            this.newqueststagetaskbutton.Margin = new System.Windows.Forms.Padding(0);
             this.newqueststagetaskbutton.Name = "newqueststagetaskbutton";
-            this.newqueststagetaskbutton.Size = new System.Drawing.Size(185, 23);
+            this.newqueststagetaskbutton.Size = new System.Drawing.Size(194, 27);
             this.newqueststagetaskbutton.TabIndex = 11;
             this.newqueststagetaskbutton.Text = "New Task";
             this.newqueststagetaskbutton.UseVisualStyleBackColor = true;
@@ -682,7 +713,7 @@
             this.QuestStageTaskList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestStageTaskList.Location = new System.Drawing.Point(3, 3);
             this.QuestStageTaskList.Name = "QuestStageTaskList";
-            this.QuestStageTaskList.Size = new System.Drawing.Size(383, 293);
+            this.QuestStageTaskList.Size = new System.Drawing.Size(383, 301);
             this.QuestStageTaskList.TabIndex = 9;
             // 
             // QuestStageDialogue
@@ -876,17 +907,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.QuestStageInfo_QuestStageList_Split)).EndInit();
             this.QuestStageInfo_QuestStageList_Split.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.QuestStageDescriptionPanel_table.ResumeLayout(false);
-            this.QuestStageDescriptionPanel_table.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GoldOnCompletion)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XPOnCompletion)).EndInit();
             this.QuestStageTabs.ResumeLayout(false);
             this.QuestStageTasks.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.NewTaskNewTaskOptionDivider.ResumeLayout(false);
+            this.NewTaskNewTaskOptionDivider.PerformLayout();
             this.QuestStageDialogue.ResumeLayout(false);
             this.QuestStageDialogue.PerformLayout();
             this.QuestStageParticleTabPage.ResumeLayout(false);
@@ -937,18 +971,13 @@
         private System.Windows.Forms.Panel PrerequisiteList;
         private System.Windows.Forms.Button NewPrerequisiteButton;
         private System.Windows.Forms.ComboBox QuestTypeIcon;
-        private System.Windows.Forms.Label InternalNameLabel;
-        private System.Windows.Forms.TextBox QuestInternalName;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TableLayoutPanel QuestStageDescriptionPanel_table;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox QuestStageDescriptionBox;
-        private System.Windows.Forms.Label QuestStageDescriptionLabel;
         private System.Windows.Forms.TabControl QuestStageTabs;
         private System.Windows.Forms.TabPage QuestStageTasks;
         private System.Windows.Forms.TabPage QuestStageDialogue;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel NewTaskNewTaskOptionDivider;
         private System.Windows.Forms.Button newqueststagetaskbutton;
         private System.Windows.Forms.Panel QuestStageTaskList;
         private System.Windows.Forms.ComboBox QuestStageTaskType;
@@ -960,6 +989,13 @@
         private System.Windows.Forms.Button NewQuestStageParticle;
         private System.Windows.Forms.Panel QuestDialogueList;
         private System.Windows.Forms.Button NewQuestDialogueButton;
+        private System.Windows.Forms.TextBox QuestStageDescriptionBox;
+        private System.Windows.Forms.Label QuestStageDescriptionLabel;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.NumericUpDown GoldOnCompletion;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown XPOnCompletion;
     }
 }
 
