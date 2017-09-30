@@ -512,12 +512,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public override string ConvertToText(int TabCount = 0)
         {
             string ReturnValue = "";
-
-            bool HasConverted = false;
-            if (ThisEditorExternal.AutoGenerateListenStringID && ThisOptionalFields.sendListenString != "") {
-                ThisOptionalFields.sendListenString = Convert.ToString(ThisEditorExternal.Parent.questID) + "_" + ThisOptionalFields.sendListenString;
-                HasConverted = true;
-            }
             if (hideIf.Count > 0) {
                 string hideIfString = "";
 
@@ -532,7 +526,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 ReturnValue += PrintEncapsulation(hideIfString, TabCount, "hideIf", true);
             }
 
+            string templistenstring = ThisOptionalFields.sendListenString;
+            ThisOptionalFields.sendListenString = Convert.ToString(ThisEditorExternal.Parent.questID) + "_" + ThisOptionalFields.sendListenString;
+
             ReturnValue += ConvertToText_Iterate(TabCount);
+
+            ThisOptionalFields.sendListenString = templistenstring;
 
             /*if (HasConverted)
             {
@@ -549,11 +548,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             if (Response != null) {
                 ReturnValue += PrintEncapsulation(Response.ConvertToText(TabCount + 1), TabCount, "goto", true);
-            }
-
-            if (HasConverted) {
-                int NumberToRemove = ThisEditorExternal.Parent.questID.ToString().Length + 1;
-                ThisOptionalFields.sendListenString.Remove(0, NumberToRemove);
             }
 
             return ReturnValue;
