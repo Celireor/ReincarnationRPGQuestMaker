@@ -373,6 +373,9 @@ namespace ReIncarnation_Quest_Maker
 
             }
             SortablePanel<T, U>.Generate(NewDefaultItem(InputText), ThisList);
+            if (MinimisedState) {
+                Minimise(null, null);
+            }
         }
 
         public void ResetSize(object sender, EventArgs e)
