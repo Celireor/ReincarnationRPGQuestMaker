@@ -143,6 +143,8 @@ namespace ReIncarnation_Quest_Maker
         {
             //StopDrawing();
             QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.description;
+            QuestStageXPOnCompletion.Value = Interpreter.SelectedQuestStage.ThisEditorExternal.exp;
+            QuestStageGoldOnCompletion.Value = Interpreter.SelectedQuestStage.ThisEditorExternal.gold;
             QuestTaskPanels.Refresh(Interpreter.SelectedQuestStage.tasks);
             QuestStageDialoguePanels.Refresh(Interpreter.SelectedQuestStage.dialogue);
             QuestStageParticlePanels.Refresh(Interpreter.SelectedQuestStage.particles);
@@ -304,12 +306,12 @@ namespace ReIncarnation_Quest_Maker
 
         private void XPOnCompletion_ValueChanged(object sender, EventArgs e)
         {
-
+            Interpreter.SelectedQuestStage.ThisEditorExternal.exp = (int)GetNumberFromNumericUpDown(sender);
         }
 
         private void GoldOnCompletion_ValueChanged(object sender, EventArgs e)
         {
-
+            Interpreter.SelectedQuestStage.ThisEditorExternal.gold = (int)GetNumberFromNumericUpDown(sender);
         }
 
         //usefulfuncs
@@ -380,65 +382,6 @@ namespace ReIncarnation_Quest_Maker
             Interpreter.AddQuestStageParticle();
         }
     }
-
-    /*
-    public class AffectedNPCsPanel : SortablePanel<AffectedNPCsPanel, QuestInjectDialogue>
-    {
-        TableLayoutPanel seperator;
-        DefaultLabel constlabel;
-        TextBox npcbox;
-
-        public void UpdateValue(object sender, EventArgs e)
-        {
-            ThisQuestVariable.NPCAffected = MainForm.GetTextFromTextBox(sender);
-        }
-
-        public AffectedNPCsPanel() { GenerateFunction = Generate_2; }
-
-        public AffectedNPCsPanel (OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue> Parent) : base(Parent)
-        {
-            seperator = new DefaultTable(2, 1);
-
-            AddControl(seperator);
-
-            constlabel = new DefaultLabel("NPC:");
-        }
-
-        public static AffectedNPCsPanel Generate_2(QuestInjectDialogue newAffectedNPC, OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue> affectedNPCsPanels)
-        {
-            AffectedNPCsPanel ReturnValue = new AffectedNPCsPanel(affectedNPCsPanels);
-
-            ReturnValue.npcbox = new DefaultTextBox(newAffectedNPC.NPCAffected);
-            ReturnValue.npcbox.TextChanged += ReturnValue.UpdateValue;
-
-            ReturnValue.seperator.Controls.Add(ReturnValue.constlabel, 0, 1);
-            ReturnValue.seperator.Controls.Add(ReturnValue.npcbox, 1, 1);
-
-            ReturnValue.FinishUp();
-
-            return ReturnValue;
-        }
-
-        public override IComparer<AffectedNPCsPanel> SortComparer ()
-        {
-            return new SortableButton_IComparer();
-        }
-    }
-    */
-    /*public class DefaultPanelButton : Button
-    {
-        public DefaultPanelButton(string Text, Action<object, EventArgs> OnClick)
-        {
-            this.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.Location = new System.Drawing.Point(3, 3);
-            this.Name = "newqueststagetaskbutton";
-            this.Size = new System.Drawing.Size(185, 32);
-            this.TabIndex = 11;
-            this.Text = "New Task";
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.Click += new System.EventHandler(OnClick);
-        }
-    }*/
 
     public class DefaultCheckBox : CheckBox {
         public DefaultCheckBox(bool Checked = false) {
@@ -613,6 +556,8 @@ namespace ReIncarnation_Quest_Maker
         {
             this.Maximum = 2147483647;
             this.Value = Value;
+            this.Dock = DockStyle.Fill;
+            this.AutoSize = true;
         }
     }
 }

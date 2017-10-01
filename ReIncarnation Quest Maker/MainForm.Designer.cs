@@ -61,11 +61,6 @@
             this.Stages = new System.Windows.Forms.TabPage();
             this.QuestStageInfo_QuestStageList_Split = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.GoldOnCompletion = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.XPOnCompletion = new System.Windows.Forms.NumericUpDown();
             this.QuestStageDescriptionBox = new System.Windows.Forms.TextBox();
             this.QuestStageDescriptionLabel = new System.Windows.Forms.Label();
             this.QuestStageTabs = new System.Windows.Forms.TabControl();
@@ -81,6 +76,12 @@
             this.QuestStageParticleTabPage = new System.Windows.Forms.TabPage();
             this.questStageParticleList = new System.Windows.Forms.Panel();
             this.NewQuestStageParticle = new System.Windows.Forms.Button();
+            this.stageRewardsTabPage = new System.Windows.Forms.TabPage();
+            this.XPGoldRewardsTable = new System.Windows.Forms.TableLayoutPanel();
+            this.QuestStageGoldOnCompletion = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.QuestStageXPOnCompletion = new System.Windows.Forms.NumericUpDown();
             this.QuestStageList = new System.Windows.Forms.Panel();
             this.newqueststagebutton = new System.Windows.Forms.Button();
             this.QuestDialoguePage = new System.Windows.Forms.TabPage();
@@ -112,15 +113,16 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GoldOnCompletion)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.XPOnCompletion)).BeginInit();
             this.QuestStageTabs.SuspendLayout();
             this.QuestStageTasks.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.NewTaskNewTaskOptionDivider.SuspendLayout();
             this.QuestStageDialogue.SuspendLayout();
             this.QuestStageParticleTabPage.SuspendLayout();
+            this.stageRewardsTabPage.SuspendLayout();
+            this.XPGoldRewardsTable.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.QuestStageGoldOnCompletion)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.QuestStageXPOnCompletion)).BeginInit();
             this.QuestDialoguePage.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -529,7 +531,6 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel3);
             this.splitContainer1.Panel1.Controls.Add(this.QuestStageDescriptionBox);
             this.splitContainer1.Panel1.Controls.Add(this.QuestStageDescriptionLabel);
             // 
@@ -539,67 +540,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(403, 504);
             this.splitContainer1.SplitterDistance = 134;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.GoldOnCompletion, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label5, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label4, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.XPOnCompletion, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 82);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(403, 52);
-            this.tableLayoutPanel3.TabIndex = 0;
-            // 
-            // GoldOnCompletion
-            // 
-            this.GoldOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GoldOnCompletion.Location = new System.Drawing.Point(153, 29);
-            this.GoldOnCompletion.Name = "GoldOnCompletion";
-            this.GoldOnCompletion.Size = new System.Drawing.Size(247, 20);
-            this.GoldOnCompletion.TabIndex = 10;
-            this.GoldOnCompletion.ValueChanged += new System.EventHandler(this.GoldOnCompletion_ValueChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(3, 33);
-            this.label5.Margin = new System.Windows.Forms.Padding(3);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(144, 16);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Gold on Completion";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(3, 7);
-            this.label4.Margin = new System.Windows.Forms.Padding(3);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(144, 16);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "XP on Completion";
-            // 
-            // XPOnCompletion
-            // 
-            this.XPOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.XPOnCompletion.Location = new System.Drawing.Point(153, 3);
-            this.XPOnCompletion.Name = "XPOnCompletion";
-            this.XPOnCompletion.Size = new System.Drawing.Size(247, 20);
-            this.XPOnCompletion.TabIndex = 9;
-            this.XPOnCompletion.ValueChanged += new System.EventHandler(this.XPOnCompletion_ValueChanged);
             // 
             // QuestStageDescriptionBox
             // 
@@ -630,6 +570,7 @@
             this.QuestStageTabs.Controls.Add(this.QuestStageTasks);
             this.QuestStageTabs.Controls.Add(this.QuestStageDialogue);
             this.QuestStageTabs.Controls.Add(this.QuestStageParticleTabPage);
+            this.QuestStageTabs.Controls.Add(this.stageRewardsTabPage);
             this.QuestStageTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.QuestStageTabs.Location = new System.Drawing.Point(0, 0);
             this.QuestStageTabs.Multiline = true;
@@ -784,6 +725,88 @@
             this.NewQuestStageParticle.UseVisualStyleBackColor = true;
             this.NewQuestStageParticle.Click += new System.EventHandler(this.NewStageParticle_Click);
             // 
+            // stageRewardsTabPage
+            // 
+            this.stageRewardsTabPage.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.stageRewardsTabPage.Controls.Add(this.XPGoldRewardsTable);
+            this.stageRewardsTabPage.Location = new System.Drawing.Point(4, 22);
+            this.stageRewardsTabPage.Name = "stageRewardsTabPage";
+            this.stageRewardsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.stageRewardsTabPage.Size = new System.Drawing.Size(395, 340);
+            this.stageRewardsTabPage.TabIndex = 3;
+            this.stageRewardsTabPage.Text = "Stage Rewards";
+            // 
+            // XPGoldRewardsTable
+            // 
+            this.XPGoldRewardsTable.AutoSize = true;
+            this.XPGoldRewardsTable.ColumnCount = 2;
+            this.XPGoldRewardsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.XPGoldRewardsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.XPGoldRewardsTable.Controls.Add(this.QuestStageGoldOnCompletion, 1, 1);
+            this.XPGoldRewardsTable.Controls.Add(this.label5, 0, 1);
+            this.XPGoldRewardsTable.Controls.Add(this.label4, 0, 0);
+            this.XPGoldRewardsTable.Controls.Add(this.QuestStageXPOnCompletion, 1, 0);
+            this.XPGoldRewardsTable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.XPGoldRewardsTable.Location = new System.Drawing.Point(3, 3);
+            this.XPGoldRewardsTable.Name = "XPGoldRewardsTable";
+            this.XPGoldRewardsTable.RowCount = 2;
+            this.XPGoldRewardsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.XPGoldRewardsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.XPGoldRewardsTable.Size = new System.Drawing.Size(389, 52);
+            this.XPGoldRewardsTable.TabIndex = 1;
+            // 
+            // QuestStageGoldOnCompletion
+            // 
+            this.QuestStageGoldOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.QuestStageGoldOnCompletion.Location = new System.Drawing.Point(153, 29);
+            this.QuestStageGoldOnCompletion.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.QuestStageGoldOnCompletion.Name = "QuestStageGoldOnCompletion";
+            this.QuestStageGoldOnCompletion.Size = new System.Drawing.Size(233, 20);
+            this.QuestStageGoldOnCompletion.TabIndex = 10;
+            this.QuestStageGoldOnCompletion.ValueChanged += new System.EventHandler(this.GoldOnCompletion_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(3, 33);
+            this.label5.Margin = new System.Windows.Forms.Padding(3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(144, 16);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Gold on Completion";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(3, 7);
+            this.label4.Margin = new System.Windows.Forms.Padding(3);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(144, 16);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "XP on Completion";
+            // 
+            // QuestStageXPOnCompletion
+            // 
+            this.QuestStageXPOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.QuestStageXPOnCompletion.Location = new System.Drawing.Point(153, 3);
+            this.QuestStageXPOnCompletion.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.QuestStageXPOnCompletion.Name = "QuestStageXPOnCompletion";
+            this.QuestStageXPOnCompletion.Size = new System.Drawing.Size(233, 20);
+            this.QuestStageXPOnCompletion.TabIndex = 9;
+            this.QuestStageXPOnCompletion.ValueChanged += new System.EventHandler(this.XPOnCompletion_ValueChanged);
+            // 
             // QuestStageList
             // 
             this.QuestStageList.AutoScroll = true;
@@ -911,10 +934,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GoldOnCompletion)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.XPOnCompletion)).EndInit();
             this.QuestStageTabs.ResumeLayout(false);
             this.QuestStageTasks.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -925,6 +944,12 @@
             this.QuestStageDialogue.PerformLayout();
             this.QuestStageParticleTabPage.ResumeLayout(false);
             this.QuestStageParticleTabPage.PerformLayout();
+            this.stageRewardsTabPage.ResumeLayout(false);
+            this.stageRewardsTabPage.PerformLayout();
+            this.XPGoldRewardsTable.ResumeLayout(false);
+            this.XPGoldRewardsTable.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.QuestStageGoldOnCompletion)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.QuestStageXPOnCompletion)).EndInit();
             this.QuestDialoguePage.ResumeLayout(false);
             this.QuestDialoguePage.PerformLayout();
             this.ResumeLayout(false);
@@ -991,11 +1016,12 @@
         private System.Windows.Forms.Button NewQuestDialogueButton;
         private System.Windows.Forms.TextBox QuestStageDescriptionBox;
         private System.Windows.Forms.Label QuestStageDescriptionLabel;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.NumericUpDown GoldOnCompletion;
+        private System.Windows.Forms.TabPage stageRewardsTabPage;
+        private System.Windows.Forms.TableLayoutPanel XPGoldRewardsTable;
+        private System.Windows.Forms.NumericUpDown QuestStageGoldOnCompletion;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown XPOnCompletion;
+        private System.Windows.Forms.NumericUpDown QuestStageXPOnCompletion;
     }
 }
 

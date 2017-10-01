@@ -105,7 +105,7 @@ namespace ReIncarnation_Quest_Maker
         }
         public void UpdateValue(object sender, EventArgs e)
         {
-            ThisQuestVariable.Value = MainForm.GetTextFromTextBox(sender);
+            ThisQuestVariable.Value = ((int) MainForm.GetNumberFromNumericUpDown(sender)).ToString();
         }
 
         public PrerequisitePanel(OrganizedControlList<PrerequisitePanel, KVPair> Parent) : base(Parent) { }

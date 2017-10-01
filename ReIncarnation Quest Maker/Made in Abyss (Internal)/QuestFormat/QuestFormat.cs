@@ -249,19 +249,34 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 switch (IterationKV.Key)
                 {
-                    //opens the tasks folder
-                    case "tasks":
+                    case "onCompletion":
                         {
-                            IterationKV.FolderValue.Items.ForEach(obj =>
-                            {
-                                QuestTask.MassGenerate<QuestTask_location>(ReturnValue, obj, "location");
-                                QuestTask.MassGenerate<QuestTask_gather>(ReturnValue, obj, "gather");
-                                QuestTask.MassGenerate<QuestTask_kill>(ReturnValue, obj, "kill");
-                                QuestTask.MassGenerate<QuestTask_killType>(ReturnValue, obj, "killType");
-                                QuestTask.MassGenerate<QuestTask_talkto>(ReturnValue, obj, "talkto");
+                            IterationKV.FolderValue.Items.ForEach(obj => {
+                                switch (obj.Key) {
+                                    case "rewards":
+                                        {
+                                            obj.FolderValue.Items.ForEach(obj2 => {
+                                            switch (obj2.Key)
+                                            {
+                                                case "gold":
+                                                    {
+                                                        ReturnValue.ThisEditorExternal.gold = Convert.ToInt32(obj2.Value);
+                                                    }
+                                                    break;
+                                                case "exp":
+                                                    {
+                                                        ReturnValue.ThisEditorExternal.exp = Convert.ToInt32(obj2.Value);
+                                                    }
+                                                    break;
+                                            }
+                                        });
+                                    }
+                                    break;
+                                }
                             });
                         }
                         break;
+                    //opens the injections folder
                     case "inject":
                         {
                             IterationKV.FolderValue.Items.ForEach(obj =>
@@ -290,6 +305,19 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                             });
                         }
                         break;
+                    //opens the tasks folder
+                    case "tasks":
+                        {
+                            IterationKV.FolderValue.Items.ForEach(obj =>
+                            {
+                                QuestTask.MassGenerate<QuestTask_location>(ReturnValue, obj, "location");
+                                QuestTask.MassGenerate<QuestTask_gather>(ReturnValue, obj, "gather");
+                                QuestTask.MassGenerate<QuestTask_kill>(ReturnValue, obj, "kill");
+                                QuestTask.MassGenerate<QuestTask_killType>(ReturnValue, obj, "killType");
+                                QuestTask.MassGenerate<QuestTask_talkto>(ReturnValue, obj, "talkto");
+                            });
+                        }
+                        break;
                 }
             });
             return ReturnValue;
@@ -304,13 +332,28 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        
+
 
         public override string ConvertToText(int TabCount = 0)
         {
             string stringtoencapsulate = ConvertToText_Iterate(TabCount + 1);
 
+            string OnCompletionString = "";
+
+            if (ThisEditorExternal.gold > 0 || ThisEditorExternal.exp > 0) {
+                OnCompletionString += PrintEncapsulation(
+                    PrintKeyValue("gold", ThisEditorExternal.gold.ToString(), TabCount + 3) +
+                    PrintKeyValue("exp", ThisEditorExternal.exp.ToString(), TabCount + 3),
+                    TabCount + 2, "rewards", true
+                    );
+            }
+
+            if (OnCompletionString != "") {
+                stringtoencapsulate += PrintEncapsulation(OnCompletionString, TabCount + 1, "onCompletion", true);
+            }
+
             string InjectionsString = "";
+
             if (dialogue.Count > 0)
             {
                 string DialogueString = "";
@@ -387,6 +430,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public Quest Parent;
             public int StageNum;
+
+            public int gold;
+            public int exp;
         }
     }
 
