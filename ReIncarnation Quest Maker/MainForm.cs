@@ -142,7 +142,7 @@ namespace ReIncarnation_Quest_Maker
         public void UpdateStageData()
         {
             //StopDrawing();
-            QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.description;
+            QuestStageDescriptionBox.Text = Interpreter.SelectedQuestStage.ThisOptionalFields.description;
             QuestStageXPOnCompletion.Value = Interpreter.SelectedQuestStage.ThisEditorExternal.exp;
             QuestStageGoldOnCompletion.Value = Interpreter.SelectedQuestStage.ThisEditorExternal.gold;
             QuestTaskPanels.Refresh(Interpreter.SelectedQuestStage.tasks);

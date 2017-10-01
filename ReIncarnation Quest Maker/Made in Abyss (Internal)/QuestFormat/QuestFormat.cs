@@ -214,15 +214,24 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     public class QuestStage : QuestVariable
     {
         public string stageName;
-        public string description;
 
         //public List<QuestInjectDialogue> affectedNPCs = new List<QuestInjectDialogue>();
+        public QuestStage_OptionalFields ThisOptionalFields {
+            get
+            {
+                return OptionalFields as QuestStage_OptionalFields;
+            }
+        }
 
         public List<QuestTask> tasks = new List<QuestTask>();
         public KVList dialogue = new KVList();
         public KVList particles = new KVList();
 
         public QuestStage_EditorExternal ThisEditorExternal = new QuestStage_EditorExternal();
+
+        public QuestStage() {
+            OptionalFields = new QuestStage_OptionalFields();
+        }
 
         public override bool Trash()
         {
@@ -341,11 +350,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             string OnCompletionString = "";
 
             if (ThisEditorExternal.gold > 0 || ThisEditorExternal.exp > 0) {
-                OnCompletionString += PrintEncapsulation(
-                    PrintKeyValue("gold", ThisEditorExternal.gold.ToString(), TabCount + 3) +
-                    PrintKeyValue("exp", ThisEditorExternal.exp.ToString(), TabCount + 3),
-                    TabCount + 2, "rewards", true
-                    );
+                string goldxpstring = PrintKeyValue("gold", ThisEditorExternal.gold.ToString(), TabCount + 3);
+                goldxpstring += PrintKeyValue("exp", ThisEditorExternal.exp.ToString(), TabCount + 3);
+                OnCompletionString += PrintEncapsulation(goldxpstring, TabCount + 2, "rewards", true);
             }
 
             if (OnCompletionString != "") {
@@ -433,6 +440,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public int gold;
             public int exp;
+        }
+
+        public class QuestStage_OptionalFields : QuestVariableOptionalFields
+        {
+            public string description;
         }
     }
 

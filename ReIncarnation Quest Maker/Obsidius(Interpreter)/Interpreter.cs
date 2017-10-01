@@ -229,7 +229,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         public static void UpdateSelectedQuestStateDescription(string NewValue)
         {
-            SelectedQuestStage.description = NewValue;
+            SelectedQuestStage.ThisOptionalFields.description = NewValue;
         }
 
         /* END */
