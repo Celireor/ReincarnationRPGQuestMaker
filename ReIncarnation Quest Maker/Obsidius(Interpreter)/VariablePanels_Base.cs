@@ -19,7 +19,7 @@ namespace ReIncarnation_Quest_Maker
     {
         public U ThisQuestVariable;
 
-        public List<T> ThisList = new List<T>();
+        public ListeningList<T> ThisList = new ListeningList<T>();
 
         public Panel BaseControl;
 
@@ -62,11 +62,13 @@ namespace ReIncarnation_Quest_Maker
 
         public void RepositionItems()
         {
-
             NextPos = 0;
+            int itemCount = 0;
             ThisList.ForEach(obj =>
             {
                 PositionNewItem(obj);
+                obj.ListPosition = itemCount;
+                itemCount++;
             });
         }
 
@@ -153,12 +155,13 @@ namespace ReIncarnation_Quest_Maker
 
         public void MovePos(int Displacement)
         {
-            if (ListPosition + Displacement < 0 || ListPosition + Displacement >= ParentControlList.ThisList.Count)
+            int OtherPos = ListPosition + Displacement;
+            if (OtherPos < 0 || OtherPos >= ParentControlList.ThisList.Count)
             {
                 return;
             }
-            T OtherItem = ParentControlList.ThisList.Swap(ListPosition, ListPosition + Displacement);
-            Move_Addon(OtherItem, ListPosition + Displacement);
+            T OtherItem = ParentControlList.ThisList.Swap(ListPosition, OtherPos);
+            Move_Addon(OtherItem, OtherPos);
             ListPosition += Displacement;
             OtherItem.ListPosition -= Displacement;
             ParentControlList.SortControls();

@@ -52,6 +52,7 @@ namespace ReIncarnation_Quest_Maker
         void UpdateValues()
         {
             QuestButtonQuestName.Text = "(ID: " + ThisQuestVariable.questID.ToString() + ") " + ThisQuestVariable.name;
+            ParentControlList.SortControls();
         }
 
         public override void Generate_Addon(Quest NewQuest, OrganizedControlList<QuestButton, Quest> Parent)
@@ -76,7 +77,7 @@ namespace ReIncarnation_Quest_Maker
 
         public QuestButton(OrganizedControlList<QuestButton, Quest> Parent) : base(Parent) { ContentsPanel.Click += new EventHandler(OnClick); }
 
-        public new IComparer<QuestButton> SortComparer()
+        public override IComparer<QuestButton> SortComparer()
         {
             return new QuestButton_IComparer();
         }

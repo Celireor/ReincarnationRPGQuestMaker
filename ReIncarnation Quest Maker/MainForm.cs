@@ -381,6 +381,11 @@ namespace ReIncarnation_Quest_Maker
         {
             Interpreter.AddQuestStageParticle();
         }
+
+        private void fixIDsButton_Click(object sender, EventArgs e)
+        {
+            Interpreter.fixIDs();
+        }
     }
 
     public class DefaultCheckBox : CheckBox {

@@ -101,6 +101,20 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         //others
 
+        public static void fixIDs() {
+            CurrentQuestList.Quests.ForEach(obj => {
+                int OldNum = obj.questID;
+                obj.questID = -1;
+                while (obj.questID == -1)
+                {
+                    UpdateQuestID(OldNum, obj);
+                    OldNum++;
+                }
+            });
+            CurrentQuestList.SortQuests();
+            UpdateScreen();
+        }
+
         public static void AddQuestStageTask(string TaskType)
         {
             QuestTask NewStage = QuestTask.Generate(TaskType, SelectedQuestStage);
@@ -198,28 +212,35 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         public static void UpdateSelectedQuestID(int NewValue)
         {
-            if (NewValue == SelectedQuest.questID || NewValue < 0) {
+            UpdateQuestID(NewValue, SelectedQuest);
+            UpdateScreen();
+        }
+
+        public static void UpdateQuestID(int NewValue, Quest ThisQuest) {
+
+            if (NewValue == ThisQuest.questID || NewValue < 0)
+            {
                 return;
             }
             bool Occupied = false;
             CurrentQuestList.Quests.ForEach(obj => {
-                Occupied |= obj.questID == NewValue && obj != SelectedQuest;
+                Occupied |= obj.questID == NewValue && obj != ThisQuest;
             });
             if (Occupied == true)
             {
-                UpdateScreen();
                 return;
             }
             if (NewValue > CurrentQuestList.ThisEditorExternal.LargestQuestID)
             {
                 CurrentQuestList.ThisEditorExternal.LargestQuestID = NewValue;
             }
-            int OldID = SelectedQuest.questID;
-            SelectedQuest.SetQuestID (NewValue);
-            if (OldID == CurrentQuestList.ThisEditorExternal.LargestQuestID) {
+            int OldID = ThisQuest.questID;
+            ThisQuest.SetQuestID(NewValue);
+            if (OldID == CurrentQuestList.ThisEditorExternal.LargestQuestID)
+            {
                 GetLargestQuestID();
             }
-            SelectedQuest.ThisEditorExternal.OnUpdate();
+            ThisQuest.ThisEditorExternal.OnUpdate();
         }
 
         public static void UpdateSelectedQuestIcon(string NewValue)

@@ -32,8 +32,6 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fromReincQuestFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CompileButton = new System.Windows.Forms.ToolStripButton();
             this.Quest_QuestList_Split = new System.Windows.Forms.SplitContainer();
             this.QuestTabs = new System.Windows.Forms.TabControl();
@@ -90,6 +88,7 @@
             this.QuestList = new System.Windows.Forms.Panel();
             this.newquestbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.fixIDsButton = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Quest_QuestList_Split)).BeginInit();
             this.Quest_QuestList_Split.Panel1.SuspendLayout();
@@ -130,7 +129,8 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
-            this.CompileButton});
+            this.CompileButton,
+            this.fixIDsButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(864, 25);
@@ -141,8 +141,7 @@
             // 
             this.toolStripLabel1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
-            this.loadToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.loadToolStripMenuItem});
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(38, 22);
             this.toolStripLabel1.Text = "File";
@@ -151,38 +150,24 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewQuestList);
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fromTextToolStripMenuItem,
-            this.fromReincQuestFileToolStripMenuItem});
+            this.fromTextToolStripMenuItem});
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadToolStripMenuItem.Text = "Load";
             // 
             // fromTextToolStripMenuItem
             // 
             this.fromTextToolStripMenuItem.Name = "fromTextToolStripMenuItem";
-            this.fromTextToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fromTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fromTextToolStripMenuItem.Text = "From Text";
             this.fromTextToolStripMenuItem.Click += new System.EventHandler(this.fromTextToolStripMenuItem_Click);
-            // 
-            // fromReincQuestFileToolStripMenuItem
-            // 
-            this.fromReincQuestFileToolStripMenuItem.Name = "fromReincQuestFileToolStripMenuItem";
-            this.fromReincQuestFileToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.fromReincQuestFileToolStripMenuItem.Text = "From .ReincQuest File";
-            this.fromReincQuestFileToolStripMenuItem.Click += new System.EventHandler(this.fromReincQuestFileToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.saveToolStripMenuItem.Text = "Save";
             // 
             // CompileButton
             // 
@@ -896,6 +881,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Quest ID";
             // 
+            // fixIDsButton
+            // 
+            this.fixIDsButton.Name = "fixIDsButton";
+            this.fixIDsButton.Size = new System.Drawing.Size(74, 22);
+            this.fixIDsButton.Text = "Fix Quest IDs";
+            this.fixIDsButton.Click += new System.EventHandler(this.fixIDsButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -964,8 +956,6 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fromTextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fromReincQuestFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton CompileButton;
         private System.Windows.Forms.SplitContainer Quest_QuestList_Split;
         private System.Windows.Forms.Button newquestbutton;
@@ -1022,6 +1012,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown QuestStageXPOnCompletion;
+        private System.Windows.Forms.ToolStripLabel fixIDsButton;
     }
 }
 
