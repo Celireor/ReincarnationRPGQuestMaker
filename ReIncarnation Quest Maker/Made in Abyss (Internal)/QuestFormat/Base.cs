@@ -129,7 +129,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public List<Action> OnUpdateList = new List<Action>();
         public void OnUpdate()
         {
-            OnUpdateList.ForEach(obj => obj());
+            List<Action> NextToExecute = new List<Action>();
+            OnUpdateList.ForEach(obj => NextToExecute.Add(obj));
+            NextToExecute.ForEach(obj => obj());
         }
     }
 

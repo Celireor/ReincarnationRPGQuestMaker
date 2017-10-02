@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
@@ -111,7 +112,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string listenString;
         public string completionString;
 
-        public QuestTask_talkto() { }
+        public new QuestTaskTalkTo_EditorExternal ThisEditorExternal { get { return base.ThisEditorExternal as QuestTaskTalkTo_EditorExternal; } }
+
+        public QuestTask_talkto() { base.ThisEditorExternal = new QuestTaskTalkTo_EditorExternal(); }
 
         public override string ConvertToText_Full(int Index, int TabCount)
         {
@@ -119,8 +122,57 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return PrintEncapsulation(StringToEncapsulate, TabCount, Convert.ToString(Index), true);
         }
 
-        public class QuestTaskLocation_EditorExternal
+        public void UpdateListenString()
         {
+            ThisEditorExternal.ListeningStringQuestLength = QuestDialogueOption_OptionalFields.GetQuestIDFromListenString(listenString) - 1;
+
+            if (ThisEditorExternal.ListeningStringQuestLength > 0)
+            {
+                Quest OldListeningStringParent = ThisEditorExternal.ListenStringParent;
+                int NewListenStringID = Convert.ToInt32(listenString.Remove(ThisEditorExternal.ListeningStringQuestLength));
+                if (ThisEditorExternal.ParentStage.ThisEditorExternal.Parent.questID == NewListenStringID)
+                {
+                    ThisEditorExternal.ListenStringParent = ThisEditorExternal.ParentStage.ThisEditorExternal.Parent;
+                }
+                else
+                {
+                    ThisEditorExternal.ListenStringParent = Interpreter.CurrentQuestList.GetQuest(NewListenStringID);
+                }
+                if (ThisEditorExternal.ListenStringParent != null)
+                {
+                    ThisEditorExternal.ListenStringParent.ThisEditorExternal.OnUpdateList.Add(UpdateListenStringID);
+                }
+                if (OldListeningStringParent != null)
+                {
+                    OldListeningStringParent.ThisEditorExternal.OnUpdateList.Remove(UpdateListenStringID);
+                }
+            }
+            else
+            {
+                if (ThisEditorExternal.ListenStringParent != null)
+                {
+                    ThisEditorExternal.ListenStringParent.ThisEditorExternal.OnUpdateList.Remove(UpdateListenStringID);
+                }
+            }
+        }
+
+        public void UpdateListenStringID()
+        {
+            if (listenString != "")
+            {
+                listenString = listenString.Remove(0, ThisEditorExternal.ListeningStringQuestLength + 1);
+                ThisEditorExternal.ListeningStringQuestLength = ThisEditorExternal.ListenStringParent.questID.ToString().Length;
+                listenString = ThisEditorExternal.ListenStringParent.questID.ToString() + '_' + listenString;
+
+            }
+        }
+
+        public class QuestTaskTalkTo_EditorExternal : QuestTask_EditorExternal
+        {
+            public int ListeningStringQuestLength;
+            public Quest ListenStringParent;
+
+           
         }
     }
 

@@ -40,6 +40,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             Quests.Sort(Quest.SortByQuestID());
         }
 
+        public Quest GetQuest(int ID) {
+            Quest ReturnValue = null;
+            Quests.ForEach(obj => { if (obj.questID == ID) { ReturnValue = obj; } });
+            return ReturnValue;
+        }
+
         public class QuestList_EditorExternal : QuestVariableEditorExternal
         {
 
@@ -663,8 +669,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 }*/
             });
             if (ReturnValue.ThisOptionalFields.sendListenString != "") {
-                int NumberToRemove = ReturnValue.ThisEditorExternal.Parent.questID.ToString().Length + 1;
-                ReturnValue.ThisOptionalFields.ChangeListenString(ReturnValue.ThisOptionalFields.sendListenString.Remove(0, NumberToRemove));
+                ReturnValue.ThisOptionalFields.ChangeListenString(ReturnValue.ThisOptionalFields.sendListenString.Remove(0, QuestDialogueOption_OptionalFields.GetQuestIDFromListenString(ReturnValue.ThisOptionalFields.sendListenString)));
             }
 
             return ReturnValue;
@@ -683,42 +688,55 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             //public int listeningQuest;
         }
+    }
 
-        public class QuestDialogueOption_OptionalFields : QuestVariableOptionalFields
+    public class QuestDialogueOption_OptionalFields : QuestVariableOptionalFields
+    {
+        //public string questMarker = "";
+        //public string selectBackground = "";
+        public string sendListenString = "";
+
+        public QuestDialogueOption_OptionalFields_EditorExternal ThisEditorExternal = new QuestDialogueOption_OptionalFields_EditorExternal();
+
+        public void ChangeListenString(string sendListenString)
         {
-            //public string questMarker = "";
-            //public string selectBackground = "";
-            public string sendListenString = "";
-
-            public QuestDialogueOption_OptionalFields_EditorExternal ThisEditorExternal = new QuestDialogueOption_OptionalFields_EditorExternal();
-
-            public void ChangeListenString(string sendListenString)
+            if (this.sendListenString != "")
             {
-                if (this.sendListenString != "")
-                {
-                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
-                }
-                this.sendListenString = sendListenString;
-                if (this.sendListenString != "")
-                {
-                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
-                }
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
             }
-
-            public void ChangeID() {
-                if (this.sendListenString != "")
-                {
-                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
-                    Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
-                    ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
-                }
-            }
-
-            public class QuestDialogueOption_OptionalFields_EditorExternal : QuestVariableEditorExternal
+            this.sendListenString = sendListenString;
+            if (this.sendListenString != "")
             {
-                public Quest Parent;
-                public int LastID;
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
             }
+        }
+
+        public static int GetQuestIDFromListenString(string ListenString)
+        {
+            for (int x = 0; x < ListenString.Length; x++)
+            {
+                if (ListenString[x] == '_')
+                {
+                    return x + 1;
+                }
+            }
+            return 0;
+        }
+
+        public void ChangeID()
+        {
+            if (this.sendListenString != "")
+            {
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
+                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
+            }
+        }
+
+        public class QuestDialogueOption_OptionalFields_EditorExternal : QuestVariableEditorExternal
+        {
+            public Quest Parent;
+            public int LastID;
         }
     }
 

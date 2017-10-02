@@ -290,6 +290,9 @@ namespace ReIncarnation_Quest_Maker
     public class QuestTaskPanel_talkto : QuestTaskPanel
     {
         public QuestTask_talkto ThisItem;
+        public DefaultDropDown ListenString;
+        public Quest ListenStringParent;
+        public int ListeningStringQuestLength;
 
         public void ModifyTalkToDescription(object sender, EventArgs e)
         {
@@ -299,6 +302,9 @@ namespace ReIncarnation_Quest_Maker
         public void ModifyTalkToListenString(object sender, EventArgs e)
         {
             ThisItem.listenString = MainForm.GetTextFromComboBox(sender);
+
+            ThisItem.UpdateListenString();
+            ListenString.Text = ThisItem.listenString;
         }
 
         public void ModifyTalkToCompletionString(object sender, EventArgs e)
@@ -310,13 +316,21 @@ namespace ReIncarnation_Quest_Maker
 
         public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
         {
+
             QuestTask_talkto Item = (QuestTask_talkto)Item_raw;
 
             ThisItem = Item;
 
             ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ModifyTalkToDescription);
-            ThisTable.AddItem("Listen String", new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings, true), ModifyTalkToListenString);
+            ListenString = new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings, true);
+            ThisTable.AddItem("Listen String", ListenString, ModifyTalkToListenString);
             ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ModifyTalkToCompletionString);
+
+            ModifyTalkToListenString(ListenString, null);
+
+            /*Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.AddListener((useless, item) => {
+
+            }, false, false, true)*/
         }
     }
     public class QuestTaskPanel_kill : QuestTaskPanel
