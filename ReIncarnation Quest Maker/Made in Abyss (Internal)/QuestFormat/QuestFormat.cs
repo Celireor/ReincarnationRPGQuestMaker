@@ -585,7 +585,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
 
             string templistenstring = ThisOptionalFields.sendListenString;
-            ThisOptionalFields.sendListenString = Convert.ToString(ThisEditorExternal.Parent.questID) + "_" + ThisOptionalFields.sendListenString;
+            if(templistenstring != "")
+            {
+                ThisOptionalFields.sendListenString = Convert.ToString(ThisEditorExternal.Parent.questID) + "_" + ThisOptionalFields.sendListenString;
+            }
 
             ReturnValue += ConvertToText_Iterate(TabCount);
 
@@ -742,16 +745,19 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             ReturnValue += ConvertToText_Iterate(TabCount);
 
-            string OptionsString = "";
-            int x = 0;
-
-            options.ForEach(obj =>
+            if (options.Count > 0)
             {
-                x++;
-                OptionsString += PrintEncapsulation(obj.ConvertToText(TabCount + 2), TabCount + 1, x.ToString(), true);
-            });
+                string OptionsString = "";
+                int x = 0;
 
-            ReturnValue += PrintEncapsulation(OptionsString, TabCount, "options", true);
+                options.ForEach(obj =>
+                {
+                    x++;
+                    OptionsString += PrintEncapsulation(obj.ConvertToText(TabCount + 2), TabCount + 1, x.ToString(), true);
+                });
+
+                ReturnValue += PrintEncapsulation(OptionsString, TabCount, "options", true);
+            }
 
             return ReturnValue;
         }
