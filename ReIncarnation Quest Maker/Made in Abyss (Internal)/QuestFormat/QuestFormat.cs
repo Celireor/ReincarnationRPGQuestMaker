@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
-using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
@@ -28,7 +27,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             KVPairFolder ThisKVPairFolder = ThisKV.FolderValue;
             ThisKVPairFolder.Items.ForEach(obj =>
             {
-                Quest NewQuest = GenerateFromKeyValue<Quest>(obj);
+                Quest NewQuest = Quest.KVGenerate(obj, this);
                 Quests.Add(NewQuest);
                 ThisEditorExternal.PossibleTypeIcons.Add(NewQuest.typeIcon);
             });
@@ -158,6 +157,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
+        public static Quest KVGenerate(KVPair ThisKV, QuestList Parent) {
+            Quest ReturnValue = new Quest();
+            ReturnValue.ThisEditorExternal.ParentQuestList = Parent;
+            ReturnValue.GenerateFromKV(ThisKV);
+            return ReturnValue;
+        }
+
         public override void GenerateFromKV(KVPair ThisKV)
         {
             GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (KVPair IterationKV, FieldInfo ThisFieldInfo) =>
@@ -213,6 +219,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public class Quest_EditorExternal : QuestVariableEditorExternal
         {
+            public QuestList ParentQuestList;
+
             public ListeningList<String> PossibleDialogueInjections = new ListeningList<string>();
         }
     }
@@ -702,12 +710,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             if (this.sendListenString != "")
             {
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
             }
             this.sendListenString = sendListenString;
             if (this.sendListenString != "")
             {
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
             }
         }
 
@@ -727,8 +735,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             if (this.sendListenString != "")
             {
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
-                Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
+                ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.PossibleListenStrings.Remove(ThisEditorExternal.LastID + "_" + this.sendListenString);
+                ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.PossibleListenStrings.Add(ThisEditorExternal.Parent.questID + "_" + this.sendListenString);
                 ThisEditorExternal.LastID = ThisEditorExternal.Parent.questID;
             }
         }

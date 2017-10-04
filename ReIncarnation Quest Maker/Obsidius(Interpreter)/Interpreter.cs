@@ -139,7 +139,6 @@ namespace ReIncarnation_Quest_Maker.Obsidius
         {
             ClearScreen();
             NewQuestList.ThisEditorExternal.FilePath = FilePath;
-            NewQuestList.ThisEditorExternal.PossibleListenStrings = CurrentQuestList.ThisEditorExternal.PossibleListenStrings;
             CurrentQuestList = NewQuestList;
 
             CurrentQuestList.SortQuests();

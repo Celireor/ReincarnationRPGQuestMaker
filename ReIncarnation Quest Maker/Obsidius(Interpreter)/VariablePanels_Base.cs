@@ -446,6 +446,72 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
+    /*public class ModifyQuestVariableTable : DefaultPanel
+    {
+        public DefaultPanel LabelPanel;
+        public DefaultPanel ObjectPanel;
+
+        public ModifyQuestVariableTable()// : base(2, 1)
+        {
+            Dock = DockStyle.Fill;
+            LabelPanel = new DefaultPanel();
+            ObjectPanel = new DefaultPanel();
+            LabelPanel.Dock = DockStyle.Left;
+            //LabelPanel.Anchor = AnchorStyles.Left;
+            LabelPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            LabelPanel.AutoSize = true;
+            LabelPanel.BackColor = SystemColors.ControlDarkDark;
+            ObjectPanel.Dock = DockStyle.Left;
+            //ObjectPanel.Anchor = AnchorStyles.Left;
+            ObjectPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ObjectPanel.AutoSize = true;
+            ObjectPanel.BackColor = SystemColors.ControlLightLight;
+            Controls.Add(LabelPanel);
+            Controls.Add(ObjectPanel);
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSize = true;
+        }
+
+        public void AddItem(string VarString, Control VarControl, EventHandler OnValueChanged)
+        {
+            //VarControl.Location = new Point(0, RowCount * 33);
+            VarControl.Dock = DockStyle.Top;
+
+            DefaultLabel LabelControl = new DefaultLabel(VarString);
+           // LabelControl.Location = new Point(0, RowCount * 33);
+            LabelControl.Dock = DockStyle.Top;
+
+            LabelPanel.Controls.Add(LabelControl);
+            ObjectPanel.Controls.Add(VarControl);
+
+            Type VarControlType = VarControl.GetType();
+            if (typeof(TextBox).IsAssignableFrom(VarControlType))
+            {
+                TextBox temp = VarControl as TextBox;
+                temp.TextChanged += OnValueChanged;
+            }
+            else if (typeof(ComboBox).IsAssignableFrom(VarControlType))
+            {
+
+                ComboBox temp = VarControl as ComboBox;
+                temp.TextChanged += OnValueChanged;
+            }
+            else if (typeof(NumericUpDown).IsAssignableFrom(VarControlType))
+            {
+
+                NumericUpDown temp = VarControl as NumericUpDown;
+                temp.ValueChanged += OnValueChanged;
+                temp.KeyUp += new KeyEventHandler((obj, e) => OnValueChanged(obj, null));
+            }
+            else if (typeof(CheckBox).IsAssignableFrom(VarControlType))
+            {
+
+                CheckBox temp = VarControl as CheckBox;
+                temp.CheckedChanged += OnValueChanged;
+            }
+        }
+    }*/
+    
     public class ModifyQuestVariableTable : DefaultTable
     {
         public ModifyQuestVariableTable() : base(2, 1)

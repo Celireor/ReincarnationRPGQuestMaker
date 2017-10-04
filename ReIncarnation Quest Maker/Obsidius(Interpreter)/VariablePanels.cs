@@ -106,7 +106,7 @@ namespace ReIncarnation_Quest_Maker
         }
         public void UpdateValue(object sender, EventArgs e)
         {
-            ThisQuestVariable.Value = ((int) MainForm.GetNumberFromNumericUpDown(sender)).ToString();
+            ThisQuestVariable.Value = ((int)MainForm.GetNumberFromNumericUpDown(sender)).ToString();
         }
 
         public PrerequisitePanel(OrganizedControlList<PrerequisitePanel, KVPair> Parent) : base(Parent) { }
@@ -593,7 +593,7 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.Controls.Add(giveQuestsList, 0, 1);
             ThisTable.Controls.Add(DialogueOptionsTable, 0, 2);
         }
-        public override void Generate_Addon (QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
+        public override void Generate_Addon(QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
         {
             //QuestDialogueOptionsPanel ReturnValue = new QuestDialogueOptionsPanel(Parent);
 
@@ -695,7 +695,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void ModifyQuestID(object sender, EventArgs e)
         {
-            ThisQuestVariable.Quest = (int) MainForm.GetNumberFromNumericUpDown(sender);
+            ThisQuestVariable.Quest = (int)MainForm.GetNumberFromNumericUpDown(sender);
         }
 
         public void ModifyQuestState(object sender, EventArgs e)
@@ -729,7 +729,7 @@ namespace ReIncarnation_Quest_Maker
             ThisQuestVariable.Value = MainForm.GetTextFromComboBox(sender);
         }
 
-        public override void Generate_Addon (KVPair Item, OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent)
+        public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent)
         {
             //QuestStageDialoguePanel ReturnValue = new QuestStageDialoguePanel(Parent);
             ThisTable = new ModifyQuestVariableTable();
@@ -769,4 +769,6 @@ namespace ReIncarnation_Quest_Maker
             //return ReturnValue;
         }
     }
+
+    //public class RunScriptPanel : SortablePanel<RunScriptPanel {}
 }
