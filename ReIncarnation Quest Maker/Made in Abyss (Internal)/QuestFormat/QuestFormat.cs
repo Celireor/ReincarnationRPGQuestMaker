@@ -17,7 +17,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string ReturnString = "";
             Quests.ForEach(obj => { ReturnString += obj.ConvertToText(); });
-            return ReturnString;
+            return PrintEncapsulation(PrintEncapsulation(ReturnString, TabCount + 1, "Quests", true), TabCount + 1, "Quests", true);
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
@@ -29,6 +29,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 Quest NewQuest = Quest.KVGenerate(obj, this);
                 Quests.Add(NewQuest);
                 ThisEditorExternal.PossibleTypeIcons.Add(NewQuest.typeIcon);
+            });
+
+            ThisEditorExternal.StringsToFix.ForEach(obj => {
+                ThisEditorExternal.AllTalkTos.ForEach(obj2 => {
+                    if (obj.ThisOptionalFields.sendListenString == obj2.listenString) {
+                        obj2.listenString = obj.ThisEditorExternal.Parent.questID.ToString() + '_' + obj2.listenString;
+                    }
+                });
             });
         }
 
@@ -80,6 +88,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public ListeningList<string> PossibleListenStrings = new ListeningList<string>();
 
             public ListeningList<string> PossibleHideIfStrings = new ListeningList<string>();
+
+            public List<QuestTask_talkto> AllTalkTos = new List<QuestTask_talkto>();
+            public List<QuestDialogueOption> StringsToFix = new List<QuestDialogueOption>();
 
             public QuestList_EditorExternal()
             {
@@ -738,7 +749,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 }*/
             });
             if (ReturnValue.ThisOptionalFields.sendListenString != "") {
-                ReturnValue.ThisOptionalFields.ChangeListenString(ReturnValue.ThisOptionalFields.sendListenString.Remove(0, QuestDialogueOption_OptionalFields.GetQuestIDFromListenString(ReturnValue.ThisOptionalFields.sendListenString)));
+                int NumToRemove = QuestDialogueOption_OptionalFields.GetQuestIDFromListenString(ReturnValue.ThisOptionalFields.sendListenString);
+                if (NumToRemove == 0) {
+                    Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.StringsToFix.Add(ReturnValue);
+                }
+                else
+                {
+                    ReturnValue.ThisOptionalFields.ChangeListenString(ReturnValue.ThisOptionalFields.sendListenString.Remove(0, NumToRemove));
+                }
             }
 
             return ReturnValue;

@@ -133,8 +133,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string completionString;
 
         public new QuestTaskTalkTo_EditorExternal ThisEditorExternal { get { return base.ThisEditorExternal as QuestTaskTalkTo_EditorExternal; } }
-
-        public QuestTask_talkto() { base.ThisEditorExternal = new QuestTaskTalkTo_EditorExternal(); }
+        public override bool Trash()
+        {
+            ThisEditorExternal.ParentStage.ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.AllTalkTos.Remove(this);
+            return base.Trash();
+        }
+        public QuestTask_talkto() {
+            base.ThisEditorExternal = new QuestTaskTalkTo_EditorExternal();
+        }
 
         public override string ConvertToText_Full(int Index, int TabCount)
         {
@@ -183,13 +189,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 listenString = listenString.Remove(0, ThisEditorExternal.ListeningStringQuestLength + 1);
                 ThisEditorExternal.ListeningStringQuestLength = ThisEditorExternal.ListenStringParent.questID.ToString().Length;
                 listenString = ThisEditorExternal.ListenStringParent.questID.ToString() + '_' + listenString;
-
             }
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
         {
             base.GenerateFromKV(ThisKV);
+            ThisEditorExternal.ParentStage.ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.AllTalkTos.Add(this);
             UpdateListenString();
         }
 
@@ -197,8 +203,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public int ListeningStringQuestLength;
             public Quest ListenStringParent;
-
-           
         }
     }
 
