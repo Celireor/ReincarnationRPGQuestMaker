@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
 
 namespace ReIncarnation_Quest_Maker.Obsidius
 {
@@ -63,7 +64,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
         public static void AddQuest()
         {
             CurrentQuestList.ThisEditorExternal.LargestQuestID++;
-            Quest NewQuest = Quest.GenerateDefaultQuest(CurrentQuestList.ThisEditorExternal.LargestQuestID);
+            Quest NewQuest = Quest.GenerateDefaultQuest(CurrentQuestList.ThisEditorExternal.LargestQuestID, CurrentQuestList);
             SelectQuest(NewQuest);
             CurrentQuestList.Quests.Add(NewQuest);
 
@@ -135,10 +136,22 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             ThisForm.OnNewQuestStageParticle(NewStageParticle);
         }
 
-        public static void LoadNewQuestList(QuestList NewQuestList, string FilePath)
+        public static void MergeQuestListFromText(string FilePath)
         {
-            ClearScreen();
-            NewQuestList.ThisEditorExternal.FilePath = FilePath;
+            string Raw = QuestFormatParser.OpenTextFile(FilePath);
+            CurrentQuestList.MergeQuestList(QuestFormatParser.Parse(Raw, FilePath));
+            ThisForm.UpdateEverything();
+        }
+
+        public static void LoadNewQuestListFromText(string FilePath)
+        {
+            string Raw = QuestFormatParser.OpenTextFile(FilePath);
+            LoadNewQuestList(QuestFormatParser.Parse(Raw, FilePath));
+        }
+
+        public static void LoadNewQuestList(QuestList NewQuestList)
+        {
+            //NewQuestList.ThisEditorExternal.FilePath = FilePath;
             CurrentQuestList = NewQuestList;
 
             CurrentQuestList.SortQuests();
@@ -146,10 +159,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
             SelectQuest(CurrentQuestList.Quests[0]);
 
-            ThisForm.LoadValues();
-            UpdateScreen();
-
-            CurrentQuestList.Quests.ForEach(obj => { ThisForm.OnNewQuest(obj); });
+            ThisForm.UpdateEverything();
         }
 
         public static void Print(string FilePath)
@@ -162,8 +172,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         public static void GetLargestQuestID()
         {
-            CurrentQuestList.SortQuests();
-            CurrentQuestList.ThisEditorExternal.LargestQuestID = CurrentQuestList.Quests[CurrentQuestList.Quests.Count - 1].questID;
+            CurrentQuestList.GetLargestQuestID();
         }
 
         //Update
@@ -216,30 +225,7 @@ namespace ReIncarnation_Quest_Maker.Obsidius
         }
 
         public static void UpdateQuestID(int NewValue, Quest ThisQuest) {
-
-            if (NewValue == ThisQuest.questID || NewValue < 0)
-            {
-                return;
-            }
-            bool Occupied = false;
-            CurrentQuestList.Quests.ForEach(obj => {
-                Occupied |= obj.questID == NewValue && obj != ThisQuest;
-            });
-            if (Occupied == true)
-            {
-                return;
-            }
-            if (NewValue > CurrentQuestList.ThisEditorExternal.LargestQuestID)
-            {
-                CurrentQuestList.ThisEditorExternal.LargestQuestID = NewValue;
-            }
-            int OldID = ThisQuest.questID;
-            ThisQuest.SetQuestID(NewValue);
-            if (OldID == CurrentQuestList.ThisEditorExternal.LargestQuestID)
-            {
-                GetLargestQuestID();
-            }
-            ThisQuest.ThisEditorExternal.OnUpdate();
+            ThisQuest.UpdateQuestID(NewValue);
         }
 
         public static void UpdateSelectedQuestIcon(string NewValue)

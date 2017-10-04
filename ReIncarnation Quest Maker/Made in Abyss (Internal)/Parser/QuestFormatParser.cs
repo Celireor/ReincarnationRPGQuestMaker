@@ -13,27 +13,30 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
 {
     public static class QuestFormatParser
     {
-
-        public static void OpenTextFile(string FilePath) {
+        public static string OpenTextFile(string FilePath) {
             try
             {
-                string Raw = File.ReadAllText(FilePath);
-                Parse(Raw, FilePath);
+                return File.ReadAllText(FilePath);
+                //Parse(Raw, FilePath);
             }
             catch (IOException)
             {
             }
+            return null;
         }
 
-        public static void Parse(string Raw, string FilePath) {
+        public static QuestList Parse(string Raw, string FilePath) {
             string ErrorMessage;
             KVPairFolder All = ParseRaw(Raw, out ErrorMessage);
             if (ErrorMessage != null)
             {
                 throw new ArgumentException(ErrorMessage);
             }
-            Interpreter.LoadNewQuestList(QuestVariable.GenerateFromKeyValue<QuestList>(new KVPair("", All)), FilePath);
+            //Interpreter.LoadNewQuestList(QuestVariable.GenerateFromKeyValue<QuestList>(new KVPair("", All)), FilePath);
+            QuestList ReturnValue = QuestVariable.GenerateFromKeyValue<QuestList>(new KVPair("", All));
+            ReturnValue.ThisEditorExternal.FilePath = FilePath;
             All.Delete();
+            return ReturnValue;
         }
 
         public static KVPairFolder ParseRaw(string Raw, out string ErrorMessage) {

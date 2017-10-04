@@ -113,6 +113,17 @@ namespace ReIncarnation_Quest_Maker
             QuestStageTaskType.Text = "kill";
         }
 
+        public void UpdateEverything ()
+        {
+            ClearScreen();
+            //NewQuestList.ThisEditorExternal.FilePath = FilePath;
+
+            LoadValues();
+            UpdateScreen();
+
+            Interpreter.CurrentQuestList.Quests.ForEach(obj => { OnNewQuest(obj); });
+        }
+
         public void UpdateScreen()
         {
            // StopDrawing();
@@ -212,13 +223,6 @@ namespace ReIncarnation_Quest_Maker
 
         //file/load/new
 
-        private void fromReincQuestFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "ReIncarnation Quest Maker Files (.ReincQuest)|*.ReincQuest";
-        }
-
         private void toolStripDropDownCompileButton_Click(object sender, EventArgs e)
         {
             if (Interpreter.CurrentQuestList.ThisEditorExternal.FilePath == null)
@@ -245,7 +249,18 @@ namespace ReIncarnation_Quest_Maker
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 //Parse
-                QuestFormatParser.OpenTextFile(ofd.FileName);
+                Interpreter.LoadNewQuestListFromText(ofd.FileName);
+            }
+        }
+
+        private void MergeButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Text Files (.txt)|*.txt";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                //Parse
+                Interpreter.MergeQuestListFromText(ofd.FileName);
             }
         }
 

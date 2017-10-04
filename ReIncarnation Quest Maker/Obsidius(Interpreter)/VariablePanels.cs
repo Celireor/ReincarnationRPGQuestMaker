@@ -25,8 +25,8 @@ namespace ReIncarnation_Quest_Maker
         public override void Move_Addon(QuestButton Other, int OtherPos)
         {
             int temp = ThisQuestVariable.questID;
-            ThisQuestVariable.SetQuestID(Other.ThisQuestVariable.questID);
-            Other.ThisQuestVariable.SetQuestID(temp);
+            ThisQuestVariable.ForceSetQuestID(Other.ThisQuestVariable.questID);
+            Other.ThisQuestVariable.ForceSetQuestID(temp);
             UpdateValues();
             Other.UpdateValues();
             Interpreter.ThisForm.UpdateScreen();
@@ -325,8 +325,6 @@ namespace ReIncarnation_Quest_Maker
             ListenString = new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings, true);
             ThisTable.AddItem("Listen String", ListenString, ModifyTalkToListenString);
             ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ModifyTalkToCompletionString);
-
-            ModifyTalkToListenString(ListenString, null);
 
             /*Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.AddListener((useless, item) => {
 

@@ -7,7 +7,6 @@ using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
-
     public class QuestList : QuestVariable
     {
         public QuestList_EditorExternal ThisEditorExternal = new QuestList_EditorExternal();
@@ -31,7 +30,24 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 Quests.Add(NewQuest);
                 ThisEditorExternal.PossibleTypeIcons.Add(NewQuest.typeIcon);
             });
+        }
 
+        public void MergeQuestList(QuestList OtherList) {
+            List<Quest> OtherListReverse = new List<Quest>();
+
+            OtherList.Quests.ForEach(obj =>
+            {
+                OtherListReverse.Insert(0, obj);
+            });
+
+            OtherListReverse.ForEach(obj => {
+                obj.UpdateQuestID(ThisEditorExternal.LargestQuestID + obj.questID);
+            });
+
+            Quests.AddRange(OtherList.Quests);
+            ThisEditorExternal.PossibleListenStrings.AddRange(OtherList.ThisEditorExternal.PossibleListenStrings);
+
+            GetLargestQuestID();
         }
 
         public void SortQuests()
@@ -43,6 +59,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             Quest ReturnValue = null;
             Quests.ForEach(obj => { if (obj.questID == ID) { ReturnValue = obj; } });
             return ReturnValue;
+        }
+
+        public void GetLargestQuestID()
+        {
+            SortQuests();
+            ThisEditorExternal.LargestQuestID = Quests[Quests.Count - 1].questID;
         }
 
         public class QuestList_EditorExternal : QuestVariableEditorExternal
@@ -102,16 +124,17 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public Quest_EditorExternal ThisEditorExternal = new Quest_EditorExternal();
 
-        public void SetQuestID(int NewValue) {
+        public void ForceSetQuestID(int NewValue) {
 
             questID = NewValue;
             ThisEditorExternal.OnUpdate();
         }
 
-        public static Quest GenerateDefaultQuest(int questID)
+        public static Quest GenerateDefaultQuest(int questID, QuestList Parent)
         {
             Quest ReturnValue = new Quest();
-            ReturnValue.SetQuestID(questID);
+            ReturnValue.ThisEditorExternal.ParentQuestList = Parent;
+            ReturnValue.ForceSetQuestID(questID);
             ReturnValue.typeIcon = "story";
             QuestStage.Generate(0, ReturnValue);
 
@@ -158,8 +181,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         }
 
         public static Quest KVGenerate(KVPair ThisKV, QuestList Parent) {
-            Quest ReturnValue = new Quest();
-            ReturnValue.ThisEditorExternal.ParentQuestList = Parent;
+            Quest ReturnValue = GenerateDefaultQuest(0, Parent);
             ReturnValue.GenerateFromKV(ThisKV);
             return ReturnValue;
         }
@@ -168,7 +190,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (KVPair IterationKV, FieldInfo ThisFieldInfo) =>
             {
-
                 switch (IterationKV.Key)
                 {
                     case "prerequisites":
@@ -202,6 +223,33 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                         break;
                 }
             });
+        }
+
+        public void UpdateQuestID(int NewValue)
+        {
+            if (NewValue == questID || NewValue < 0)
+            {
+                return;
+            }
+            bool Occupied = false;
+            ThisEditorExternal.ParentQuestList.Quests.ForEach(obj => {
+                Occupied |= obj.questID == NewValue && obj != this;
+            });
+            if (Occupied == true)
+            {
+                return;
+            }
+            if (NewValue > ThisEditorExternal.ParentQuestList.ThisEditorExternal.LargestQuestID)
+            {
+                ThisEditorExternal.ParentQuestList.ThisEditorExternal.LargestQuestID = NewValue;
+            }
+            int OldID = questID;
+            ForceSetQuestID(NewValue);
+            if (OldID == ThisEditorExternal.ParentQuestList.ThisEditorExternal.LargestQuestID)
+            {
+                ThisEditorExternal.ParentQuestList.GetLargestQuestID();
+            }
+            ThisEditorExternal.OnUpdate();
         }
 
         public static IComparer<Quest> SortByQuestID()

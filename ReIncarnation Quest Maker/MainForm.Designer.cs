@@ -33,6 +33,7 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CompileButton = new System.Windows.Forms.ToolStripButton();
+            this.fixIDsButton = new System.Windows.Forms.ToolStripLabel();
             this.Quest_QuestList_Split = new System.Windows.Forms.SplitContainer();
             this.QuestTabs = new System.Windows.Forms.TabControl();
             this.QuestBasicInfoPage = new System.Windows.Forms.TabPage();
@@ -88,7 +89,7 @@
             this.QuestList = new System.Windows.Forms.Panel();
             this.newquestbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.fixIDsButton = new System.Windows.Forms.ToolStripLabel();
+            this.MergeButton = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Quest_QuestList_Split)).BeginInit();
             this.Quest_QuestList_Split.Panel1.SuspendLayout();
@@ -130,6 +131,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.CompileButton,
+            this.MergeButton,
             this.fixIDsButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -165,7 +167,7 @@
             // fromTextToolStripMenuItem
             // 
             this.fromTextToolStripMenuItem.Name = "fromTextToolStripMenuItem";
-            this.fromTextToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fromTextToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.fromTextToolStripMenuItem.Text = "From Text";
             this.fromTextToolStripMenuItem.Click += new System.EventHandler(this.fromTextToolStripMenuItem_Click);
             // 
@@ -177,6 +179,13 @@
             this.CompileButton.Size = new System.Drawing.Size(56, 22);
             this.CompileButton.Text = "Compile";
             this.CompileButton.Click += new System.EventHandler(this.toolStripDropDownCompileButton_Click);
+            // 
+            // fixIDsButton
+            // 
+            this.fixIDsButton.Name = "fixIDsButton";
+            this.fixIDsButton.Size = new System.Drawing.Size(74, 22);
+            this.fixIDsButton.Text = "Fix Quest IDs";
+            this.fixIDsButton.Click += new System.EventHandler(this.fixIDsButton_Click);
             // 
             // Quest_QuestList_Split
             // 
@@ -881,12 +890,12 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Quest ID";
             // 
-            // fixIDsButton
+            // MergeButton
             // 
-            this.fixIDsButton.Name = "fixIDsButton";
-            this.fixIDsButton.Size = new System.Drawing.Size(74, 22);
-            this.fixIDsButton.Text = "Fix Quest IDs";
-            this.fixIDsButton.Click += new System.EventHandler(this.fixIDsButton_Click);
+            this.MergeButton.Name = "MergeButton";
+            this.MergeButton.Size = new System.Drawing.Size(41, 22);
+            this.MergeButton.Text = "Merge";
+            this.MergeButton.Click += new System.EventHandler(this.MergeButton_Click);
             // 
             // MainForm
             // 
@@ -1013,6 +1022,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown QuestStageXPOnCompletion;
         private System.Windows.Forms.ToolStripLabel fixIDsButton;
+        private System.Windows.Forms.ToolStripLabel MergeButton;
     }
 }
 

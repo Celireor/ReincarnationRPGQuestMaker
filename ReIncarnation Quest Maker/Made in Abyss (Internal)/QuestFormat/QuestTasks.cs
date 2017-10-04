@@ -167,6 +167,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
         }
 
+        public override void GenerateFromKV(KVPair ThisKV)
+        {
+            base.GenerateFromKV(ThisKV);
+            UpdateListenString();
+        }
+
         public class QuestTaskTalkTo_EditorExternal : QuestTask_EditorExternal
         {
             public int ListeningStringQuestLength;
