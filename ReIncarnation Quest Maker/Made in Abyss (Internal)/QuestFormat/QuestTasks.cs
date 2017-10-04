@@ -17,10 +17,25 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             if (obj.Key == typeString)
             {
+                bool ShouldGenerateMultiple = true;
                 obj.FolderValue.Items.ForEach(obj2 =>
                 {
-                    QuestTask.KVGenerate<T>(Parent, obj2);
+                    if (obj2.FolderValue == null) {
+                        ShouldGenerateMultiple = false;
+                    }
                 });
+
+                if (ShouldGenerateMultiple == false)
+                {
+                    QuestTask.KVGenerate<T>(Parent, obj);
+                }
+                else {
+
+                    obj.FolderValue.Items.ForEach(obj2 =>
+                    {
+                        QuestTask.KVGenerate<T>(Parent, obj2);
+                    });
+                }
             }
         }
 
@@ -99,6 +114,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string StringToEncapsulate = ConvertToText(TabCount);
             return PrintEncapsulation(StringToEncapsulate, TabCount, Convert.ToString(Index), true);
+        }
+
+        public override void GenerateFromKV(KVPair ThisKV)
+        {
+            GenerateFromKeyValue_Iterate(ThisKV.FolderValue);
         }
 
         public class QuestTaskLocation_EditorExternal

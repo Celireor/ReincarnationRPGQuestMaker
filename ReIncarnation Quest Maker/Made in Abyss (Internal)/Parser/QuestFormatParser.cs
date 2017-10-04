@@ -33,10 +33,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
                 throw new ArgumentException(ErrorMessage);
             }
             //Interpreter.LoadNewQuestList(QuestVariable.GenerateFromKeyValue<QuestList>(new KVPair("", All)), FilePath);
-            QuestList ReturnValue = QuestVariable.GenerateFromKeyValue<QuestList>(new KVPair("", All));
+            QuestList ReturnValue = QuestVariable.GenerateFromKeyValue<QuestList>(GetQuestListFromAll(All));
             ReturnValue.ThisEditorExternal.FilePath = FilePath;
             All.Delete();
             return ReturnValue;
+        }
+
+        public static KVPair GetQuestListFromAll(KVPairFolder All) {
+            return All.Items[0].FolderValue.Items[0];
         }
 
         public static KVPairFolder ParseRaw(string Raw, out string ErrorMessage) {

@@ -768,5 +768,11 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    //public class RunScriptPanel : SortablePanel<RunScriptPanel {}
+    public class RunScriptPanel : SortablePanel<RunScriptPanel, QuestDialogueOptionRunScript>
+    {
+        public override void Generate_Addon(QuestDialogueOptionRunScript Item, OrganizedControlList<RunScriptPanel, QuestDialogueOptionRunScript> Parent)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

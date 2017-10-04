@@ -603,8 +603,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestDialogueOption : QuestVariable
     {
+
         public string selectText;
         public string selectImg;
+
+        public QuestDialogueOptionRunScript runScript;
 
         public KVList giveQuests = new KVList();
 
@@ -653,6 +656,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             }
 
             ReturnValue += ConvertToText_Iterate(TabCount);
+
+            if(runScript != null)
+            {
+                ReturnValue += runScript.ConvertToText(TabCount);
+            }
 
             ThisOptionalFields.sendListenString = templistenstring;
 
@@ -718,6 +726,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                 });
                         }
                         break;
+                    case "runScript":
+                        {
+                            ReturnValue.runScript = GenerateFromKeyValue<QuestDialogueOptionRunScript>(obj);
+                        }
+                        break;
                 }
                 /*if (obj.Key == "listeningQuest")
                 {
@@ -769,12 +782,19 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public static int GetQuestIDFromListenString(string ListenString)
         {
+            string TestIDString = "";
             for (int x = 0; x < ListenString.Length; x++)
             {
                 if (ListenString[x] == '_')
                 {
-                    return x + 1;
+                    int result;
+                    if (int.TryParse(TestIDString, out result))
+                    {
+                        return x + 1;
+                    }
+                    return 0;
                 }
+                TestIDString += ListenString[x];
             }
             return 0;
         }
@@ -960,6 +980,31 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public override void SetDefaultValues()
         {
             QuestState = "active";
+        }
+    }
+
+    public class QuestDialogueOptionRunScript : QuestVariable
+    {
+        string className;
+        string functionName;
+        List<KVPair> arguments = new List<KVPair>();
+
+        public override string ConvertToText(int TabCount = 0)
+        {
+            string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
+            string argumentsString = "";
+            arguments.ForEach(obj => argumentsString += obj.ConvertToText(TabCount + 2));
+            StringToEncapsulate += PrintEncapsulation(argumentsString, TabCount + 1, "arguments", true);
+            return PrintEncapsulation(StringToEncapsulate, TabCount, "runScript", true);
+        }
+
+        public override void GenerateFromKV(KVPair ThisKV)
+        {
+            GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, info) => {
+                if (obj.Key == "arguments") {
+                    obj.FolderValue.Items.ForEach(obj2 => arguments.Add(GenerateFromKeyValue<KVPair>(obj2)));
+                }
+            });
         }
     }
 }
