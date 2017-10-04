@@ -100,6 +100,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 PossibleTypeIcons.Add("repeatable");
 
                 PossibleQuestPrerequisites.Add("level");
+                PossibleQuestPrerequisites.Add("class");
+                PossibleQuestPrerequisites.Add("quests");
 
                 PossibleQuestOptionSelectImage.Add("story");
                 PossibleQuestOptionSelectImage.Add("story_repeatable");
@@ -234,6 +236,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                         break;
                 }
             });
+            questID = Convert.ToInt32(ThisKV.Key);
         }
 
         public void UpdateQuestID(int NewValue)
