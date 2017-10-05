@@ -614,7 +614,8 @@ namespace ReIncarnation_Quest_Maker
             DialogueOptionsTable.AddItem("Sent Listen String", new DefaultTextBox(Item.ThisOptionalFields.sendListenString), OnSendListenStringChanged);
             DialogueOptionsTable.AddItem("Has Response", new DefaultCheckBox(Item.Response != null), OnHasResponseChanged);
 
-            ResponseTextBox = new DefaultTextBox();
+            ResponseTextBox = new DefaultTextBox("", true);
+            ResponseTextBox.MinimumSize = new Size(0, ResponseTextBox.Height * 5);
             ResponsePortraitBox = new DefaultTextBox();
             PlaySoundBox = new DefaultTextBox();
 
@@ -809,8 +810,8 @@ namespace ReIncarnation_Quest_Maker
 
         public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageItemRewardPanel, KVPair> Parent)
         {
-            ThisTable.AddItem("Item", new DefaultTextBox(Item.Key), UpdateItemName);
-            ThisTable.AddItem("Count", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateItemNum);
+            ThisTable.AddItem("Item:", new DefaultTextBox(Item.Key), UpdateItemName);
+            ThisTable.AddItem("Charges:", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateItemNum);
         }
     }
 }

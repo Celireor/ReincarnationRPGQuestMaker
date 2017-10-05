@@ -769,10 +769,10 @@
             this.XPGoldRewardsTable.ColumnCount = 2;
             this.XPGoldRewardsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.XPGoldRewardsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.XPGoldRewardsTable.Controls.Add(this.QuestStageGoldOnCompletion, 1, 1);
-            this.XPGoldRewardsTable.Controls.Add(this.label5, 0, 1);
-            this.XPGoldRewardsTable.Controls.Add(this.label4, 0, 0);
-            this.XPGoldRewardsTable.Controls.Add(this.QuestStageXPOnCompletion, 1, 0);
+            this.XPGoldRewardsTable.Controls.Add(this.QuestStageGoldOnCompletion, 1, 0);
+            this.XPGoldRewardsTable.Controls.Add(this.label5, 0, 0);
+            this.XPGoldRewardsTable.Controls.Add(this.label4, 0, 1);
+            this.XPGoldRewardsTable.Controls.Add(this.QuestStageXPOnCompletion, 1, 1);
             this.XPGoldRewardsTable.Dock = System.Windows.Forms.DockStyle.Top;
             this.XPGoldRewardsTable.Location = new System.Drawing.Point(3, 3);
             this.XPGoldRewardsTable.Name = "XPGoldRewardsTable";

@@ -55,6 +55,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
             string KeyValuePairKey = "";
             string KeyValuePairValue = "";
             bool ParseAsDefault = false;
+            int ShouldNotParseLine = 1;
 
             //bool HasParsedKey = false;
             int LineCount = 0;
@@ -63,105 +64,137 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
             char[] Raw_CharArray = Raw.ToCharArray();
             for (int x = 0; x < Raw_CharArray.Length; x++)
             {
-                bool ShouldParseIndiscrimately = ParseAsDefault; //true if last character was '\'
-
-                if (!ShouldParseIndiscrimately)
+                if (ShouldNotParseLine != 0)
                 {
-                    switch (Raw_CharArray[x])
-                    {
-                        case '\\':
+                    //check if line became a comment
+                    switch (Raw_CharArray[x]) {
+                        case '/':
                             {
-                                ParseAsDefault = true;
+                                ShouldNotParseLine++;
                             }
                             break;
-                        case '\"':
+                        case ' ':
+                        case '\t':
                             {
-                                if (Parsing)
-                                {
-                                    if (ParsingValue)
-                                    {
-                                        //If finished parsing value, creates a new KeyValuePair.
-                                        CurrentFolder.AddItem(new KVPair(KeyValuePairKey, KeyValuePairValue));
-                                        KeyValuePairKey = "";
-                                        KeyValuePairValue = "";
-                                    }
-                                    //Debug purposes
-                                    //HasParsedKey = !ParsingValue;
-                                    //When closing parsing, invert ParsingValue.
-                                    ParsingValue = !ParsingValue;
-                                }
-                                //Inverts ifparsing
-                                Parsing = !Parsing;
-                            }
-                            break;
-                        case '{':
-                            {
-                                if (Parsing) {
-                                    /* Throws an Error Message */
-                                    ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
-                                    return null;
-                                }
-                                KVPairFolder NewFolder = new KVPairFolder(CurrentFolder);
-                                CurrentFolder.AddItem(new KVPair(KeyValuePairKey, NewFolder));
-                                CurrentFolder = NewFolder;
-
-                                KeyValuePairKey = "";
-
-                                if (!ParsingValue)
-                                {
-                                    /* Throws an Error Message */
-                                    ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
-                                    return null;
-                                }
-
-                                ParsingValue = false;
-                            }
-                            break;
-                        case '}':
-                            {
-                                if (Parsing)
-                                {
-
-                                    /* Throws an Error Message */
-                                    ErrorMessage = "Illegal character (}) (Character " + CharacterCount + " in line " + LineCount + ")";
-                                }
-
-                                CurrentFolder = CurrentFolder.Parent;
-
-                                if (CurrentFolder == null) {
-                                    /* Throws an Error Message */
-                                    ErrorMessage = "Too many }. (Character " + CharacterCount + " in line " + LineCount + ")";
-                                    return null;
+                                if (ShouldNotParseLine != 3) {
+                                    ShouldNotParseLine = 1;
                                 }
                             }
                             break;
                         default:
                             {
-                                if (Parsing)
-                                {
-                                    ShouldParseIndiscrimately = true;
+                                if (ShouldNotParseLine != 3) {
+                                    ShouldNotParseLine = 0;
                                 }
                             }
                             break;
                     }
                 }
-                if (ShouldParseIndiscrimately)
+                if (ShouldNotParseLine == 0)
                 {
-                    if (ParsingValue)
+                    bool ShouldParseIndiscrimately = ParseAsDefault; //true if last character was '\'
+
+                    if (!ShouldParseIndiscrimately)
                     {
-                        KeyValuePairValue += Raw_CharArray[x];
+                        switch (Raw_CharArray[x])
+                        {
+                            case '\\':
+                                {
+                                    ParseAsDefault = true;
+                                }
+                                break;
+                            case '\"':
+                                {
+                                    if (Parsing)
+                                    {
+                                        if (ParsingValue)
+                                        {
+                                            //If finished parsing value, creates a new KeyValuePair.
+                                            CurrentFolder.AddItem(new KVPair(KeyValuePairKey, KeyValuePairValue));
+                                            KeyValuePairKey = "";
+                                            KeyValuePairValue = "";
+                                        }
+                                        //Debug purposes
+                                        //HasParsedKey = !ParsingValue;
+                                        //When closing parsing, invert ParsingValue.
+                                        ParsingValue = !ParsingValue;
+                                    }
+                                    //Inverts ifparsing
+                                    Parsing = !Parsing;
+                                }
+                                break;
+                            case '{':
+                                {
+                                    if (Parsing)
+                                    {
+                                        /* Throws an Error Message */
+                                        ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
+                                        return null;
+                                    }
+                                    KVPairFolder NewFolder = new KVPairFolder(CurrentFolder);
+                                    CurrentFolder.AddItem(new KVPair(KeyValuePairKey, NewFolder));
+                                    CurrentFolder = NewFolder;
+
+                                    KeyValuePairKey = "";
+
+                                    if (!ParsingValue)
+                                    {
+                                        /* Throws an Error Message */
+                                        ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
+                                        return null;
+                                    }
+
+                                    ParsingValue = false;
+                                }
+                                break;
+                            case '}':
+                                {
+                                    if (Parsing)
+                                    {
+
+                                        /* Throws an Error Message */
+                                        ErrorMessage = "Illegal character (}) (Character " + CharacterCount + " in line " + LineCount + ")";
+                                    }
+
+                                    CurrentFolder = CurrentFolder.Parent;
+
+                                    if (CurrentFolder == null)
+                                    {
+                                        /* Throws an Error Message */
+                                        ErrorMessage = "Too many }. (Character " + CharacterCount + " in line " + LineCount + ")";
+                                        return null;
+                                    }
+                                }
+                                break;
+                            default:
+                                {
+                                    if (Parsing)
+                                    {
+                                        ShouldParseIndiscrimately = true;
+                                    }
+                                }
+                                break;
+                        }
                     }
-                    else
+                    if (ShouldParseIndiscrimately)
                     {
-                        KeyValuePairKey += Raw_CharArray[x];
+                        if (ParsingValue)
+                        {
+                            KeyValuePairValue += Raw_CharArray[x];
+                        }
+                        else
+                        {
+                            KeyValuePairKey += Raw_CharArray[x];
+                        }
+                        ParseAsDefault = false;
                     }
-                    ParseAsDefault = false;
                 }
                 CharacterCount++;
                 if (Raw_CharArray[x] == '\n')
                 {
                     LineCount++;
                     CharacterCount = 0;
+                    ShouldNotParseLine = 1;
                 }
             }
 
