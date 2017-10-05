@@ -785,7 +785,7 @@
             // QuestStageGoldOnCompletion
             // 
             this.QuestStageGoldOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestStageGoldOnCompletion.Location = new System.Drawing.Point(153, 29);
+            this.QuestStageGoldOnCompletion.Location = new System.Drawing.Point(153, 3);
             this.QuestStageGoldOnCompletion.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -801,7 +801,7 @@
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(3, 33);
+            this.label5.Location = new System.Drawing.Point(3, 7);
             this.label5.Margin = new System.Windows.Forms.Padding(3);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(144, 16);
@@ -813,7 +813,7 @@
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(3, 7);
+            this.label4.Location = new System.Drawing.Point(3, 33);
             this.label4.Margin = new System.Windows.Forms.Padding(3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(144, 16);
@@ -823,7 +823,7 @@
             // QuestStageXPOnCompletion
             // 
             this.QuestStageXPOnCompletion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.QuestStageXPOnCompletion.Location = new System.Drawing.Point(153, 3);
+            this.QuestStageXPOnCompletion.Location = new System.Drawing.Point(153, 29);
             this.QuestStageXPOnCompletion.Maximum = new decimal(new int[] {
             2147483647,
             0,

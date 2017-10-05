@@ -26,13 +26,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
                 if (ShouldGenerateMultiple == false)
                 {
-                    QuestTask.KVGenerate<T>(Parent, obj);
+                    KVGenerate<T>(Parent, obj);
                 }
                 else {
 
                     obj.FolderValue.Items.ForEach(obj2 =>
                     {
-                        QuestTask.KVGenerate<T>(Parent, obj2);
+                        KVGenerate<T>(Parent, obj2);
                     });
                 }
             }
@@ -59,6 +59,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             AddPossibleTaskType("kill", typeof(QuestTask_kill));
             AddPossibleTaskType("gather", typeof(QuestTask_gather));
             AddPossibleTaskType("killType", typeof(QuestTask_killType));
+            AddPossibleTaskType("event", typeof(QuestTask_killType));
         }
         public QuestTask() { }
 
@@ -106,8 +107,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string locationString;
         public int radius;
         public new QuestTaskLocation_EditorExternal ThisEditorExternal = new QuestTaskLocation_EditorExternal();
+        public QuestTaskLocation_OptionalFields ThisOptionalFields { get { return OptionalFields as QuestTaskLocation_OptionalFields; } }
 
-        public QuestTask_location() { }
+        public QuestTask_location() { OptionalFields = new QuestTaskLocation_OptionalFields(); }
 
         public override string ConvertToText_Full(int Index, int TabCount)
         {
@@ -123,15 +125,21 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public class QuestTaskLocation_EditorExternal
         {
         }
+
+        public class QuestTaskLocation_OptionalFields : QuestVariableOptionalFields
+        {
+            public string completionString;
+        }
     }
 
     public class QuestTask_talkto : QuestTask
     {
         public string description;
         public string listenString;
-        public string completionString;
 
         public new QuestTaskTalkTo_EditorExternal ThisEditorExternal { get { return base.ThisEditorExternal as QuestTaskTalkTo_EditorExternal; } }
+        public QuestTaskTalkTo_OptionalFields ThisOptionalFields { get { return OptionalFields as QuestTaskTalkTo_OptionalFields; } }
+
         public override bool Trash()
         {
             ThisEditorExternal.ParentStage.ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.ThisEditorExternal.AllTalkTos.Remove(this);
@@ -139,6 +147,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         }
         public QuestTask_talkto() {
             base.ThisEditorExternal = new QuestTaskTalkTo_EditorExternal();
+            OptionalFields = new QuestTaskTalkTo_OptionalFields();
         }
 
         public override string ConvertToText_Full(int Index, int TabCount)
@@ -203,6 +212,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public int ListeningStringQuestLength;
             public Quest ListenStringParent;
+        }
+
+        public class QuestTaskTalkTo_OptionalFields : QuestVariableOptionalFields
+        {
+            public string completionString;
         }
     }
 
@@ -274,6 +288,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
             return PrintEncapsulation(base.ConvertToText(TabCount), TabCount, ThisEditorExternal.EnemyGroupName, true);
+        }
+    }
+
+    public class QuestTask_event : QuestTask
+    {
+        public override string ConvertToText_Full(int Index, int TabCount = 0)
+        {
+            throw new NotImplementedException();
         }
     }
 }

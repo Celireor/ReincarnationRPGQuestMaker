@@ -274,6 +274,11 @@ namespace ReIncarnation_Quest_Maker
             ThisItem.radius = (int)MainForm.GetNumberFromNumericUpDown(sender);
         }
 
+        public void ModifyLocationCompletionString(object sender, EventArgs e)
+        {
+            ThisItem.ThisOptionalFields.completionString = MainForm.GetTextFromTextBox(sender);
+        }
+
         public QuestTaskPanel_location(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { }
 
         public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
@@ -285,6 +290,7 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.AddItem("Name", new DefaultTextBox(Item.name), ModifyLocationName);
             ThisTable.AddItem("Location Name", new DefaultTextBox(Item.locationString), ModifyLocationInternalName);
             ThisTable.AddItem("Radius", new DefaultNumericUpDown(Item.radius), ModifyLocationRadius);
+            ThisTable.AddItem("Completion String", new DefaultTextBox(Item.ThisOptionalFields.completionString), ModifyLocationCompletionString);
         }
     }
     public class QuestTaskPanel_talkto : QuestTaskPanel
@@ -309,7 +315,7 @@ namespace ReIncarnation_Quest_Maker
 
         public void ModifyTalkToCompletionString(object sender, EventArgs e)
         {
-            ThisItem.completionString = MainForm.GetTextFromTextBox(sender);
+            ThisItem.ThisOptionalFields.completionString = MainForm.GetTextFromTextBox(sender);
         }
 
         public QuestTaskPanel_talkto(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { }
@@ -324,7 +330,7 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ModifyTalkToDescription);
             ListenString = new DefaultDropDown(Item.listenString, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings, true);
             ThisTable.AddItem("Listen String", ListenString, ModifyTalkToListenString);
-            ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ModifyTalkToCompletionString);
+            ThisTable.AddItem("Completion String", new DefaultTextBox(Item.ThisOptionalFields.completionString), ModifyTalkToCompletionString);
 
             ThisItem.ThisEditorExternal.OnUpdateList.Add(UpdateListenString);
 
