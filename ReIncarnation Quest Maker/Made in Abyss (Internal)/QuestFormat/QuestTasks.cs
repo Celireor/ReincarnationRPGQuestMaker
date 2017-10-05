@@ -59,7 +59,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             AddPossibleTaskType("kill", typeof(QuestTask_kill));
             AddPossibleTaskType("gather", typeof(QuestTask_gather));
             AddPossibleTaskType("killType", typeof(QuestTask_killType));
-            AddPossibleTaskType("event", typeof(QuestTask_killType));
+            AddPossibleTaskType("event", typeof(QuestTask_event));
         }
         public QuestTask() { }
 
@@ -115,11 +115,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string StringToEncapsulate = ConvertToText(TabCount);
             return PrintEncapsulation(StringToEncapsulate, TabCount, Convert.ToString(Index), true);
-        }
-
-        public override void GenerateFromKV(KVPair ThisKV)
-        {
-            GenerateFromKeyValue_Iterate(ThisKV.FolderValue);
         }
 
         public class QuestTaskLocation_EditorExternal
@@ -293,9 +288,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestTask_event : QuestTask
     {
+        public string eventName;
+        public string description;
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
-            throw new NotImplementedException();
+            return PrintEncapsulation(ConvertToText_Iterate(TabCount + 1), TabCount, Index.ToString(), true);
         }
     }
 }

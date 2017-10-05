@@ -401,6 +401,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                 QuestTask.MassGenerate<QuestTask_kill>(ReturnValue, obj, "kill");
                                 QuestTask.MassGenerate<QuestTask_killType>(ReturnValue, obj, "killType");
                                 QuestTask.MassGenerate<QuestTask_talkto>(ReturnValue, obj, "talkto");
+                                QuestTask.MassGenerate<QuestTask_event>(ReturnValue, obj, "event");
                             });
                         }
                         break;
@@ -472,6 +473,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask> TalkToTaskList = new QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask>("talkto");
                 QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask> KillTaskList = new QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask>("kill");
                 QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask> KillTypeTaskList = new QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask>("killType");
+                QuestIndexableVariableStringConverter<QuestTask_event, QuestTask> EventTaskList = new QuestIndexableVariableStringConverter<QuestTask_event, QuestTask>("event");
 
                 tasks.ForEach(obj =>
                 {
@@ -480,6 +482,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                     TalkToTaskList.Add(obj);
                     KillTaskList.Add(obj);
                     KillTypeTaskList.Add(obj);
+                    EventTaskList.Add(obj);
                 });
 
                 TaskString += GatherTaskList.Print(TabCount + 1);
@@ -487,6 +490,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 TaskString += TalkToTaskList.Print(TabCount + 1);
                 TaskString += KillTypeTaskList.Print(TabCount + 1);
                 TaskString += KillTaskList.Print(TabCount + 1);
+                TaskString += EventTaskList.Print(TabCount + 1);
 
                 stringtoencapsulate += PrintEncapsulation(TaskString, TabCount + 1, "tasks", true);
             }
