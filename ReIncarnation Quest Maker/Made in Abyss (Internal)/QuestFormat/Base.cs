@@ -171,6 +171,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public override bool Trash() {
             if (ThisEditorExternal.EncapsulatingList != null) {
                 ThisEditorExternal.EncapsulatingList.Remove(this);
+                ThisEditorExternal.EncapsulatingList = null;
             }
             return true;
         }
@@ -186,6 +187,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return PrintKeyValue(Key, Value, TabCount);
         }
 
+        /*public void SetEncapsulatingList(List<KVPair> EncapsulatingList)
+        {
+            ThisEditorExternal.EncapsulatingList = EncapsulatingList;
+            EncapsulatingList.Add(this);
+        }*/
+
         public class KVPairEditorExternal : QuestVariableEditorExternal {
             public List<KVPair> EncapsulatingList;
         }
@@ -193,8 +200,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class KVList : ListeningList<KVPair> {
 
-        public KVList(List<KVPair> ThisList) : base()
+        public KVList(List<KVPair> ThisList)
         {
+            AddListener(SetEncapsulatingList, false, true, false);
             ThisList.ForEach(obj => Add(QuestVariable.GenerateFromKeyValue<KVPair>(obj)));
         }
 
@@ -202,9 +210,15 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             AddListener(SetEncapsulatingList, false, true, false);
         }
 
-        void SetEncapsulatingList(ListeningList<KVPair> Useless, KVPair NewPair) {
+        void SetEncapsulatingList(ListeningList<KVPair> Useless, KVPair NewPair)
+        {
             NewPair.ThisEditorExternal.EncapsulatingList = this;
         }
+
+        /*void RemoveEncapsulatingList(ListeningList<KVPair> Useless, KVPair NewPair)
+        {
+            NewPair.ThisEditorExternal.EncapsulatingList = null;
+        }*/
     }
 
     public class ListeningList<T> : List<T>

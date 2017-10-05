@@ -29,10 +29,10 @@ namespace ReIncarnation_Quest_Maker
 
         //public Func
 
-        public static OrganizedControlList<T, U> GenerateOrganizedControlList(Panel BaseControl, IComparer<T> OrderMetric)
+        public static OrganizedControlList<T, U> GenerateOrganizedControlList(Panel BaseControl)
         {
             OrganizedControlList<T, U> ReturnValue = new OrganizedControlList<T, U>();
-            ReturnValue.OrderMetric = OrderMetric;
+            ReturnValue.OrderMetric = SortablePanel<T, U>.Sort();
             ReturnValue.BaseControl = BaseControl;
             ReturnValue.BaseControl.SizeChanged += ReturnValue.ResetAllItemSizes;
             return ReturnValue;
@@ -414,7 +414,7 @@ namespace ReIncarnation_Quest_Maker
             this.NewDefaultItem = NewDefaultItem;
             ThisPanel = new DefaultPanel();
             ThisButton = new DefaultButton(OnClick, ThisButtonText);
-            ThisList = OrganizedControlList<T, U>.GenerateOrganizedControlList(ThisPanel, SortMetric);
+            ThisList = OrganizedControlList<T, U>.GenerateOrganizedControlList(ThisPanel);
 
             ThisPanel.Dock = DockStyle.Top;
             ThisButton.Dock = System.Windows.Forms.DockStyle.Top;

@@ -77,6 +77,8 @@
             this.questStageParticleList = new System.Windows.Forms.Panel();
             this.NewQuestStageParticle = new System.Windows.Forms.Button();
             this.stageRewardsTabPage = new System.Windows.Forms.TabPage();
+            this.questrewarditemspanel = new System.Windows.Forms.Panel();
+            this.questrewarditemsbutton = new System.Windows.Forms.Button();
             this.XPGoldRewardsTable = new System.Windows.Forms.TableLayoutPanel();
             this.QuestStageGoldOnCompletion = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -729,6 +731,8 @@
             // stageRewardsTabPage
             // 
             this.stageRewardsTabPage.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.stageRewardsTabPage.Controls.Add(this.questrewarditemspanel);
+            this.stageRewardsTabPage.Controls.Add(this.questrewarditemsbutton);
             this.stageRewardsTabPage.Controls.Add(this.XPGoldRewardsTable);
             this.stageRewardsTabPage.Location = new System.Drawing.Point(4, 22);
             this.stageRewardsTabPage.Name = "stageRewardsTabPage";
@@ -736,6 +740,28 @@
             this.stageRewardsTabPage.Size = new System.Drawing.Size(395, 340);
             this.stageRewardsTabPage.TabIndex = 3;
             this.stageRewardsTabPage.Text = "Stage Rewards";
+            // 
+            // questrewarditemspanel
+            // 
+            this.questrewarditemspanel.AutoScroll = true;
+            this.questrewarditemspanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.questrewarditemspanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questrewarditemspanel.Location = new System.Drawing.Point(3, 55);
+            this.questrewarditemspanel.Name = "questrewarditemspanel";
+            this.questrewarditemspanel.Size = new System.Drawing.Size(389, 232);
+            this.questrewarditemspanel.TabIndex = 7;
+            // 
+            // questrewarditemsbutton
+            // 
+            this.questrewarditemsbutton.AutoSize = true;
+            this.questrewarditemsbutton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.questrewarditemsbutton.Location = new System.Drawing.Point(3, 287);
+            this.questrewarditemsbutton.Name = "questrewarditemsbutton";
+            this.questrewarditemsbutton.Size = new System.Drawing.Size(389, 50);
+            this.questrewarditemsbutton.TabIndex = 6;
+            this.questrewarditemsbutton.Text = "New Item Reward";
+            this.questrewarditemsbutton.UseVisualStyleBackColor = true;
+            this.questrewarditemsbutton.Click += new System.EventHandler(this.questrewarditemsbutton_Click);
             // 
             // XPGoldRewardsTable
             // 
@@ -1023,6 +1049,8 @@
         private System.Windows.Forms.NumericUpDown QuestStageXPOnCompletion;
         private System.Windows.Forms.ToolStripLabel fixIDsButton;
         private System.Windows.Forms.ToolStripLabel MergeButton;
+        private System.Windows.Forms.Panel questrewarditemspanel;
+        private System.Windows.Forms.Button questrewarditemsbutton;
     }
 }
 

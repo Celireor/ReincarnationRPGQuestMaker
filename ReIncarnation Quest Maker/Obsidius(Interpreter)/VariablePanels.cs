@@ -787,4 +787,30 @@ namespace ReIncarnation_Quest_Maker
             throw new NotImplementedException();
         }
     }
+
+    public class QuestStageItemRewardPanel : KVPanel<QuestStageItemRewardPanel>
+    {
+        ModifyQuestVariableTable ThisTable;
+        public QuestStageItemRewardPanel(OrganizedControlList<QuestStageItemRewardPanel, KVPair> Parent) : base(Parent)
+        {
+            ThisTable = new ModifyQuestVariableTable();
+            AddControl(ThisTable);
+        }
+
+        public void UpdateItemName(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Key = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void UpdateItemNum(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Value = ((int)MainForm.GetNumberFromNumericUpDown(sender)).ToString();
+        }
+
+        public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageItemRewardPanel, KVPair> Parent)
+        {
+            ThisTable.AddItem("Item", new DefaultTextBox(Item.Key), UpdateItemName);
+            ThisTable.AddItem("Count", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateItemNum);
+        }
+    }
 }

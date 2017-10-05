@@ -100,6 +100,12 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             ThisForm.OnNewQuestDialogue(NewDialogue);
         }
 
+        public static void AddQuestStageReward() {
+            KVPair NewQuestStageReward = new KVPair();
+            SelectedQuestStage.ThisEditorExternal.items.Add(NewQuestStageReward);
+            ThisForm.OnNewQuestStageItemReward(NewQuestStageReward);
+        }
+
         //others
 
         public static void fixIDs() {

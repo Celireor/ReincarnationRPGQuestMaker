@@ -375,8 +375,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
-                                                ReturnValue.dialogue.Add(GenerateFromKeyValue<KVPair>(obj2));
-                                                obj2.ThisEditorExternal.EncapsulatingList = ReturnValue.dialogue;
+                                                ReturnValue.dialogue.Add(obj2);
                                             });
                                         }
                                         break;
@@ -384,8 +383,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
-                                                ReturnValue.particles.Add(GenerateFromKeyValue<KVPair>(obj2));
-                                                obj2.ThisEditorExternal.EncapsulatingList = ReturnValue.particles;
+                                                ReturnValue.particles.Add(obj2);
                                             });
                                         }
                                         break;
