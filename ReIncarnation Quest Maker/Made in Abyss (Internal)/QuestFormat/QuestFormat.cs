@@ -16,8 +16,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public override string ConvertToText(int TabCount = 0)
         {
             string ReturnString = "";
-            Quests.ForEach(obj => { ReturnString += obj.ConvertToText(); });
-            return PrintEncapsulation(PrintEncapsulation(ReturnString, TabCount + 1, "Quests", true), TabCount + 1, "Quests", true);
+            Quests.ForEach(obj => { ReturnString += obj.ConvertToText(TabCount + 2); });
+            return PrintEncapsulation(PrintEncapsulation(ReturnString, TabCount + 1, "Quests", true), TabCount, "Quests", true);
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
@@ -157,8 +157,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public override string ConvertToText(int TabCount = 0)
         {
-            string ReturnValue = "\"" + questID + "\"" + Environment.NewLine;
-
             /* Contents of Quest */
             string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
 
@@ -189,9 +187,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             StringToEncapsulate += PrintEncapsulation(injectionsString, TabCount + 1, "injections", true);
 
             /* Encapsulate everything */
-            ReturnValue += PrintEncapsulation(StringToEncapsulate, TabCount);
 
-            return ReturnValue;
+            return PrintEncapsulation(StringToEncapsulate, TabCount, questID.ToString(), true);
         }
 
         public static Quest KVGenerate(KVPair ThisKV, QuestList Parent) {
@@ -208,7 +205,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 {
                     case "prerequisites":
                         {
-                            prerequisites = new KVList(FillFromKeyValueFolder<KVPair>(IterationKV.FolderValue));
+                            prerequisites = new KVList(IterationKV.FolderValue.Items);
                         }
                         break;
                     /*case "affectedNpcs":
@@ -343,18 +340,23 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 => {
                                             switch (obj2.Key)
-                                            {
-                                                case "gold":
-                                                    {
-                                                        ReturnValue.ThisEditorExternal.gold = Convert.ToInt32(obj2.Value);
-                                                    }
-                                                    break;
-                                                case "exp":
-                                                    {
-                                                        ReturnValue.ThisEditorExternal.exp = Convert.ToInt32(obj2.Value);
-                                                    }
-                                                    break;
-                                            }
+                                                {
+                                                    case "gold":
+                                                        {
+                                                            ReturnValue.ThisEditorExternal.gold = Convert.ToInt32(obj2.Value);
+                                                        }
+                                                        break;
+                                                    case "exp":
+                                                        {
+                                                            ReturnValue.ThisEditorExternal.exp = Convert.ToInt32(obj2.Value);
+                                                        }
+                                                        break;
+                                                    case "items":
+                                                        {
+                                                            ReturnValue.ThisEditorExternal.items = new KVList(obj2.FolderValue.Items);
+                                                        }
+                                                        break;
+                                                }
                                         });
                                     }
                                     break;
@@ -426,9 +428,17 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             string OnCompletionString = "";
 
-            if (ThisEditorExternal.gold > 0 || ThisEditorExternal.exp > 0) {
+            if (ThisEditorExternal.gold > 0 || ThisEditorExternal.exp > 0 || ThisEditorExternal.items.Count > 0) {
                 string goldxpstring = PrintKeyValue("gold", ThisEditorExternal.gold.ToString(), TabCount + 3);
                 goldxpstring += PrintKeyValue("exp", ThisEditorExternal.exp.ToString(), TabCount + 3);
+
+                if (ThisEditorExternal.items.Count > 0)
+                {
+                    string itemsrewardstring = "";
+                    ThisEditorExternal.items.ForEach(obj => itemsrewardstring += obj.ConvertToText(TabCount + 4));
+                    goldxpstring += PrintEncapsulation(itemsrewardstring, TabCount + 3, "items", true);
+                }
+
                 OnCompletionString += PrintEncapsulation(goldxpstring, TabCount + 2, "rewards", true);
             }
 
@@ -517,6 +527,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             public int gold;
             public int exp;
+            public KVList items = new KVList();
         }
 
         public class QuestStage_OptionalFields : QuestVariableOptionalFields

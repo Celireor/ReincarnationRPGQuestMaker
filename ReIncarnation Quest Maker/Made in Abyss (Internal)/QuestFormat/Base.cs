@@ -192,9 +192,10 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     }
 
     public class KVList : ListeningList<KVPair> {
+
         public KVList(List<KVPair> ThisList) : base()
         {
-            ThisList.ForEach(obj => Add(obj));
+            ThisList.ForEach(obj => Add(QuestVariable.GenerateFromKeyValue<KVPair>(obj)));
         }
 
         public KVList() {
