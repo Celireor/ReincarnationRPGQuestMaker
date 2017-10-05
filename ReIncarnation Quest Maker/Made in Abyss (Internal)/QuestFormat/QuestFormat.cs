@@ -50,6 +50,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             OtherListReverse.ForEach(obj => {
                 obj.UpdateQuestID(ThisEditorExternal.LargestQuestID + obj.questID);
+                obj.ThisEditorExternal.ParentQuestList = this;
             });
 
             Quests.AddRange(OtherList.Quests);

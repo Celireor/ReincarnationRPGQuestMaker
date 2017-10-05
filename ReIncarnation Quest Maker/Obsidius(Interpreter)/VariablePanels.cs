@@ -326,9 +326,21 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.AddItem("Listen String", ListenString, ModifyTalkToListenString);
             ThisTable.AddItem("Completion String", new DefaultTextBox(Item.completionString), ModifyTalkToCompletionString);
 
+            ThisItem.ThisEditorExternal.OnUpdateList.Add(UpdateListenString);
+
             /*Interpreter.CurrentQuestList.ThisEditorExternal.PossibleListenStrings.AddListener((useless, item) => {
 
             }, false, false, true)*/
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ThisItem.ThisEditorExternal.OnUpdateList.Remove(UpdateListenString);
+            base.Dispose(disposing);
+        }
+
+        public void UpdateListenString() {
+            ListenString.Text = ThisItem.listenString;
         }
     }
     public class QuestTaskPanel_kill : QuestTaskPanel

@@ -33,6 +33,7 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fromTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CompileButton = new System.Windows.Forms.ToolStripButton();
+            this.MergeButton = new System.Windows.Forms.ToolStripLabel();
             this.fixIDsButton = new System.Windows.Forms.ToolStripLabel();
             this.Quest_QuestList_Split = new System.Windows.Forms.SplitContainer();
             this.QuestTabs = new System.Windows.Forms.TabControl();
@@ -89,7 +90,6 @@
             this.QuestList = new System.Windows.Forms.Panel();
             this.newquestbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.MergeButton = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Quest_QuestList_Split)).BeginInit();
             this.Quest_QuestList_Split.Panel1.SuspendLayout();
@@ -152,7 +152,7 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewQuestList);
             // 
@@ -161,7 +161,7 @@
             this.loadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fromTextToolStripMenuItem});
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "Load";
             // 
             // fromTextToolStripMenuItem
@@ -179,6 +179,13 @@
             this.CompileButton.Size = new System.Drawing.Size(56, 22);
             this.CompileButton.Text = "Compile";
             this.CompileButton.Click += new System.EventHandler(this.toolStripDropDownCompileButton_Click);
+            // 
+            // MergeButton
+            // 
+            this.MergeButton.Name = "MergeButton";
+            this.MergeButton.Size = new System.Drawing.Size(41, 22);
+            this.MergeButton.Text = "Merge";
+            this.MergeButton.Click += new System.EventHandler(this.MergeButton_Click);
             // 
             // fixIDsButton
             // 
@@ -889,13 +896,6 @@
             this.label1.Size = new System.Drawing.Size(67, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "Quest ID";
-            // 
-            // MergeButton
-            // 
-            this.MergeButton.Name = "MergeButton";
-            this.MergeButton.Size = new System.Drawing.Size(41, 22);
-            this.MergeButton.Text = "Merge";
-            this.MergeButton.Click += new System.EventHandler(this.MergeButton_Click);
             // 
             // MainForm
             // 

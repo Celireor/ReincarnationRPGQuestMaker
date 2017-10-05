@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
@@ -162,7 +161,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 }
                 else
                 {
-                    ThisEditorExternal.ListenStringParent = Interpreter.CurrentQuestList.GetQuest(NewListenStringID);
+                    ThisEditorExternal.ListenStringParent = ThisEditorExternal.ParentStage.ThisEditorExternal.Parent.ThisEditorExternal.ParentQuestList.GetQuest(NewListenStringID);
                 }
                 if (ThisEditorExternal.ListenStringParent != null)
                 {
@@ -189,6 +188,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 listenString = listenString.Remove(0, ThisEditorExternal.ListeningStringQuestLength + 1);
                 ThisEditorExternal.ListeningStringQuestLength = ThisEditorExternal.ListenStringParent.questID.ToString().Length;
                 listenString = ThisEditorExternal.ListenStringParent.questID.ToString() + '_' + listenString;
+                ThisEditorExternal.OnUpdate();
             }
         }
 
