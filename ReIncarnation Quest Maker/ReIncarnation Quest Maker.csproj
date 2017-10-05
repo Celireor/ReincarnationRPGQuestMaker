@@ -79,6 +79,9 @@
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestTasks.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\LinqExtensions.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\UtilityFunctions.cs" />
+    <Compile Include="Obsidius%28Interpreter%29\TaskPanels.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Obsidius%28Interpreter%29\VariablePanels.cs">
       <SubType>Component</SubType>
     </Compile>
