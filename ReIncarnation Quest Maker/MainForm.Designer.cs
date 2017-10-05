@@ -57,6 +57,11 @@
             this.QuestRepeatable = new System.Windows.Forms.CheckBox();
             this.QuestDescriptionTextBox = new System.Windows.Forms.TextBox();
             this.PrerequisiteList = new System.Windows.Forms.Panel();
+            this.prerequisitetable = new System.Windows.Forms.TableLayoutPanel();
+            this.classrequiredlabel = new System.Windows.Forms.Label();
+            this.classrequiredfield = new System.Windows.Forms.TextBox();
+            this.levelrequiredlabel = new System.Windows.Forms.Label();
+            this.levelrequiredfield = new System.Windows.Forms.NumericUpDown();
             this.NewPrerequisiteButton = new System.Windows.Forms.Button();
             this.Stages = new System.Windows.Forms.TabPage();
             this.QuestStageInfo_QuestStageList_Split = new System.Windows.Forms.SplitContainer();
@@ -106,6 +111,8 @@
             this.QuestBasicInfoTable.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.QuestID)).BeginInit();
+            this.prerequisitetable.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.levelrequiredfield)).BeginInit();
             this.Stages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.QuestStageInfo_QuestStageList_Split)).BeginInit();
             this.QuestStageInfo_QuestStageList_Split.Panel1.SuspendLayout();
@@ -253,6 +260,7 @@
             // 
             this.QuestBasicInfo_QuestPrerequisites_Split.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.QuestBasicInfo_QuestPrerequisites_Split.Panel2.Controls.Add(this.PrerequisiteList);
+            this.QuestBasicInfo_QuestPrerequisites_Split.Panel2.Controls.Add(this.prerequisitetable);
             this.QuestBasicInfo_QuestPrerequisites_Split.Panel2.Controls.Add(this.NewPrerequisiteButton);
             this.QuestBasicInfo_QuestPrerequisites_Split.Size = new System.Drawing.Size(623, 504);
             this.QuestBasicInfo_QuestPrerequisites_Split.SplitterDistance = 393;
@@ -477,11 +485,76 @@
             this.PrerequisiteList.AutoScroll = true;
             this.PrerequisiteList.BackColor = System.Drawing.Color.DarkGray;
             this.PrerequisiteList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PrerequisiteList.Location = new System.Drawing.Point(0, 0);
+            this.PrerequisiteList.Location = new System.Drawing.Point(0, 52);
             this.PrerequisiteList.Margin = new System.Windows.Forms.Padding(0);
             this.PrerequisiteList.Name = "PrerequisiteList";
-            this.PrerequisiteList.Size = new System.Drawing.Size(226, 454);
-            this.PrerequisiteList.TabIndex = 7;
+            this.PrerequisiteList.Size = new System.Drawing.Size(226, 402);
+            this.PrerequisiteList.TabIndex = 9;
+            // 
+            // prerequisitetable
+            // 
+            this.prerequisitetable.AutoSize = true;
+            this.prerequisitetable.ColumnCount = 2;
+            this.prerequisitetable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.prerequisitetable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.prerequisitetable.Controls.Add(this.classrequiredlabel, 0, 1);
+            this.prerequisitetable.Controls.Add(this.classrequiredfield, 1, 1);
+            this.prerequisitetable.Controls.Add(this.levelrequiredlabel, 0, 0);
+            this.prerequisitetable.Controls.Add(this.levelrequiredfield, 1, 0);
+            this.prerequisitetable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.prerequisitetable.Location = new System.Drawing.Point(0, 0);
+            this.prerequisitetable.Name = "prerequisitetable";
+            this.prerequisitetable.RowCount = 2;
+            this.prerequisitetable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.prerequisitetable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.prerequisitetable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.prerequisitetable.Size = new System.Drawing.Size(226, 52);
+            this.prerequisitetable.TabIndex = 6;
+            // 
+            // classrequiredlabel
+            // 
+            this.classrequiredlabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.classrequiredlabel.AutoSize = true;
+            this.classrequiredlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.classrequiredlabel.Location = new System.Drawing.Point(3, 31);
+            this.classrequiredlabel.Name = "classrequiredlabel";
+            this.classrequiredlabel.Size = new System.Drawing.Size(115, 16);
+            this.classrequiredlabel.TabIndex = 12;
+            this.classrequiredlabel.Text = "Class Required";
+            // 
+            // classrequiredfield
+            // 
+            this.classrequiredfield.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.classrequiredfield.Location = new System.Drawing.Point(124, 29);
+            this.classrequiredfield.Name = "classrequiredfield";
+            this.classrequiredfield.Size = new System.Drawing.Size(99, 20);
+            this.classrequiredfield.TabIndex = 13;
+            this.classrequiredfield.TextChanged += new System.EventHandler(this.classrequiredfield_TextChanged);
+            // 
+            // levelrequiredlabel
+            // 
+            this.levelrequiredlabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.levelrequiredlabel.AutoSize = true;
+            this.levelrequiredlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.levelrequiredlabel.Location = new System.Drawing.Point(3, 5);
+            this.levelrequiredlabel.Name = "levelrequiredlabel";
+            this.levelrequiredlabel.Size = new System.Drawing.Size(114, 16);
+            this.levelrequiredlabel.TabIndex = 1;
+            this.levelrequiredlabel.Text = "Level Required";
+            // 
+            // levelrequiredfield
+            // 
+            this.levelrequiredfield.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levelrequiredfield.Location = new System.Drawing.Point(124, 3);
+            this.levelrequiredfield.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.levelrequiredfield.Name = "levelrequiredfield";
+            this.levelrequiredfield.Size = new System.Drawing.Size(99, 20);
+            this.levelrequiredfield.TabIndex = 11;
+            this.levelrequiredfield.ValueChanged += new System.EventHandler(this.levelrequiredfield_ValueChanged);
             // 
             // NewPrerequisiteButton
             // 
@@ -950,6 +1023,9 @@
             this.QuestBasicInfoTable.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.QuestID)).EndInit();
+            this.prerequisitetable.ResumeLayout(false);
+            this.prerequisitetable.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.levelrequiredfield)).EndInit();
             this.Stages.ResumeLayout(false);
             this.QuestStageInfo_QuestStageList_Split.Panel1.ResumeLayout(false);
             this.QuestStageInfo_QuestStageList_Split.Panel2.ResumeLayout(false);
@@ -1018,7 +1094,6 @@
         private System.Windows.Forms.SplitContainer QuestStageInfo_QuestStageList_Split;
         private System.Windows.Forms.Panel QuestStageList;
         private System.Windows.Forms.Button newqueststagebutton;
-        private System.Windows.Forms.Panel PrerequisiteList;
         private System.Windows.Forms.Button NewPrerequisiteButton;
         private System.Windows.Forms.ComboBox QuestTypeIcon;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -1051,6 +1126,12 @@
         private System.Windows.Forms.ToolStripLabel MergeButton;
         private System.Windows.Forms.Panel questrewarditemspanel;
         private System.Windows.Forms.Button questrewarditemsbutton;
+        private System.Windows.Forms.Panel PrerequisiteList;
+        private System.Windows.Forms.TableLayoutPanel prerequisitetable;
+        private System.Windows.Forms.NumericUpDown levelrequiredfield;
+        private System.Windows.Forms.Label levelrequiredlabel;
+        private System.Windows.Forms.TextBox classrequiredfield;
+        private System.Windows.Forms.Label classrequiredlabel;
     }
 }
 

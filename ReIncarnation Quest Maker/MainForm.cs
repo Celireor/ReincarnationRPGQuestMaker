@@ -143,6 +143,8 @@ namespace ReIncarnation_Quest_Maker
         public void UpdateQuestData()
         {
             //StopDrawing();
+            levelrequiredfield.Value = Interpreter.SelectedQuest.ThisEditorExternal.prereqlevel;
+            classrequiredfield.Text = Interpreter.SelectedQuest.ThisEditorExternal.prereqclass;
             PrerequisitePanels.Refresh(Interpreter.SelectedQuest.prerequisites);
             QuestStagePanels.Refresh(Interpreter.SelectedQuest.stages);
             QuestDialoguePanels.Refresh(Interpreter.SelectedQuest.injections);
@@ -412,6 +414,16 @@ namespace ReIncarnation_Quest_Maker
         private void questrewarditemsbutton_Click(object sender, EventArgs e)
         {
             Interpreter.AddQuestStageReward();
+        }
+
+        private void levelrequiredfield_ValueChanged(object sender, EventArgs e)
+        {
+            Interpreter.SelectedQuest.ThisEditorExternal.prereqlevel = (int) GetNumberFromNumericUpDown(sender);
+        }
+
+        private void classrequiredfield_TextChanged(object sender, EventArgs e)
+        {
+            Interpreter.SelectedQuest.ThisEditorExternal.prereqclass = GetTextFromTextBox(sender);
         }
     }
 

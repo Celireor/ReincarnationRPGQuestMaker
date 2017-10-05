@@ -169,12 +169,27 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             AffectedNPCNames.Distinct().ToList().ForEach(obj =>
             {
                 x++;
-                AffectedNPCString += new string('\t', TabCount + 2) + "\"" + x.ToString() + "\"\t\"" + obj + "\"" + Environment.NewLine;
+                AffectedNPCString += PrintKeyValue(x.ToString(), obj, TabCount + 2);
             });
             StringToEncapsulate += PrintEncapsulation(AffectedNPCString, TabCount + 1, "affectedNpcs", true);
 
             /* Contents of Prerequisites */
-            StringToEncapsulate += PrintListVariables(prerequisites, "prerequisites", TabCount + 1);
+
+            {
+                string prereqstring = "";
+                if (ThisEditorExternal.prereqlevel > 0)
+                {
+                    prereqstring += PrintKeyValue("level", ThisEditorExternal.prereqlevel.ToString(), TabCount + 2);
+                }
+                if (ThisEditorExternal.prereqclass != "" && ThisEditorExternal.prereqclass != null)
+                {
+                    prereqstring += PrintKeyValue("class", ThisEditorExternal.prereqclass, TabCount + 2);
+                }
+                if(prereqstring != "")
+                {
+                    StringToEncapsulate += PrintEncapsulation(prereqstring, TabCount + 1, "prerequisites", true);
+                }
+            }
 
             /* Contents of Stages */
             StringToEncapsulate += StagesString;
@@ -205,7 +220,22 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 {
                     case "prerequisites":
                         {
-                            prerequisites = new KVList(IterationKV.FolderValue.Items);
+                            IterationKV.FolderValue.Items.ForEach(obj => {
+                                switch (obj.Key)
+                                {
+                                    case "level":
+                                        {
+                                            ThisEditorExternal.prereqlevel = Convert.ToInt32(obj.Value);
+                                        }
+                                        break;
+                                    case "class":
+                                        {
+                                            ThisEditorExternal.prereqclass = obj.Value;
+                                        }
+                                        break;
+                                }
+                            });
+                            //prerequisites = new KVList(IterationKV.FolderValue.Items);
                         }
                         break;
                     /*case "affectedNpcs":
@@ -282,6 +312,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public QuestList ParentQuestList;
 
             public ListeningList<String> PossibleDialogueInjections = new ListeningList<string>();
+
+            public int prereqlevel;
+            public string prereqclass;
         }
     }
 
@@ -375,7 +408,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
-                                                ReturnValue.dialogue.Add(obj2);
+                                                ReturnValue.dialogue.Add(GenerateFromKeyValue<KVPair>(obj2));
                                             });
                                         }
                                         break;
@@ -383,7 +416,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 =>
                                             {
-                                                ReturnValue.particles.Add(obj2);
+                                                ReturnValue.particles.Add(GenerateFromKeyValue<KVPair>(obj2));
                                             });
                                         }
                                         break;
