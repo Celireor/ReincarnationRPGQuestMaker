@@ -290,7 +290,7 @@ namespace ReIncarnation_Quest_Maker
         public ModifyQuestVariableTable DialogueResponseTable;
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
-        public ListPanel<QuestDialogueGivesQuestPanel, KVPair> giveQuestsList;
+        public ListPanel<GivesQuestPanel, KVPair> giveQuestsList;
         public ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> hideIfList;
 
         DefaultTextBox ResponseTextBox;
@@ -386,7 +386,7 @@ namespace ReIncarnation_Quest_Maker
             DialogueOptionsTable = new ModifyQuestVariableTable();
             DialogueResponseTable = new ModifyQuestVariableTable();
             ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, Sort());
-            giveQuestsList = new ListPanel<QuestDialogueGivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, QuestDialogueGivesQuestPanel.Sort());
+            giveQuestsList = new ListPanel<GivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, GivesQuestPanel.Sort());
             hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, QuestDialogueHideIfPanel.Sort(), new DefaultDropDown("quests", Interpreter.CurrentQuestList.ThisEditorExternal.PossibleHideIfStrings));
 
             AddControl(ThisTable, true);
@@ -435,7 +435,7 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestDialogueGivesQuestPanel : KVPanel<QuestDialogueGivesQuestPanel>
+    public class GivesQuestPanel : KVPanel<GivesQuestPanel>
     {
         public ModifyQuestVariableTable ThisTable;
 
@@ -448,12 +448,12 @@ namespace ReIncarnation_Quest_Maker
             ThisQuestVariable.Value = MainForm.GetStateFromCheckBox(sender).ToString().ToLower();
         }
 
-        public QuestDialogueGivesQuestPanel(OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent) : base(Parent)
+        public GivesQuestPanel(OrganizedControlList<GivesQuestPanel, KVPair> Parent) : base(Parent)
         {
             ThisTable = new ModifyQuestVariableTable();
         }
 
-        public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestDialogueGivesQuestPanel, KVPair> Parent)
+        public override void Generate_Addon(KVPair Item, OrganizedControlList<GivesQuestPanel, KVPair> Parent)
         {
             ThisTable.AddItem("Quest ID", new DefaultNumericUpDown(Convert.ToInt32(Item.Key)), QuestIDOnChanged);
             ThisTable.AddItem("Force Give", new DefaultCheckBox(Convert.ToBoolean(Item.Value)), ForceGiveQuestChanged);
@@ -604,6 +604,31 @@ namespace ReIncarnation_Quest_Maker
         {
             ThisTable.AddItem("Item:", new DefaultTextBox(Item.Key), UpdateItemName);
             ThisTable.AddItem("Charges:", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateItemNum);
+        }
+    }
+    public class QuestStageItemConsumedPanel : KVPanel<QuestStageItemConsumedPanel>
+    {
+        ModifyQuestVariableTable ThisTable;
+        public QuestStageItemConsumedPanel(OrganizedControlList<QuestStageItemConsumedPanel, KVPair> Parent) : base(Parent)
+        {
+            ThisTable = new ModifyQuestVariableTable();
+            AddControl(ThisTable);
+        }
+
+        public void UpdateItemName(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Key = MainForm.GetTextFromTextBox(sender);
+        }
+
+        public void UpdateItemNum(object sender, EventArgs e)
+        {
+            ThisQuestVariable.Value = ((int)MainForm.GetNumberFromNumericUpDown(sender)).ToString();
+        }
+
+        public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageItemConsumedPanel, KVPair> Parent)
+        {
+            ThisTable.AddItem("Item:", new DefaultTextBox(Item.Key), UpdateItemName);
+            ThisTable.AddItem("Amount:", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateItemNum);
         }
     }
 }

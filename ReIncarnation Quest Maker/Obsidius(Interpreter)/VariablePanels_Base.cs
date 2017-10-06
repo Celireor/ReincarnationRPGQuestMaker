@@ -27,6 +27,8 @@ namespace ReIncarnation_Quest_Maker
 
         public int NextPos = 0;
 
+        public List<Action> OnTrash = new List<Action>();
+
         //public Func
 
         public static OrganizedControlList<T, U> GenerateOrganizedControlList(Panel BaseControl)
@@ -138,6 +140,7 @@ namespace ReIncarnation_Quest_Maker
                 ParentControlList.ThisList.AssignIndexValuesToListItems((obj, index) => {
                     obj.ListPosition = index;
                 });
+                ParentControlList.OnTrash.ForEach(obj => obj());
             }
         }
 
@@ -359,6 +362,7 @@ namespace ReIncarnation_Quest_Maker
 
         public DefaultButton MinimiseButton;
         bool MinimisedState = true;
+        bool HasMinimisedButton = false;
 
         public DefaultDropDown ThisDefaultQuestTypeSelector;
 
@@ -378,6 +382,24 @@ namespace ReIncarnation_Quest_Maker
             SortablePanel<T, U>.Generate(NewDefaultItem(InputText), ThisList);
             if (MinimisedState) {
                 Minimise(null, null);
+            }
+            CheckIfShouldAddMinimiseButton();
+        }
+
+        public void CheckIfShouldAddMinimiseButton() {
+
+            if (ThisList.ThisList.Count > 0)
+            {
+                if (!HasMinimisedButton)
+                {
+                    ThisTable.Controls.Add(MinimiseButton, 0, 0);
+                    HasMinimisedButton = true;
+                }
+            }
+            else
+            {
+                ThisTable.Controls.Remove(MinimiseButton);
+                HasMinimisedButton = false;
             }
         }
 
@@ -401,11 +423,16 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.Controls.Remove(ThisPanel);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ThisList.OnTrash.Remove(CheckIfShouldAddMinimiseButton);
+            base.Dispose(disposing);
+        }
+
         public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, IComparer<T> SortMetric, DefaultDropDown ElementTypeSelector = null)
         {
             MinimiseButton = new DefaultButton(Minimise, "Minimise/Maxmise");
             MinimiseButton.Location = new Point(0, MinimiseButton.Height);
-
 
             ThisTable = new DefaultTable(1, 3);
             ThisTable.Margin = new Padding(0, 0, 0, 0);
@@ -430,9 +457,9 @@ namespace ReIncarnation_Quest_Maker
                 ThisDefaultQuestTypeSelector = ElementTypeSelector;
                 ButtonContainerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             }
-            ThisTable.Controls.Add(MinimiseButton, 0, 0);
 
             ButtonContainerTable.Dock = DockStyle.Fill;
+            CheckIfShouldAddMinimiseButton();
             ThisTable.Controls.Add(ButtonContainerTable, 0, 2);
             Controls.Add(ThisTable);
 
@@ -443,6 +470,8 @@ namespace ReIncarnation_Quest_Maker
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             SizeChanged += ResetSize;
+
+            ThisList.OnTrash.Add(CheckIfShouldAddMinimiseButton);
         }
     }
 

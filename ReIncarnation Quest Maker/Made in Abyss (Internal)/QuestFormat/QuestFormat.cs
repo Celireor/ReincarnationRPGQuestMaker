@@ -366,6 +366,27 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             throw new NotImplementedException();
         }
 
+        public static void GetRewardsValues(KVPair KV, QuestStage ReturnValue) {
+            switch (KV.Key)
+            {
+                case "gold":
+                    {
+                        ReturnValue.ThisEditorExternal.gold = Convert.ToInt32(KV.Value);
+                    }
+                    break;
+                case "exp":
+                    {
+                        ReturnValue.ThisEditorExternal.exp = Convert.ToInt32(KV.Value);
+                    }
+                    break;
+                case "items":
+                    {
+                        ReturnValue.ThisEditorExternal.items = new KVList(KV.FolderValue.Items);
+                    }
+                    break;
+            }
+        }
+
         public static QuestStage KVGenerate(KVPair ThisKV, Quest Parent)
         {
             int Num = Convert.ToInt32(ThisKV.Key);
@@ -377,32 +398,27 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                     case "onCompletion":
                         {
                             IterationKV.FolderValue.Items.ForEach(obj => {
-                                switch (obj.Key) {
+                                switch (obj.Key)
+                                {
+                                    case "quests":
+                                        {
+                                            ReturnValue.ThisEditorExternal.QuestsGiven = new KVList(obj.FolderValue.Items);
+                                        }
+                                        break;
                                     case "rewards":
                                         {
                                             obj.FolderValue.Items.ForEach(obj2 => {
-                                            switch (obj2.Key)
-                                                {
-                                                    case "gold":
-                                                        {
-                                                            ReturnValue.ThisEditorExternal.gold = Convert.ToInt32(obj2.Value);
-                                                        }
-                                                        break;
-                                                    case "exp":
-                                                        {
-                                                            ReturnValue.ThisEditorExternal.exp = Convert.ToInt32(obj2.Value);
-                                                        }
-                                                        break;
-                                                    case "items":
-                                                        {
-                                                            ReturnValue.ThisEditorExternal.items = new KVList(obj2.FolderValue.Items);
-                                                        }
-                                                        break;
-                                                }
-                                        });
-                                    }
-                                    break;
+                                                GetRewardsValues(obj2, ReturnValue);
+                                            });
+                                        }
+                                        break;
+                                    case "consume":
+                                        {
+                                            ReturnValue.ThisEditorExternal.itemsConsumed = new KVList(obj.FolderValue.Items);
+                                        }
+                                        break;
                                 }
+                                GetRewardsValues(obj, ReturnValue);
                             });
                         }
                         break;
@@ -444,6 +460,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                 QuestTask.MassGenerate<QuestTask_killType>(ReturnValue, obj, "killType");
                                 QuestTask.MassGenerate<QuestTask_talkto>(ReturnValue, obj, "talkto");
                                 QuestTask.MassGenerate<QuestTask_event>(ReturnValue, obj, "event");
+                                QuestTask.MassGenerate<QuestTask_useAbility>(ReturnValue, obj, "useAbility");
                             });
                         }
                         break;
@@ -461,13 +478,21 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-
-
         public override string ConvertToText(int TabCount = 0)
         {
             string stringtoencapsulate = ConvertToText_Iterate(TabCount + 1);
 
             string OnCompletionString = "";
+
+            if (ThisEditorExternal.QuestsGiven.Count > 0)
+            {
+                OnCompletionString += PrintEncapsulation(ThisEditorExternal.QuestsGiven.ConvertToText(TabCount + 3), TabCount + 2, "quests", true);
+            }
+
+            if (ThisEditorExternal.itemsConsumed.Count > 0)
+            {
+                OnCompletionString += PrintEncapsulation(ThisEditorExternal.itemsConsumed.ConvertToText(TabCount + 3), TabCount + 2, "consume", true);
+            }
 
             if (ThisEditorExternal.gold > 0 || ThisEditorExternal.exp > 0 || ThisEditorExternal.items.Count > 0) {
                 string goldxpstring = PrintKeyValue("gold", ThisEditorExternal.gold.ToString(), TabCount + 3);
@@ -510,29 +535,29 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 string TaskString = "";
 
-                QuestIndexableVariableStringConverter<QuestTask_gather, QuestTask> GatherTaskList = new QuestIndexableVariableStringConverter<QuestTask_gather, QuestTask>("gather");
-                QuestIndexableVariableStringConverter<QuestTask_location, QuestTask> LocationTasksList = new QuestIndexableVariableStringConverter<QuestTask_location, QuestTask>("location");
-                QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask> TalkToTaskList = new QuestIndexableVariableStringConverter<QuestTask_talkto, QuestTask>("talkto");
-                QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask> KillTaskList = new QuestIndexableVariableStringConverter<QuestTask_kill, QuestTask>("kill");
-                QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask> KillTypeTaskList = new QuestIndexableVariableStringConverter<QuestTask_killType, QuestTask>("killType");
-                QuestIndexableVariableStringConverter<QuestTask_event, QuestTask> EventTaskList = new QuestIndexableVariableStringConverter<QuestTask_event, QuestTask>("event");
+                QuestIndexableVariableStringConverter<QuestTask>[] TaskLibrary = {
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_gather), "gather"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_location), "location"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_talkto), "talkto"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_kill), "kill"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_killType), "killType"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_event), "event"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_useAbility), "useAbility")
+                };
 
                 tasks.ForEach(obj =>
                 {
-                    GatherTaskList.Add(obj);
-                    LocationTasksList.Add(obj);
-                    TalkToTaskList.Add(obj);
-                    KillTaskList.Add(obj);
-                    KillTypeTaskList.Add(obj);
-                    EventTaskList.Add(obj);
+                    for (int x = 0; x < TaskLibrary.Length; x++)
+                    {
+                        TaskLibrary[x].Add(obj);
+                    }
                 });
 
-                TaskString += GatherTaskList.Print(TabCount + 1);
-                TaskString += LocationTasksList.Print(TabCount + 1);
-                TaskString += TalkToTaskList.Print(TabCount + 1);
-                TaskString += KillTypeTaskList.Print(TabCount + 1);
-                TaskString += KillTaskList.Print(TabCount + 1);
-                TaskString += EventTaskList.Print(TabCount + 1);
+                for (int x = 0; x < TaskLibrary.Length; x++)
+                {
+                    TaskString += TaskLibrary[x].Print(TabCount + 1);
+                }
+
 
                 stringtoencapsulate += PrintEncapsulation(TaskString, TabCount + 1, "tasks", true);
             }
@@ -569,9 +594,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public Quest Parent;
             public int StageNum;
 
+            //rewards
             public int gold;
             public int exp;
             public KVList items = new KVList();
+
+            public KVList itemsConsumed = new KVList();
+
+            public KVList QuestsGiven = new KVList();
         }
 
         public class QuestStage_OptionalFields : QuestVariableOptionalFields
@@ -708,7 +738,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             if (hideIf.Count > 0) {
                 string hideIfString = "";
 
-                QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf_Quest, QuestDialogueOptionHideIf> QuestHideIfList = new QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf_Quest, QuestDialogueOptionHideIf>("quests");
+                QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf> QuestHideIfList = new QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf>(typeof(QuestDialogueOptionHideIf_Quest), "quests");
 
                 hideIf.ForEach(obj => {
                     QuestHideIfList.Add(obj);

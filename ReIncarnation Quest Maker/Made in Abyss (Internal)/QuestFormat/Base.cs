@@ -215,6 +215,12 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             NewPair.ThisEditorExternal.EncapsulatingList = this;
         }
 
+        public string ConvertToText(int TabCount = 1) {
+            string returnstring = "";
+            ForEach(obj => { returnstring += obj.ConvertToText(TabCount); });
+            return returnstring;
+        }
+
         /*void RemoveEncapsulatingList(ListeningList<KVPair> Useless, KVPair NewPair)
         {
             NewPair.ThisEditorExternal.EncapsulatingList = null;
@@ -296,19 +302,24 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             TaskTypeDictionary.Add(TypeString, TaskType);
         }
     }
-    public class QuestIndexableVariableStringConverter<T, U> where T : U where U : MultiTypeVariable<U>
+
+    public class QuestIndexableVariableStringConverter<U> where U : MultiTypeVariable<U>
     {
-        List<T> VarList = new List<T>();
+        Type TaskType;
+        List<U> VarList = new List<U>();
         string VarType;
 
-        public QuestIndexableVariableStringConverter(string VarType) { this.VarType = VarType; }
+        public QuestIndexableVariableStringConverter (Type TaskType, string VarType) {
+            this.TaskType = TaskType;
+            this.VarType = VarType;
+        }
 
         public void Add(U obj)
         {
             Type ObjType = obj.GetType();
-            if (ObjType == typeof(T))
+            if (ObjType == TaskType)
             {
-                VarList.Add(obj as T);
+                VarList.Add(obj);
             }
         }
 

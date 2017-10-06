@@ -81,6 +81,8 @@ namespace ReIncarnation_Quest_Maker
         public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageDialoguePanels;
         public OrganizedControlList<QuestStageParticlePanel, KVPair> QuestStageParticlePanels;
         public OrganizedControlList<QuestStageItemRewardPanel, KVPair> QuestStageRewardsPanel;
+        public OrganizedControlList<GivesQuestPanel, KVPair> QuestStageGivesQuestPanel;
+        public OrganizedControlList<QuestStageItemConsumedPanel, KVPair> QuestStageItemConsumedPanels;
         //public OrganizedControlList<QuestStageDialoguePanel, KVPair> QuestStageParticlePanels;
         //public OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue> AffectedNPCsPanels;
         //public 
@@ -96,10 +98,12 @@ namespace ReIncarnation_Quest_Maker
             QuestStageDialoguePanels = OrganizedControlList<QuestStageDialoguePanel, KVPair>.GenerateOrganizedControlList(questStageDialogueList);
             QuestStageParticlePanels = OrganizedControlList<QuestStageParticlePanel, KVPair>.GenerateOrganizedControlList(questStageParticleList);
             QuestStageRewardsPanel = OrganizedControlList<QuestStageItemRewardPanel, KVPair>.GenerateOrganizedControlList(questrewarditemspanel);
+            QuestStageGivesQuestPanel = OrganizedControlList<GivesQuestPanel, KVPair>.GenerateOrganizedControlList(questsGivenPanel);
+            QuestStageItemConsumedPanels = OrganizedControlList<QuestStageItemConsumedPanel, KVPair>.GenerateOrganizedControlList(itemsConsumedPanel);
 
-        //AffectedNPCsPanels = OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue>.GenerateOrganizedControlList(AffectedNPCsList, AffectedNPCsPanel.Sort());
+              //AffectedNPCsPanels = OrganizedControlList<AffectedNPCsPanel, QuestInjectDialogue>.GenerateOrganizedControlList(AffectedNPCsList, AffectedNPCsPanel.Sort());
 
-            Interpreter.ThisForm = this;
+              Interpreter.ThisForm = this;
             Interpreter.GenerateDefaultQuestList();
             InitialiseScreen();
 
@@ -164,6 +168,8 @@ namespace ReIncarnation_Quest_Maker
             QuestStageDialoguePanels.Refresh(Interpreter.SelectedQuestStage.dialogue);
             QuestStageParticlePanels.Refresh(Interpreter.SelectedQuestStage.particles);
             QuestStageRewardsPanel.Refresh(Interpreter.SelectedQuestStage.ThisEditorExternal.items);
+            QuestStageGivesQuestPanel.Refresh(Interpreter.SelectedQuestStage.ThisEditorExternal.QuestsGiven);
+            QuestStageItemConsumedPanels.Refresh(Interpreter.SelectedQuestStage.ThisEditorExternal.itemsConsumed);
             //AffectedNPCsPanel.MassGenerate(Interpreter.SelectedQuestStage.affectedNPCs.ToArray(), AffectedNPCsPanels);
             // SendMessage(parent.Handle, WM_SETREDRAW, false, 0);
             //StartDrawing();
@@ -223,6 +229,10 @@ namespace ReIncarnation_Quest_Maker
 
         public void OnNewQuestStageItemReward(KVPair NewQuestStageItemReward) {
             QuestStageItemRewardPanel.Generate(NewQuestStageItemReward, QuestStageRewardsPanel);
+        }
+
+        public void OnNewQuestStageGiven(KVPair NewQuestStageGiven) {
+            GivesQuestPanel.Generate(NewQuestStageGiven, QuestStageGivesQuestPanel);
         }
 
         /*public void OnNewAffectedNPC(QuestInjectDialogue NewAffectedNPC)
@@ -406,6 +416,11 @@ namespace ReIncarnation_Quest_Maker
             Interpreter.AddQuestStageParticle();
         }
 
+        private void newQuestGivenButton_Click(object sender, EventArgs e)
+        {
+            Interpreter.AddNewQuestGiven();
+        }
+
         private void fixIDsButton_Click(object sender, EventArgs e)
         {
             Interpreter.fixIDs();
@@ -424,6 +439,13 @@ namespace ReIncarnation_Quest_Maker
         private void classrequiredfield_TextChanged(object sender, EventArgs e)
         {
             Interpreter.SelectedQuest.ThisEditorExternal.prereqclass = GetTextFromTextBox(sender);
+        }
+
+        private void newItemConsumedButton_Click(object sender, EventArgs e)
+        {
+            KVPair NewItemConsumed = new KVPair("", 1.ToString());
+            Interpreter.SelectedQuestStage.ThisEditorExternal.itemsConsumed.Add(NewItemConsumed);
+            QuestStageItemConsumedPanel.Generate(NewItemConsumed, QuestStageItemConsumedPanels);
         }
     }
 

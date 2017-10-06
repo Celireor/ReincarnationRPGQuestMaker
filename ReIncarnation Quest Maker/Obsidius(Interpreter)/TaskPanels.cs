@@ -29,6 +29,7 @@ namespace ReIncarnation_Quest_Maker
             ItemToPanel.Add(typeof(QuestTask_gather), typeof(QuestTaskPanel_gather));
             ItemToPanel.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
             ItemToPanel.Add(typeof(QuestTask_event), typeof(QuestTaskPanel_event));
+            ItemToPanel.Add(typeof(QuestTask_useAbility), typeof(QuestTaskPanel_useAbility));
         }
 
         public override void Move_Addon(QuestTaskPanel OtherObject, int OtherPosition)
@@ -172,6 +173,11 @@ namespace ReIncarnation_Quest_Maker
             ThisItem.required = (int)MainForm.GetNumberFromNumericUpDown(sender);
         }
 
+        public void ModifyConsumedOnCompletion(object sender, EventArgs e)
+        {
+            ThisItem.ThisOptionalFields.consume = MainForm.GetStateFromCheckBox(sender);
+        }
+
         public QuestTaskPanel_gather(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { }
 
         public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
@@ -182,6 +188,7 @@ namespace ReIncarnation_Quest_Maker
 
             ThisTable.AddItem("Item Name", new DefaultTextBox(Item.ThisEditorExternal.ItemName), ModifyGatherObject);
             ThisTable.AddItem("Number To Gather", new DefaultNumericUpDown(Item.required), ModifyGatherAmount);
+            ThisTable.AddItem("Consume On Completion", new DefaultCheckBox(Item.ThisOptionalFields.consume), ModifyConsumedOnCompletion);
         }
     }
     public class QuestTaskPanel_killType : QuestTaskPanel
@@ -240,6 +247,36 @@ namespace ReIncarnation_Quest_Maker
             QuestTask_event Item = (QuestTask_event)Item_raw;
             ThisTable.AddItem("Event Name", new DefaultTextBox(Item.eventName), ModifyEventName);
             ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ModifyEventDescription);
+        }
+    }
+
+    public class QuestTaskPanel_useAbility : QuestTaskPanel
+    {
+        public new QuestTask_useAbility ThisQuestVariable { get { return base.ThisQuestVariable as QuestTask_useAbility; } }
+
+        public QuestTaskPanel_useAbility(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { AddControl(ThisTable); }
+
+        public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
+        {
+            QuestTask_useAbility Item = (QuestTask_useAbility)Item_raw;
+            ThisTable.AddItem("Ability/Item", new DefaultTextBox(Item.ThisEditorExternal.AbilityName), ModifyUseAbilityItem);
+            ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ModifyUseAbilityDescription);
+            ThisTable.AddItem("Amount", new DefaultNumericUpDown(Item.amount), ModifyUseAbilityAmount);
+        }
+
+        private void ModifyUseAbilityItem(object sender, EventArgs e)
+        {
+            ThisQuestVariable.ThisEditorExternal.AbilityName = MainForm.GetTextFromTextBox(sender);
+        }
+
+        private void ModifyUseAbilityAmount(object sender, EventArgs e)
+        {
+            ThisQuestVariable.amount = (int)MainForm.GetNumberFromNumericUpDown(sender);
+        }
+
+        private void ModifyUseAbilityDescription(object sender, EventArgs e)
+        {
+            ThisQuestVariable.description = MainForm.GetTextFromTextBox(sender);
         }
     }
 }

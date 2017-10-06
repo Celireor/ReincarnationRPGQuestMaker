@@ -106,6 +106,32 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             ThisForm.OnNewQuestStageItemReward(NewQuestStageReward);
         }
 
+        public static void AddQuestStageTask(string TaskType)
+        {
+            QuestTask NewStage = QuestTask.Generate(TaskType, SelectedQuestStage);
+
+            ThisForm.OnNewQuestStageTask(NewStage);
+        }
+
+        public static void AddQuestStageDialogue()
+        {
+            KVPair NewStageDialogue = new KVPair();
+            SelectedQuestStage.dialogue.Add(NewStageDialogue);
+            ThisForm.OnNewQuestStageDialogue(NewStageDialogue);
+        }
+        public static void AddQuestStageParticle()
+        {
+            KVPair NewStageParticle = new KVPair();
+            SelectedQuestStage.particles.Add(NewStageParticle);
+            ThisForm.OnNewQuestStageParticle(NewStageParticle);
+        }
+        public static void AddNewQuestGiven() {
+            KVPair NewQuestStageGiven = new KVPair();
+            SelectedQuestStage.ThisEditorExternal.QuestsGiven.Add(NewQuestStageGiven);
+            ThisForm.OnNewQuestStageGiven(NewQuestStageGiven);
+
+        }
+
         //others
 
         public static void fixIDs() {
@@ -120,26 +146,6 @@ namespace ReIncarnation_Quest_Maker.Obsidius
             });
             CurrentQuestList.SortQuests();
             UpdateScreen();
-        }
-
-        public static void AddQuestStageTask(string TaskType)
-        {
-            QuestTask NewStage = QuestTask.Generate(TaskType, SelectedQuestStage);
-
-            ThisForm.OnNewQuestStageTask(NewStage);
-        }
-
-        public static void AddQuestStageDialogue ()
-        {
-            KVPair NewStageDialogue = new KVPair();
-            SelectedQuestStage.dialogue.Add(NewStageDialogue);
-            ThisForm.OnNewQuestStageDialogue(NewStageDialogue);
-        }
-        public static void AddQuestStageParticle()
-        {
-            KVPair NewStageParticle = new KVPair();
-            SelectedQuestStage.particles.Add(NewStageParticle);
-            ThisForm.OnNewQuestStageParticle(NewStageParticle);
         }
 
         public static void MergeQuestListFromText(string FilePath)
