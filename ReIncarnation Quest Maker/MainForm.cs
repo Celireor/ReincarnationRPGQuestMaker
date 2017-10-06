@@ -145,7 +145,7 @@ namespace ReIncarnation_Quest_Maker
             //StopDrawing();
             levelrequiredfield.Value = Interpreter.SelectedQuest.ThisEditorExternal.prereqlevel;
             classrequiredfield.Text = Interpreter.SelectedQuest.ThisEditorExternal.prereqclass;
-            PrerequisitePanels.Refresh(Interpreter.SelectedQuest.prerequisites);
+            PrerequisitePanels.Refresh(Interpreter.SelectedQuest.questprerequisites);
             QuestStagePanels.Refresh(Interpreter.SelectedQuest.stages);
             QuestDialoguePanels.Refresh(Interpreter.SelectedQuest.injections);
             //

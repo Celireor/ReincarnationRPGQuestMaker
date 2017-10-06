@@ -91,7 +91,7 @@ namespace ReIncarnation_Quest_Maker
 
         public override void Move_Addon(PrerequisitePanel other, int OtherPos)
         {
-            Interpreter.SelectedQuest.prerequisites.Swap(ListPosition, OtherPos);
+            Interpreter.SelectedQuest.questprerequisites.Swap(ListPosition, OtherPos);
         }
 
         public void UpdateType(object sender, EventArgs e)
@@ -111,8 +111,8 @@ namespace ReIncarnation_Quest_Maker
             ThisTable = new ModifyQuestVariableTable();
             AddControl(ThisTable);
 
-            ThisTable.AddItem("Type: ", new DefaultDropDown(Item.Key, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestPrerequisites), UpdateType);
-            ThisTable.AddItem("Value: ", new DefaultNumericUpDown(Convert.ToInt32(Item.Value)), UpdateValue);
+            ThisTable.AddItem("Quest:", new DefaultNumericUpDown(Convert.ToInt32(Item.Key)), UpdateValue);
+            ThisTable.AddItem("State:", new DefaultDropDown(Item.Value, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestStates), UpdateType);
 
             //return ReturnValue;
         }

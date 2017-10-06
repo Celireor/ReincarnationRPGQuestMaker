@@ -82,8 +82,8 @@ namespace ReIncarnation_Quest_Maker.Obsidius
 
         public static void AddPrerequisite()
         {
-            KVPair NewPrerequisite = new KVPair("level", "0");
-            SelectedQuest.prerequisites.Add(NewPrerequisite);
+            KVPair NewPrerequisite = new KVPair("0", "true");
+            SelectedQuest.questprerequisites.Add(NewPrerequisite);
             ThisForm.OnNewPrerequisite(NewPrerequisite);
         }
 

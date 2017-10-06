@@ -82,7 +82,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             public string FilePath;
             public int LargestQuestID;
             public ListeningList<string> PossibleTypeIcons = new ListeningList<string>();
-            public ListeningList<string> PossibleQuestPrerequisites = new ListeningList<string>();
+            public ListeningList<string> PossibleQuestStates = new ListeningList<string>();
             public ListeningList<string> PossibleQuestOptionSelectImage = new ListeningList<string>();
             public ListeningList<string> PossibleParticles = new ListeningList<string>();
 
@@ -100,9 +100,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 PossibleTypeIcons.Add("class");
                 PossibleTypeIcons.Add("repeatable");
 
-                PossibleQuestPrerequisites.Add("level");
-                PossibleQuestPrerequisites.Add("class");
-                PossibleQuestPrerequisites.Add("quests");
+                PossibleQuestStates.Add("true");
+                PossibleQuestStates.Add("false");
 
                 PossibleQuestOptionSelectImage.Add("story");
                 PossibleQuestOptionSelectImage.Add("story_repeatable");
@@ -130,7 +129,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string typeIcon;
         public bool cantAbandon;
 
-        public KVList prerequisites = new KVList();
+        public KVList questprerequisites = new KVList();
 
         public List<QuestStage> stages = new List<QuestStage>();
 
@@ -185,6 +184,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 {
                     prereqstring += PrintKeyValue("class", ThisEditorExternal.prereqclass, TabCount + 2);
                 }
+                if (questprerequisites.Count > 0) {
+                    string questprerequisitesstring = "";
+                    questprerequisites.ForEach(obj => questprerequisitesstring += obj.ConvertToText(TabCount + 3));
+                    prereqstring += PrintEncapsulation(questprerequisitesstring, TabCount + 2, "quests", true);
+                }
                 if(prereqstring != "")
                 {
                     StringToEncapsulate += PrintEncapsulation(prereqstring, TabCount + 1, "prerequisites", true);
@@ -231,6 +235,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                     case "class":
                                         {
                                             ThisEditorExternal.prereqclass = obj.Value;
+                                        }
+                                        break;
+                                    case "quests":
+                                        {
+                                            questprerequisites = new KVList(obj.FolderValue.Items);
                                         }
                                         break;
                                 }
