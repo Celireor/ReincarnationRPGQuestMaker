@@ -21,6 +21,7 @@ namespace ReIncarnation_Quest_Maker
         {
             ItemToPanel.Add(typeof(QuestDialogueOptionHideIf_Quest), typeof(QuestDialogueHideIfPanel_Quest));
             ItemToPanel.Add(typeof(QuestDialogueOptionHideIf_Prereqs), typeof(QuestDialogueHideIfPanel_Prereqs));
+            ItemToPanel.Add(typeof(QuestDialogueOptionHideIf_Item), typeof(QuestDialogueHideIfPanel_Item));
         }
 
         public QuestDialogueHideIfPanel(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent)
@@ -32,6 +33,11 @@ namespace ReIncarnation_Quest_Maker
         public override void Move_Addon(QuestDialogueHideIfPanel OtherObject, int OtherPosition)
         {
             ThisQuestVariable.ThisEditorExternal.ParentOption.hideIf.Swap(ListPosition, OtherPosition);
+        }
+
+        public override void Generate_Addon(QuestDialogueOptionHideIf Item, OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -98,4 +104,21 @@ namespace ReIncarnation_Quest_Maker
             ThisTable.AddItem("Prerequisite Value", new DefaultNumericUpDown(Convert.ToInt32(Item.ThisKV.Value)), ModifyPrereqValue);
         }
     }
+
+    public class QuestDialogueHideIfPanel_Item : QuestDialogueHideIfPanel
+    {
+        public QuestDialogueHideIfPanel_Item(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent)
+        {
+        }
+
+        public override void Generate_Addon(QuestDialogueOptionHideIf Item_raw, OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent)
+        {
+            QuestDialogueOptionHideIf_Item Item = (QuestDialogueOptionHideIf_Item)Item_raw;
+
+            ThisTable.AddItem("Item Name", new DefaultTextBox(Item.ThisKV.Key), (a, b) => Item.ThisKV.Key = MainForm.GetTextFromTextBox(a));
+            ThisTable.AddItem("Item Count", new DefaultTextBox(Item.ThisKV.Value), (a, b) => Item.ThisKV.Value = ((int)MainForm.GetNumberFromNumericUpDown(a)).ToString());
+        }
+    }
+
+    //public class QuestDialogueHideIfPanel_tasks
 }

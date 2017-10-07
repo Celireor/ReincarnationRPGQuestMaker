@@ -114,6 +114,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
                 PossibleHideIfStrings.Add("quests");
                 PossibleHideIfStrings.Add("prereqs");
+                PossibleHideIfStrings.Add("items");
             }
         }
     }

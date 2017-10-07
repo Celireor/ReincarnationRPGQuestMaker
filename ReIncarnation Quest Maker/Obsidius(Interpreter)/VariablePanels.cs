@@ -306,7 +306,9 @@ namespace ReIncarnation_Quest_Maker
         }
 
         public QuestDialogueOptionHideIf NewHideIf(string InString) {
-            return QuestDialogueOptionHideIf.Generate(InString, ThisQuestVariable);
+            QuestDialogueOptionHideIf ReturnValue = QuestDialogueOptionHideIf.Generate(InString, ThisQuestVariable);
+            ReturnValue.SetDefaultValues();
+            return ReturnValue;
         }
 
         public void OnSelectionTextChanged(object sender, EventArgs e)

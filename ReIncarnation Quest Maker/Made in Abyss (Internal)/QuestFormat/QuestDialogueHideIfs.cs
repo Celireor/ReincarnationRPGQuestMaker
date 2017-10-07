@@ -7,7 +7,7 @@ using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 {
-    public abstract class QuestDialogueOptionHideIf : MultiTypeVariable<QuestDialogueOptionHideIf>
+    public class QuestDialogueOptionHideIf : MultiTypeVariable<QuestDialogueOptionHideIf>
     {
         public QuestDialogueOptionHideIf_EditorExternal ThisEditorExternal = new QuestDialogueOptionHideIf_EditorExternal();
 
@@ -77,8 +77,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             this.ThisKV.GenerateFromKV(ThisKV);
         }
-
-        public virtual void SetDefaultValues() { }
     }
 
     public class QuestDialogueOptionHideIf_EditorExternal : QuestVariableEditorExternal
@@ -106,16 +104,26 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public override void SetDefaultValues()
         {
+            ThisKV.Key = "0";
             ThisKV.Value = "active";
         }
     }
 
     public class QuestDialogueOptionHideIf_Prereqs : QuestDialogueOptionHideIf
     {
+        public override void SetDefaultValues()
+        {
+            ThisKV.Key = "aboveLevel";
+            ThisKV.Value = "0";
+        }
     }
 
     public class QuestDialogueOptionHideIf_Item : QuestDialogueOptionHideIf
     {
+        public override void SetDefaultValues()
+        {
+            ThisKV.Value = "0";
+        }
     }
 
     public class QuestDialogueOptionHideIf_Event : QuestDialogueOptionHideIf

@@ -127,7 +127,7 @@ namespace ReIncarnation_Quest_Maker
             LoadValues();
             UpdateScreen();
 
-            Interpreter.CurrentQuestList.Quests.ForEach(obj => { OnNewQuest(obj); });
+            QuestButtons.Refresh(Interpreter.CurrentQuestList.Quests);
         }
 
         public void UpdateScreen()

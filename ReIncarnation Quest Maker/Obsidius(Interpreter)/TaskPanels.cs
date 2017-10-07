@@ -37,6 +37,11 @@ namespace ReIncarnation_Quest_Maker
         {
             ThisQuestVariable.ThisEditorExternal.ParentStage.tasks.Swap(ListPosition, OtherPosition);
         }
+
+        public override void Generate_Addon(QuestTask Item, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class QuestTaskPanel_location : QuestTaskPanel

@@ -115,6 +115,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             string ReturnValue = new string('\t', TabCount) + "\"" + Key + "\"\t\"" + Value + "\"" + Environment.NewLine;
             return ReturnValue;
         }
+
+        public virtual void SetDefaultValues() { }
     }
 
     public class QuestVariableOptionalFields

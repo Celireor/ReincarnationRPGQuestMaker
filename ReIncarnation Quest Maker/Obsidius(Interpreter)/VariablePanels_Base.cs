@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat;
 using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
@@ -15,6 +17,25 @@ using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker
 {
+    class DrawingControl
+    {
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+
+        private const int WM_SETREDRAW = 11;
+
+        public static void SuspendDrawing(Control parent)
+        {
+            SendMessage(parent.Handle, WM_SETREDRAW, false, 0);
+        }
+
+        public static void ResumeDrawing(Control parent)
+        {
+            SendMessage(parent.Handle, WM_SETREDRAW, true, 0);
+            parent.Refresh();
+        }
+    }
+
     public class OrganizedControlList<T, U> where T : SortablePanel<T, U>
     {
         public U ThisQuestVariable;
@@ -97,12 +118,35 @@ namespace ReIncarnation_Quest_Maker
 
         public void Refresh(List<U> RefreshList)
         {
+            //new RefreshThread(RefreshList, this).Refresh();
+            //Thread RefreshThread = new Thread()
             DefaultTable.StartInit();
             Clear();
             BaseControl.Controls.AddRange(SortablePanel<T, U>.MassGenerate(RefreshList.ToArray(), this));
-            DefaultTable.EndInit();
+             DefaultTable.EndInit();
             OnRefresh.ForEach(obj => obj());
         }
+
+        /*class RefreshThread {
+            public List<U> RefreshList;
+            public OrganizedControlList<T, U> Parent;
+            public RefreshThread(List<U> RefreshList, OrganizedControlList<T, U> Parent) { this.RefreshList = RefreshList; this.Parent = Parent; }
+
+            public void Refresh() {
+
+                Thread RefreshThread = new Thread(new ThreadStart(ThisRefreshThread));
+                RefreshThread.Start();
+            }
+
+            void ThisRefreshThread()
+            {
+                DefaultTable.StartInit();
+                Parent.Clear();
+                Parent.BaseControl.Controls.AddRange(SortablePanel<T, U>.MassGenerate(RefreshList.ToArray(), Parent));
+                DefaultTable.EndInit();
+                Parent.OnRefresh.ForEach(obj => obj());
+            }
+        }*/
     }
 
 
@@ -608,12 +652,6 @@ namespace ReIncarnation_Quest_Maker
             T ReturnValue = (T)Activator.CreateInstance(ReturnType, Parent);
 
             return ReturnValue;
-        }
-
-        public override void Generate_Addon(U Item, OrganizedControlList<T, U> Parent)
-        {
-            throw new NotImplementedException();
-            //implement in inherited classes
         }
     }
 
