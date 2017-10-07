@@ -447,6 +447,12 @@ namespace ReIncarnation_Quest_Maker
             Interpreter.SelectedQuestStage.ThisEditorExternal.itemsConsumed.Add(NewItemConsumed);
             QuestStageItemConsumedPanel.Generate(NewItemConsumed, QuestStageItemConsumedPanels);
         }
+
+        private void DuplicateQuestButton_Click(object sender, EventArgs e)
+        {
+            Interpreter.CurrentQuestList.CloneQuest(Interpreter.SelectedQuest);
+            UpdateEverything();
+        }
     }
 
     public class DefaultCheckBox : CheckBox {

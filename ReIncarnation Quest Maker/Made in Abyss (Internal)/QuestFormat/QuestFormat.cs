@@ -17,7 +17,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string ReturnString = "";
             Quests.ForEach(obj => { ReturnString += obj.ConvertToText(TabCount + 2); });
-            return PrintEncapsulation(PrintEncapsulation(ReturnString, TabCount + 1, "Quests", true), TabCount, "Quests", true);
+            return EncapsulateInQuestContainer(ReturnString, TabCount);
+        }
+
+        public string EncapsulateInQuestContainer(string inputstring, int TabCount = 0)
+        {
+            return PrintEncapsulation(PrintEncapsulation(inputstring, TabCount + 1, "Quests", true), TabCount, "Quests", true);
+
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
@@ -57,6 +63,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             ThisEditorExternal.PossibleListenStrings.AddRange(OtherList.ThisEditorExternal.PossibleListenStrings);
 
             GetLargestQuestID();
+        }
+
+        public void CloneQuest(Quest QuestToClone) {
+            string TextConverted = QuestToClone.ConvertToText(2);
+            TextConverted = EncapsulateInQuestContainer(TextConverted);
+            QuestList NewQuestList = QuestFormatParser.Parse(TextConverted, "");
+            NewQuestList.Quests[0].ForceSetQuestID(1);
+            MergeQuestList(NewQuestList);
         }
 
         public void SortQuests()
