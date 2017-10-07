@@ -75,10 +75,14 @@
   <ItemGroup>
     <Compile Include="Made in Abyss %28Internal%29\Parser\QuestFormatParser.cs" />
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\Base.cs" />
+    <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestDialogueHideIfs.cs" />
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestPrerequisites.cs" />
     <Compile Include="Made in Abyss %28Internal%29\QuestFormat\QuestTasks.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\LinqExtensions.cs" />
     <Compile Include="Made in Abyss %28Internal%29\Utility\UtilityFunctions.cs" />
+    <Compile Include="Obsidius%28Interpreter%29\HideIfPanels.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Obsidius%28Interpreter%29\TaskPanels.cs">
       <SubType>Component</SubType>
     </Compile>

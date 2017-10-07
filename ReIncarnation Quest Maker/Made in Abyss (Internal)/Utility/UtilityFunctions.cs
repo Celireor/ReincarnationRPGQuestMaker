@@ -20,5 +20,22 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
             first = second;
             second = temp;
         }
+
+        public static string SafeQuotationMarks(string StringToConvert) {
+            string ReturnString = "";
+            for (int x = 0; x < StringToConvert.Length; x++) {
+                switch (StringToConvert[x])
+                {
+                    case '\\':
+                    case '"':
+                    case '{':
+                    case '}':
+                        ReturnString += '\\';
+                        break;
+                }
+                ReturnString += StringToConvert[x];
+            }
+            return ReturnString;
+        }
     }
 }

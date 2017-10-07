@@ -136,7 +136,7 @@ namespace ReIncarnation_Quest_Maker
     {
         public TableLayoutPanel table1;
         public DefaultLabel stagenumlabel;
-        public TextBox QuestStageNameTextBox;
+        public DefaultLabel QuestStageNameLabel;
 
         public override bool Trash_Addon()
         {
@@ -160,12 +160,6 @@ namespace ReIncarnation_Quest_Maker
         public void OnValuesUpdated()
         {
             stagenumlabel.Text = ThisQuestVariable.ThisEditorExternal.StageNum.ToString();
-            QuestStageNameTextBox.Text = ThisQuestVariable.stageName;
-        }
-
-        public void UpdateValue(object sender, EventArgs e)
-        {
-            ThisQuestVariable.stageName = MainForm.GetTextFromTextBox(sender);
         }
 
         public void SelectStage(object sender, EventArgs e)
@@ -178,11 +172,11 @@ namespace ReIncarnation_Quest_Maker
             //QuestStagePanel ReturnValue = new QuestStagePanel(Parent);
 
             stagenumlabel = new DefaultLabel(Item.ThisEditorExternal.StageNum.ToString());
-            QuestStageNameTextBox = new DefaultTextBox(Item.stageName);
+            QuestStageNameLabel = new DefaultLabel(Item.ThisOptionalFields.description);
 
-            QuestStageNameTextBox.TextChanged += new System.EventHandler(UpdateValue);
+            QuestStageNameLabel.Click += new System.EventHandler(SelectStage);
 
-            table1.Controls.Add(QuestStageNameTextBox, 1, 0);
+            table1.Controls.Add(QuestStageNameLabel, 1, 0);
             table1.Controls.Add(stagenumlabel, 0, 0);
             table1.Click += new System.EventHandler(SelectStage);
             stagenumlabel.Click += new System.EventHandler(SelectStage);
@@ -462,59 +456,7 @@ namespace ReIncarnation_Quest_Maker
         }
     }
 
-    public class QuestDialogueHideIfPanel : MultiTypePanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>
-    {
-        public ModifyQuestVariableTable ThisTable;
-        public override bool Trash_Addon()
-        {
-            return base.Trash_Addon();
-        }
-
-        static QuestDialogueHideIfPanel() {
-            ItemToPanel.Add(typeof(QuestDialogueOptionHideIf_Quest), typeof(QuestDialogueHideIfPanel_Quest));
-        }
-
-        public QuestDialogueHideIfPanel(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent)
-        {
-            ThisTable = new ModifyQuestVariableTable();
-            AddControl(ThisTable);
-        }
-
-        public override void Move_Addon(QuestDialogueHideIfPanel OtherObject, int OtherPosition)
-        {
-            ThisQuestVariable.ThisEditorExternal.ParentOption.hideIf.Swap(ListPosition, OtherPosition);
-        }
-    }
-
-    public class QuestDialogueHideIfPanel_Quest : QuestDialogueHideIfPanel
-    {
-        public QuestDialogueHideIfPanel_Quest(OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent) : base(Parent) { }
-
-        public new QuestDialogueOptionHideIf_Quest ThisQuestVariable {
-            get {
-                return (QuestDialogueOptionHideIf_Quest)base.ThisQuestVariable;
-            }
-        }
-
-        public void ModifyQuestID(object sender, EventArgs e)
-        {
-            ThisQuestVariable.Quest = (int)MainForm.GetNumberFromNumericUpDown(sender);
-        }
-
-        public void ModifyQuestState(object sender, EventArgs e)
-        {
-            ThisQuestVariable.QuestState = MainForm.GetTextFromComboBox(sender);
-        }
-
-
-        public override void Generate_Addon(QuestDialogueOptionHideIf Item_raw, OrganizedControlList<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf> Parent)
-        {
-            QuestDialogueOptionHideIf_Quest Item = (QuestDialogueOptionHideIf_Quest)Item_raw;
-
-            ThisTable.AddItem("Quest ID", new DefaultNumericUpDown(Item.Quest), ModifyQuestID);
-            ThisTable.AddItem("Quest State", new DefaultDropDown(Item.QuestState, QuestDialogueOptionHideIf_Quest.PossibleQuestStates), ModifyQuestState);
-        }
-    }
+   
 
     public class QuestStageDialoguePanel : KVPanel<QuestStageDialoguePanel>
     {

@@ -110,7 +110,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         }
         public static string PrintKeyValue(string Key, string Value, int TabCount = 0)
         {
-
+            Key = UtilityFunctions.SafeQuotationMarks(Key);
+            Value = UtilityFunctions.SafeQuotationMarks(Value);
             string ReturnValue = new string('\t', TabCount) + "\"" + Key + "\"\t\"" + Value + "\"" + Environment.NewLine;
             return ReturnValue;
         }
@@ -300,6 +301,37 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             PossibleTaskTypes.Add(TypeString);
             TaskTypeDictionary.Add(TypeString, TaskType);
+        }
+    }
+
+    public class QuestIndexableVariableStringConverterLibrary<U> where U : MultiTypeVariable<U>
+    {
+        public QuestIndexableVariableStringConverter<U>[] ThisList;
+
+        //public QuestIndexableVariableStringConverter<U> this[int index] { get { return ThisList[index]; } set { ThisList[index] = value; } }
+
+        public QuestIndexableVariableStringConverterLibrary(params QuestIndexableVariableStringConverter<U>[] ThisList) {
+            this.ThisList = ThisList;
+        }
+
+        public string ConvertToText(List<U> ItemList, string Name, int TabCount = 0) {
+            string TaskString = "";
+
+            ItemList.ForEach(obj =>
+            {
+                for (int x = 0; x < ThisList.Length; x++)
+                {
+                    ThisList[x].Add(obj);
+                }
+            });
+
+            for (int x = 0; x < ThisList.Length; x++)
+            {
+                TaskString += ThisList[x].Print(TabCount);
+            }
+
+
+            return QuestVariable.PrintEncapsulation(TaskString, TabCount, Name, true);
         }
     }
 

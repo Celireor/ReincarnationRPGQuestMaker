@@ -28,6 +28,7 @@ namespace ReIncarnation_Quest_Maker
         public int NextPos = 0;
 
         public List<Action> OnTrash = new List<Action>();
+        public List<Action> OnRefresh = new List<Action>();
 
         //public Func
 
@@ -100,6 +101,7 @@ namespace ReIncarnation_Quest_Maker
             Clear();
             BaseControl.Controls.AddRange(SortablePanel<T, U>.MassGenerate(RefreshList.ToArray(), this));
             DefaultTable.EndInit();
+            OnRefresh.ForEach(obj => obj());
         }
     }
 
@@ -426,6 +428,7 @@ namespace ReIncarnation_Quest_Maker
         protected override void Dispose(bool disposing)
         {
             ThisList.OnTrash.Remove(CheckIfShouldAddMinimiseButton);
+            ThisList.OnRefresh.Remove(CheckIfShouldAddMinimiseButton);
             base.Dispose(disposing);
         }
 
@@ -472,6 +475,7 @@ namespace ReIncarnation_Quest_Maker
             SizeChanged += ResetSize;
 
             ThisList.OnTrash.Add(CheckIfShouldAddMinimiseButton);
+            ThisList.OnRefresh.Add(CheckIfShouldAddMinimiseButton);
         }
     }
 

@@ -113,6 +113,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 PossibleParticles.Add("chat");
 
                 PossibleHideIfStrings.Add("quests");
+                PossibleHideIfStrings.Add("prereqs");
             }
         }
     }
@@ -122,9 +123,9 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         //public string full_name;
         public string name;
+        public int questID { get { return ThisEditorExternal.questID; } set { ThisEditorExternal.questID = value; } }
         public string description;
         public bool repeatable;
-        public int questID;
         public string portrait;
         public string typeIcon;
         public bool cantAbandon;
@@ -319,6 +320,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public class Quest_EditorExternal : QuestVariableEditorExternal
         {
             public QuestList ParentQuestList;
+            public int questID;
 
             public ListeningList<String> PossibleDialogueInjections = new ListeningList<string>();
 
@@ -329,8 +331,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestStage : QuestVariable
     {
-        public string stageName;
-
         //public List<QuestInjectDialogue> affectedNPCs = new List<QuestInjectDialogue>();
         public QuestStage_OptionalFields ThisOptionalFields {
             get
@@ -461,6 +461,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                                 QuestTask.MassGenerate<QuestTask_talkto>(ReturnValue, obj, "talkto");
                                 QuestTask.MassGenerate<QuestTask_event>(ReturnValue, obj, "event");
                                 QuestTask.MassGenerate<QuestTask_useAbility>(ReturnValue, obj, "useAbility");
+                                QuestTask.MassGenerate<QuestTask_reachLevel>(ReturnValue, obj, "reachLevel");
                             });
                         }
                         break;
@@ -533,33 +534,18 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             if (tasks.Count > 0)
             {
-                string TaskString = "";
 
-                QuestIndexableVariableStringConverter<QuestTask>[] TaskLibrary = {
+                QuestIndexableVariableStringConverterLibrary<QuestTask> TaskLibrary = new QuestIndexableVariableStringConverterLibrary<QuestTask>(
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_gather), "gather"),
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_location), "location"),
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_talkto), "talkto"),
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_kill), "kill"),
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_killType), "killType"),
                     new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_event), "event"),
-                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_useAbility), "useAbility")
-                };
-
-                tasks.ForEach(obj =>
-                {
-                    for (int x = 0; x < TaskLibrary.Length; x++)
-                    {
-                        TaskLibrary[x].Add(obj);
-                    }
-                });
-
-                for (int x = 0; x < TaskLibrary.Length; x++)
-                {
-                    TaskString += TaskLibrary[x].Print(TabCount + 1);
-                }
-
-
-                stringtoencapsulate += PrintEncapsulation(TaskString, TabCount + 1, "tasks", true);
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_useAbility), "useAbility"),
+                    new QuestIndexableVariableStringConverter<QuestTask>(typeof(QuestTask_reachLevel), "reachLevel")
+                );
+                stringtoencapsulate += TaskLibrary.ConvertToText(tasks, "tasks", TabCount);
             }
 
             return PrintEncapsulation(stringtoencapsulate, TabCount, Convert.ToString(ThisEditorExternal.StageNum), true);
@@ -736,17 +722,13 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             string ReturnValue = "";
             if (hideIf.Count > 0) {
-                string hideIfString = "";
 
-                QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf> QuestHideIfList = new QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf>(typeof(QuestDialogueOptionHideIf_Quest), "quests");
+                QuestIndexableVariableStringConverterLibrary<QuestDialogueOptionHideIf> QuestHideIfList = new QuestIndexableVariableStringConverterLibrary<QuestDialogueOptionHideIf> (
+                    new QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf>(typeof(QuestDialogueOptionHideIf_Quest), "quests"),
+                    new QuestIndexableVariableStringConverter<QuestDialogueOptionHideIf>(typeof(QuestDialogueOptionHideIf_Prereqs), "prereqs")
+                );
 
-                hideIf.ForEach(obj => {
-                    QuestHideIfList.Add(obj);
-                });
-
-                hideIfString += QuestHideIfList.Print(TabCount);
-
-                ReturnValue += PrintEncapsulation(hideIfString, TabCount, "hideIf", true);
+                ReturnValue += QuestHideIfList.ConvertToText(hideIf, "hideIf", TabCount);
             }
 
             string templistenstring = ThisOptionalFields.sendListenString;
@@ -805,6 +787,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                         {
                             obj.FolderValue.Items.ForEach(obj2 => {
                                 QuestDialogueOptionHideIf.MassGenerate<QuestDialogueOptionHideIf_Quest>(ReturnValue, obj2, "quests");
+                                QuestDialogueOptionHideIf.MassGenerate<QuestDialogueOptionHideIf_Prereqs>(ReturnValue, obj2, "prereqs");
                             });
                         }
                         break;
@@ -998,95 +981,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         {
             public string responsePortait = "";
             public string playSound = "";
-        }
-    }
-
-    public abstract class QuestDialogueOptionHideIf : MultiTypeVariable<QuestDialogueOptionHideIf>
-    {
-        public QuestDialogueOptionHideIf_EditorExternal ThisEditorExternal = new QuestDialogueOptionHideIf_EditorExternal();
-
-        public override bool Trash()
-        {
-            ThisEditorExternal.ParentOption.hideIf.Remove(this);
-            return true;
-        }
-
-        static QuestDialogueOptionHideIf() {
-            AddPossibleTaskType("quests", typeof(QuestDialogueOptionHideIf_Quest));
-        }
-
-        public static void MassGenerate<T>(QuestDialogueOption Parent, KVPair obj, string typeString) where T : QuestDialogueOptionHideIf, new()
-        {
-            if (obj.Key == typeString)
-            {
-                obj.FolderValue.Items.ForEach(obj2 =>
-                {
-                    KVGenerate<T>(Parent, obj2);
-                });
-            }
-        }
-
-        public static T KVGenerate <T> (QuestDialogueOption Parent, KVPair ThisKV) where T : QuestDialogueOptionHideIf, new()
-        {
-            T ReturnValue = new T();
-            GenerateEmpty(ReturnValue, Parent);
-            ReturnValue.GenerateFromKV(ThisKV);
-            return ReturnValue;
-        }
-
-        public static QuestDialogueOptionHideIf Generate(string TypeString, QuestDialogueOption Parent)
-        {
-            QuestDialogueOptionHideIf ReturnValue = GenerateEmpty(GetNewT(TypeString), Parent);
-            ReturnValue.SetDefaultValues();
-            return ReturnValue;
-        }
-
-        static QuestDialogueOptionHideIf GenerateEmpty(QuestDialogueOptionHideIf InputValue, QuestDialogueOption Parent)
-        {
-            QuestDialogueOptionHideIf ReturnValue = InputValue;
-            ReturnValue.ThisEditorExternal.ParentOption = Parent;
-            Parent.hideIf.Add(ReturnValue);
-            return ReturnValue;
-        }
-
-        public virtual void SetDefaultValues() { }
-    }
-
-    public class QuestDialogueOptionHideIf_EditorExternal : QuestVariableEditorExternal {
-        public QuestDialogueOption ParentOption;
-    }
-
-    public class QuestDialogueOptionHideIf_Quest : QuestDialogueOptionHideIf
-    {
-        public int Quest;
-        public string QuestState;
-
-        public static ListeningList<string> PossibleQuestStates = new ListeningList<string>();
-
-        static QuestDialogueOptionHideIf_Quest()
-        {
-            PossibleQuestStates.Add("complete");
-            PossibleQuestStates.Add("incomplete");
-            PossibleQuestStates.Add("active");
-        }
-
-        public override string ConvertToText_Full(int Index, int TabCount = 0)
-        {
-            return PrintEncapsulation(PrintKeyValue(Quest.ToString(), QuestState, TabCount + 1), TabCount, Index.ToString(), true);
-        }
-
-        public override void GenerateFromKV(KVPair ThisKV)
-        {
-            ThisKV.FolderValue.Items.ForEach(obj =>
-            {
-                Quest = Convert.ToInt32(obj.Key);
-                QuestState = obj.Value;
-            });
-        }
-
-        public override void SetDefaultValues()
-        {
-            QuestState = "active";
         }
     }
 

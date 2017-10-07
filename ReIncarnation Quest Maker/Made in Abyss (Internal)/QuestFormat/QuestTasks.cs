@@ -61,6 +61,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             AddPossibleTaskType("killType", typeof(QuestTask_killType));
             AddPossibleTaskType("event", typeof(QuestTask_event));
             AddPossibleTaskType("useAbility", typeof(QuestTask_useAbility));
+            AddPossibleTaskType("reachLevel", typeof(QuestTask_reachLevel));
         }
         public QuestTask() {
             OptionalFields = new QuestTask_OptionalFields();
@@ -335,6 +336,17 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
         public class QuestTask_useAbility_EditorExternal : QuestTask_EditorExternal {
             public string AbilityName;
+        }
+    }
+
+    public class QuestTask_reachLevel : QuestTask
+    {
+        public int level;
+        public string description;
+
+        public override string ConvertToText_Full(int Index, int TabCount = 0)
+        {
+            return PrintEncapsulation(ConvertToText_Iterate(TabCount + 1), TabCount, Index.ToString(), true);
         }
     }
 }

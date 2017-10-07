@@ -30,6 +30,7 @@ namespace ReIncarnation_Quest_Maker
             ItemToPanel.Add(typeof(QuestTask_killType), typeof(QuestTaskPanel_killType));
             ItemToPanel.Add(typeof(QuestTask_event), typeof(QuestTaskPanel_event));
             ItemToPanel.Add(typeof(QuestTask_useAbility), typeof(QuestTaskPanel_useAbility));
+            ItemToPanel.Add(typeof(QuestTask_reachLevel), typeof(QuestTaskPanel_reachLevel));
         }
 
         public override void Move_Addon(QuestTaskPanel OtherObject, int OtherPosition)
@@ -275,6 +276,29 @@ namespace ReIncarnation_Quest_Maker
         }
 
         private void ModifyUseAbilityDescription(object sender, EventArgs e)
+        {
+            ThisQuestVariable.description = MainForm.GetTextFromTextBox(sender);
+        }
+    }
+    public class QuestTaskPanel_reachLevel : QuestTaskPanel
+    {
+        public new QuestTask_reachLevel ThisQuestVariable { get { return base.ThisQuestVariable as QuestTask_reachLevel; } }
+
+        public QuestTaskPanel_reachLevel(OrganizedControlList<QuestTaskPanel, QuestTask> Parent) : base(Parent) { AddControl(ThisTable); }
+
+        public override void Generate_Addon(QuestTask Item_raw, OrganizedControlList<QuestTaskPanel, QuestTask> Parent)
+        {
+            QuestTask_reachLevel Item = (QuestTask_reachLevel)Item_raw;
+            ThisTable.AddItem("Level", new DefaultNumericUpDown(Item.level), ModifyReachLevelLevel);
+            ThisTable.AddItem("Description", new DefaultTextBox(Item.description), ReachLevelDescription);
+        }
+
+        private void ModifyReachLevelLevel(object sender, EventArgs e)
+        {
+            ThisQuestVariable.level = (int)MainForm.GetNumberFromNumericUpDown(sender);
+        }
+
+        private void ReachLevelDescription(object sender, EventArgs e)
         {
             ThisQuestVariable.description = MainForm.GetTextFromTextBox(sender);
         }
