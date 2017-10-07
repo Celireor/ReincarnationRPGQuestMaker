@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser;
+
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
 {
     public static class UtilityFunctions
@@ -26,11 +28,11 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Utility
             for (int x = 0; x < StringToConvert.Length; x++) {
                 switch (StringToConvert[x])
                 {
-                    case '\\':
+                    case QuestFormatParser.SafetyKey:
                     case '"':
-                    case '{':
-                    case '}':
-                        ReturnString += '\\';
+                    //case '{':
+                    //case '}':
+                        ReturnString += QuestFormatParser.SafetyKey;
                         break;
                 }
                 ReturnString += StringToConvert[x];

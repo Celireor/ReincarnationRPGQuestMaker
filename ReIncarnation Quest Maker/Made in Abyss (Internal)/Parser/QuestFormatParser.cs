@@ -11,8 +11,10 @@ using ReIncarnation_Quest_Maker.Obsidius;
 
 namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
 {
+
     public static class QuestFormatParser
     {
+        public const char SafetyKey = '\\';
         public static string OpenTextFile(string FilePath) {
             try
             {
@@ -98,7 +100,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
                     {
                         switch (Raw_CharArray[x])
                         {
-                            case '\\':
+                            case SafetyKey:
                                 {
                                     ParseAsDefault = true;
                                 }
@@ -127,42 +129,44 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.Parser
                                 {
                                     if (Parsing)
                                     {
-                                        /* Throws an Error Message */
-                                        ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
-                                        return null;
+                                        ShouldParseIndiscrimately = true;
                                     }
-                                    KVPairFolder NewFolder = new KVPairFolder(CurrentFolder);
-                                    CurrentFolder.AddItem(new KVPair(KeyValuePairKey, NewFolder));
-                                    CurrentFolder = NewFolder;
-
-                                    KeyValuePairKey = "";
-
-                                    if (!ParsingValue)
+                                    else
                                     {
-                                        /* Throws an Error Message */
-                                        ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
-                                        return null;
-                                    }
 
-                                    ParsingValue = false;
+                                        KVPairFolder NewFolder = new KVPairFolder(CurrentFolder);
+                                        CurrentFolder.AddItem(new KVPair(KeyValuePairKey, NewFolder));
+                                        CurrentFolder = NewFolder;
+
+                                        KeyValuePairKey = "";
+
+                                        if (!ParsingValue)
+                                        {
+                                            /* Throws an Error Message */
+                                            ErrorMessage = "Illegal character ({) (Character " + CharacterCount + " in line " + LineCount + ")";
+                                            return null;
+                                        }
+
+                                        ParsingValue = false;
+                                    }
                                 }
                                 break;
                             case '}':
                                 {
                                     if (Parsing)
                                     {
-
-                                        /* Throws an Error Message */
-                                        ErrorMessage = "Illegal character (}) (Character " + CharacterCount + " in line " + LineCount + ")";
+                                        ShouldParseIndiscrimately = true;
                                     }
-
-                                    CurrentFolder = CurrentFolder.Parent;
-
-                                    if (CurrentFolder == null)
+                                    else
                                     {
-                                        /* Throws an Error Message */
-                                        ErrorMessage = "Too many }. (Character " + CharacterCount + " in line " + LineCount + ")";
-                                        return null;
+                                        CurrentFolder = CurrentFolder.Parent;
+
+                                        if (CurrentFolder == null)
+                                        {
+                                            /* Throws an Error Message */
+                                            ErrorMessage = "Too many }. (Character " + CharacterCount + " in line " + LineCount + ")";
+                                            return null;
+                                        }
                                     }
                                 }
                                 break;
