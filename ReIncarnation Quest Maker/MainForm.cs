@@ -450,8 +450,8 @@ namespace ReIncarnation_Quest_Maker
 
         private void DuplicateQuestButton_Click(object sender, EventArgs e)
         {
-            Interpreter.CurrentQuestList.CloneQuest(Interpreter.SelectedQuest);
-            UpdateEverything();
+            Quest NewQuest = Interpreter.CurrentQuestList.CloneQuest(Interpreter.SelectedQuest);
+            OnNewQuest(NewQuest);
         }
     }
 

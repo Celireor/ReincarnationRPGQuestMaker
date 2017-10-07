@@ -65,12 +65,14 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             GetLargestQuestID();
         }
 
-        public void CloneQuest(Quest QuestToClone) {
+        public Quest CloneQuest(Quest QuestToClone) {
             string TextConverted = QuestToClone.ConvertToText(2);
             TextConverted = EncapsulateInQuestContainer(TextConverted);
             QuestList NewQuestList = QuestFormatParser.Parse(TextConverted, "");
-            NewQuestList.Quests[0].ForceSetQuestID(1);
+            Quest ReturnValue = NewQuestList.Quests[0];
+            ReturnValue.ForceSetQuestID(1);
             MergeQuestList(NewQuestList);
+            return ReturnValue;
         }
 
         public void SortQuests()
