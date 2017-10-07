@@ -11,6 +11,8 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
     {
         public QuestDialogueOptionHideIf_EditorExternal ThisEditorExternal = new QuestDialogueOptionHideIf_EditorExternal();
 
+        public KVPair ThisKV = new KVPair();
+
         public override bool Trash()
         {
             ThisEditorExternal.ParentOption.hideIf.Remove(this);
@@ -30,7 +32,15 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             {
                 obj.FolderValue.Items.ForEach(obj2 =>
                 {
-                    KVGenerate<T>(Parent, obj2);
+                    if (obj2.FolderValue == null)
+                    {
+                        KVGenerate<T>(Parent, obj2);
+                    }
+                    else {
+                        obj2.FolderValue.Items.ForEach(obj3 => {
+                            KVGenerate<T>(Parent, obj3);
+                        });
+                    }
                 });
             }
         }
@@ -58,7 +68,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
             return ReturnValue;
         }
 
-        public KVPair ThisKV = new KVPair();
         public override string ConvertToText_Full(int Index, int TabCount = 0)
         {
             return ThisKV.ConvertToText(TabCount);

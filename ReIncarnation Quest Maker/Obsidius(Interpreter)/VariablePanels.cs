@@ -87,7 +87,6 @@ namespace ReIncarnation_Quest_Maker
 
     public class PrerequisitePanel : KVPanel<PrerequisitePanel>
     {
-        ModifyQuestVariableTable ThisTable;
 
         public override void Move_Addon(PrerequisitePanel other, int OtherPos)
         {
@@ -108,8 +107,6 @@ namespace ReIncarnation_Quest_Maker
         public override void Generate_Addon(KVPair Item, OrganizedControlList<PrerequisitePanel, KVPair> Parent)
         {
             //PrerequisitePanel ReturnValue = new PrerequisitePanel(Parent);
-            ThisTable = new ModifyQuestVariableTable();
-            AddControl(ThisTable);
 
             ThisTable.AddItem("Quest:", new DefaultNumericUpDown(Convert.ToInt32(Item.Key)), UpdateValue);
             ThisTable.AddItem("State:", new DefaultDropDown(Item.Value, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleQuestStates), UpdateType);
@@ -248,7 +245,7 @@ namespace ReIncarnation_Quest_Maker
 
             ThisTable = new DefaultTable(1, 2);
             NameBox = new DefaultTextBox(Item.ThisEditorExternal.DialogueName);
-            ThisOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Dialogue Option", NewQuestDialogueOption, QuestDialogueOptionsPanel.Sort());
+            ThisOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Dialogue Option", NewQuestDialogueOption);
 
             ThisTable.Controls.Add(NameBox, 0, 0);
             ThisTable.Controls.Add(ThisOptionsList, 0, 1);
@@ -282,6 +279,7 @@ namespace ReIncarnation_Quest_Maker
         public DefaultTable ThisTable;
         public ModifyQuestVariableTable DialogueOptionsTable;
         public ModifyQuestVariableTable DialogueResponseTable;
+        public ListPanel<RunScriptPanel, QuestDialogueOptionRunScript> RunScriptList;
 
         public ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption> ResponseOptionsList;
         public ListPanel<GivesQuestPanel, KVPair> giveQuestsList;
@@ -375,19 +373,21 @@ namespace ReIncarnation_Quest_Maker
 
             FinishUpFunction = FinishUp_2;
 
-            ThisTable = new DefaultTable(1, 5);
+            ThisTable = new DefaultTable(1, 6);
 
             DialogueOptionsTable = new ModifyQuestVariableTable();
             DialogueResponseTable = new ModifyQuestVariableTable();
-            ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption, Sort());
-            giveQuestsList = new ListPanel<GivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel, GivesQuestPanel.Sort());
-            hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, QuestDialogueHideIfPanel.Sort(), new DefaultDropDown("quests", Interpreter.CurrentQuestList.ThisEditorExternal.PossibleHideIfStrings));
+            ResponseOptionsList = new ListPanel<QuestDialogueOptionsPanel, QuestDialogueOption>("New Option", NewQuestDialogueOption);
+            giveQuestsList = new ListPanel<GivesQuestPanel, KVPair>("New Quest Given", NewQuestDialogueGivesQuestPanel);
+            hideIfList = new ListPanel<QuestDialogueHideIfPanel, QuestDialogueOptionHideIf>("New Hide If Condition", NewHideIf, new DefaultDropDown("quests", Interpreter.CurrentQuestList.ThisEditorExternal.PossibleHideIfStrings));
+            RunScriptList = new ListPanel<RunScriptPanel, QuestDialogueOptionRunScript>("New Script", obj => { return new QuestDialogueOptionRunScript(); });
 
             AddControl(ThisTable, true);
 
             ThisTable.Controls.Add(hideIfList, 0, 0);
             ThisTable.Controls.Add(giveQuestsList, 0, 1);
             ThisTable.Controls.Add(DialogueOptionsTable, 0, 2);
+            ThisTable.Controls.Add(RunScriptList, 0, 3);
         }
         public override void Generate_Addon(QuestDialogueOption Item, OrganizedControlList<QuestDialogueOptionsPanel, QuestDialogueOption> Parent)
         {
@@ -416,6 +416,7 @@ namespace ReIncarnation_Quest_Maker
         {
             hideIfList.ThisList.Refresh(ThisQuestVariable.hideIf);
             giveQuestsList.ThisList.Refresh(ThisQuestVariable.giveQuests);
+            RunScriptList.ThisList.Refresh(ThisQuestVariable.runScript);
             if (ThisQuestVariable.Response != null)
             {
                 ResponseTextBox.Text = ThisQuestVariable.Response.responseText;
@@ -423,15 +424,14 @@ namespace ReIncarnation_Quest_Maker
                 PlaySoundBox.Text = ThisQuestVariable.Response.ThisOptionalFields.playSound;
 
                 ResponseOptionsList.ThisList.Refresh(ThisQuestVariable.Response.options);
-                ThisTable.Controls.Add(DialogueResponseTable, 0, 3);
-                ThisTable.Controls.Add(ResponseOptionsList, 0, 4);
+                ThisTable.Controls.Add(DialogueResponseTable, 0, 4);
+                ThisTable.Controls.Add(ResponseOptionsList, 0, 3);
             }
         }
     }
 
     public class GivesQuestPanel : KVPanel<GivesQuestPanel>
     {
-        public ModifyQuestVariableTable ThisTable;
 
         public void QuestIDOnChanged(object sender, EventArgs e)
         {
@@ -444,15 +444,12 @@ namespace ReIncarnation_Quest_Maker
 
         public GivesQuestPanel(OrganizedControlList<GivesQuestPanel, KVPair> Parent) : base(Parent)
         {
-            ThisTable = new ModifyQuestVariableTable();
         }
 
         public override void Generate_Addon(KVPair Item, OrganizedControlList<GivesQuestPanel, KVPair> Parent)
         {
             ThisTable.AddItem("Quest ID", new DefaultNumericUpDown(Convert.ToInt32(Item.Key)), QuestIDOnChanged);
             ThisTable.AddItem("Force Give", new DefaultCheckBox(Convert.ToBoolean(Item.Value)), ForceGiveQuestChanged);
-
-            AddControl(ThisTable);
         }
     }
 
@@ -460,8 +457,6 @@ namespace ReIncarnation_Quest_Maker
 
     public class QuestStageDialoguePanel : KVPanel<QuestStageDialoguePanel>
     {
-        ModifyQuestVariableTable ThisTable;
-
         public QuestStageDialoguePanel(OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent) : base(Parent) { }
 
         public void ModifyNPCName(object sender, EventArgs e)
@@ -477,18 +472,15 @@ namespace ReIncarnation_Quest_Maker
         public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageDialoguePanel, KVPair> Parent)
         {
             //QuestStageDialoguePanel ReturnValue = new QuestStageDialoguePanel(Parent);
-            ThisTable = new ModifyQuestVariableTable();
             ThisTable.AddItem("NPC: ", new DefaultTextBox(Item.Key), ModifyNPCName);
             ThisTable.AddItem("Dialogue: ", new DefaultDropDown(Item.Value, Interpreter.SelectedQuest.ThisEditorExternal.PossibleDialogueInjections), ModifyDialogue);
             //ThisTable.AddItem("Text Box: ", new DefaultDropDown(Item.Key, , true), ModifyNPCName);
-            AddControl(ThisTable);
             //return ReturnValue;
         }
     }
 
     public class QuestStageParticlePanel : KVPanel<QuestStageParticlePanel>
     {
-        ModifyQuestVariableTable ThisTable;
 
         public QuestStageParticlePanel(OrganizedControlList<QuestStageParticlePanel, KVPair> Parent) : base(Parent)
         {
@@ -507,29 +499,48 @@ namespace ReIncarnation_Quest_Maker
         public override void Generate_Addon(KVPair Item, OrganizedControlList<QuestStageParticlePanel, KVPair> Parent)
         {
             //QuestStageParticlePanel ReturnValue = new QuestStageParticlePanel(Parent);
-            ThisTable = new ModifyQuestVariableTable();
             ThisTable.AddItem("NPC: ", new DefaultTextBox(Item.Key), ModifyNPCName);
             ThisTable.AddItem("Particle: ", new DefaultDropDown(Item.Value, Interpreter.CurrentQuestList.ThisEditorExternal.PossibleParticles), ModifyDialogue);
-            AddControl(ThisTable);
             //return ReturnValue;
         }
     }
 
     public class RunScriptPanel : SortablePanel<RunScriptPanel, QuestDialogueOptionRunScript>
     {
+        ModifyQuestVariableTable ThisTable = new ModifyQuestVariableTable();
+        ListPanel<RunScriptArgumentsPanel, KVPair> ArgumentsPanel = new ListPanel<RunScriptArgumentsPanel, KVPair>("New Argument", (a) => { return new KVPair(); });
+
+        public RunScriptPanel(OrganizedControlList<RunScriptPanel, QuestDialogueOptionRunScript> Parent) : base(Parent)
+        {
+            AddControl(ThisTable);
+            AddControl(ArgumentsPanel);
+        }
+
         public override void Generate_Addon(QuestDialogueOptionRunScript Item, OrganizedControlList<RunScriptPanel, QuestDialogueOptionRunScript> Parent)
         {
-            throw new NotImplementedException();
+            ThisTable.AddItem("Class Name", new DefaultTextBox(Item.className), (a, b) => Item.className = MainForm.GetTextFromTextBox(a));
+            ThisTable.AddItem("Function Name", new DefaultTextBox(Item.functionName), (a, b) => Item.functionName = MainForm.GetTextFromTextBox(a));
+            ArgumentsPanel.ThisList.Refresh(Item.arguments);
+        }
+    }
+
+    public class RunScriptArgumentsPanel : KVPanel<RunScriptArgumentsPanel>
+    {
+        public RunScriptArgumentsPanel(OrganizedControlList<RunScriptArgumentsPanel, KVPair> Parent) : base(Parent)
+        {
+        }
+
+        public override void Generate_Addon(KVPair Item, OrganizedControlList<RunScriptArgumentsPanel, KVPair> Parent)
+        {
+            ThisTable.AddItem("Name", new DefaultTextBox(Item.Key), (a, b) => Item.Key = MainForm.GetTextFromTextBox(a));
+            ThisTable.AddItem("Value", new DefaultTextBox(Item.Value), (a, b) => Item.Value = MainForm.GetTextFromTextBox(a));
         }
     }
 
     public class QuestStageItemRewardPanel : KVPanel<QuestStageItemRewardPanel>
     {
-        ModifyQuestVariableTable ThisTable;
         public QuestStageItemRewardPanel(OrganizedControlList<QuestStageItemRewardPanel, KVPair> Parent) : base(Parent)
         {
-            ThisTable = new ModifyQuestVariableTable();
-            AddControl(ThisTable);
         }
 
         public void UpdateItemName(object sender, EventArgs e)
@@ -550,11 +561,8 @@ namespace ReIncarnation_Quest_Maker
     }
     public class QuestStageItemConsumedPanel : KVPanel<QuestStageItemConsumedPanel>
     {
-        ModifyQuestVariableTable ThisTable;
         public QuestStageItemConsumedPanel(OrganizedControlList<QuestStageItemConsumedPanel, KVPair> Parent) : base(Parent)
         {
-            ThisTable = new ModifyQuestVariableTable();
-            AddControl(ThisTable);
         }
 
         public void UpdateItemName(object sender, EventArgs e)

@@ -693,7 +693,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
         public string selectText;
         public string selectImg;
 
-        public QuestDialogueOptionRunScript runScript;
+        public List<QuestDialogueOptionRunScript> runScript = new List<QuestDialogueOptionRunScript>();
 
         public KVList giveQuests = new KVList();
 
@@ -739,11 +739,6 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
             ReturnValue += ConvertToText_Iterate(TabCount);
 
-            if(runScript != null)
-            {
-                ReturnValue += runScript.ConvertToText(TabCount);
-            }
-
             ThisOptionalFields.sendListenString = templistenstring;
 
             /*if (HasConverted)
@@ -759,8 +754,18 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                 ReturnValue += PrintEncapsulation(giveQuestsString, TabCount, "giveQuests", true);
             }
 
+            string gotoString = "";
+
+            runScript.ForEach(obj => gotoString += runScript[0].ConvertToText(TabCount + 1));
+            //todo: upgrade to support multiple scripts once jobo rework format
+
             if (Response != null) {
-                ReturnValue += PrintEncapsulation(Response.ConvertToText(TabCount + 1), TabCount, "goto", true);
+                gotoString += Response.ConvertToText(TabCount + 1);
+            }
+
+            if (gotoString != null)
+            {
+                ReturnValue += PrintEncapsulation(gotoString, TabCount, "goto", true);
             }
 
             return ReturnValue;
@@ -811,7 +816,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
                         break;
                     case "runScript":
                         {
-                            ReturnValue.runScript = GenerateFromKeyValue<QuestDialogueOptionRunScript>(obj);
+                            ReturnValue.runScript.Add(GenerateFromKeyValue<QuestDialogueOptionRunScript>(obj));
                         }
                         break;
                 }
@@ -908,6 +913,7 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestDialogueResponse : QuestVariable
     {
+
         public string responseText = "";
         public ListeningList<QuestDialogueOption> options = new ListeningList<QuestDialogueOption>();
         public KVList QuestsToGive = new KVList();
@@ -986,24 +992,22 @@ namespace ReIncarnation_Quest_Maker.Made_In_Abyss_Internal.QuestFormat
 
     public class QuestDialogueOptionRunScript : QuestVariable
     {
-        string className;
-        string functionName;
-        List<KVPair> arguments = new List<KVPair>();
+        public string className;
+        public string functionName;
+        public KVList arguments = new KVList ();
 
         public override string ConvertToText(int TabCount = 0)
         {
             string StringToEncapsulate = ConvertToText_Iterate(TabCount + 1);
-            string argumentsString = "";
-            arguments.ForEach(obj => argumentsString += obj.ConvertToText(TabCount + 2));
-            StringToEncapsulate += PrintEncapsulation(argumentsString, TabCount + 1, "arguments", true);
+            StringToEncapsulate += PrintEncapsulation(arguments.ConvertToText(TabCount + 2), TabCount + 1, "arguments", true);
             return PrintEncapsulation(StringToEncapsulate, TabCount, "runScript", true);
         }
 
         public override void GenerateFromKV(KVPair ThisKV)
         {
             GenerateFromKeyValue_Iterate(ThisKV.FolderValue, (obj, info) => {
-                if (obj.Key == "arguments") {
-                    obj.FolderValue.Items.ForEach(obj2 => arguments.Add(GenerateFromKeyValue<KVPair>(obj2)));
+            if (obj.Key == "arguments") {
+                   arguments = new KVList(obj.FolderValue.Items);
                 }
             });
         }

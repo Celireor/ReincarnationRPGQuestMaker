@@ -432,7 +432,7 @@ namespace ReIncarnation_Quest_Maker
             base.Dispose(disposing);
         }
 
-        public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, IComparer<T> SortMetric, DefaultDropDown ElementTypeSelector = null)
+        public ListPanel(string ThisButtonText, Func<string, U> NewDefaultItem, DefaultDropDown ElementTypeSelector = null)
         {
             MinimiseButton = new DefaultButton(Minimise, "Minimise/Maxmise");
             MinimiseButton.Location = new Point(0, MinimiseButton.Height);
@@ -619,8 +619,11 @@ namespace ReIncarnation_Quest_Maker
 
     public abstract class KVPanel<T> : SortablePanel<T, KVPair> where T : KVPanel<T>
     {
+        public ModifyQuestVariableTable ThisTable = new ModifyQuestVariableTable();
 
-        public KVPanel(OrganizedControlList<T, KVPair> Parent) : base(Parent) { }
+        public KVPanel(OrganizedControlList<T, KVPair> Parent) : base(Parent) {
+            AddControl(ThisTable);
+        }
 
         public override bool Trash_Addon()
         {
